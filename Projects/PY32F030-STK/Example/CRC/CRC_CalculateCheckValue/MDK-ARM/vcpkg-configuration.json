@@ -1,0 +1,20 @@
+{
+    "registries": [
+      {
+        "name": "microsoft",
+        "kind": "artifact",
+        "location": "https://aka.ms/vcpkg-ce-default"
+      },
+      {
+        "name": "arm",
+        "kind": "artifact",
+        "location": "https://aka.ms/vcpkg-artifacts-arm"
+      }
+    ],
+    "requires": {
+      "microsoft:tools/kitware/cmake": "^3.25.2",
+      "microsoft:tools/ninja-build/ninja": "^1.10.2",
+      "arm:tools/open-cmsis-pack/cmsis-toolbox": "^2.0.0-0",
+      "arm:compilers/arm/armclang": "^6.20.0"
+    }
+}

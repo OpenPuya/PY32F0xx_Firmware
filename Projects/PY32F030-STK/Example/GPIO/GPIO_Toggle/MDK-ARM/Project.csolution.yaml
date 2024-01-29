@@ -1,0 +1,73 @@
+solution:
+  created-by: uv2csolution@1.0.0
+  created-for: CMSIS-Toolbox@2.0.0
+  packs:
+    - pack: Puya::PY32F0xx_DFP
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-NN
+    - pack: ARM::CMSIS-DSP
+  target-types:
+    - type: Project
+      device: PY32F030x8
+      processor:
+        trustzone: non-secure
+      compiler: AC6
+      add-path:
+        - ../../../../../../Drivers/CMSIS/Include
+        - ../../../../../../Drivers/PY32F0xx_HAL_Driver/Inc
+        - ../../../../../../Drivers/BSP/PY32F030xx_Start_Kit
+        - ../Inc
+        - ../../../../../../Drivers/CMSIS/Device/PY32F0xx/Include
+      debug: "on"
+      define:
+        - USE_HAL_DRIVER
+        - PY32F030x8
+        - __MICROLIB
+      optimize: none
+      misc:
+        - C-CPP:
+            - -fno-rtti
+            - -funsigned-char
+            - -fshort-enums
+            - -fshort-wchar
+            - -ffunction-sections
+            - -std=c99
+            - -Wno-packed
+            - -Wno-missing-variable-declarations
+            - -Wno-missing-prototypes
+            - -Wno-missing-noreturn
+            - -Wno-sign-conversion
+            - -Wno-nonportable-include-path
+            - -Wno-reserved-id-macro
+            - -Wno-unused-macros
+            - -Wno-documentation-unknown-command
+            - -Wno-documentation
+            - -Wno-license-management
+            - -Wno-parentheses-equality
+          Link:
+            - --library_type=microlib
+            - --map
+            - --load_addr_map_info
+            - --xref
+            - --callgraph
+            - --symbols
+            - --info sizes
+            - --info totals
+            - --info unused
+            - --info veneers
+            - --list
+            - --strict
+            - --summary_stderr
+            - --info summarysizes
+
+  build-types:
+    - type: Debug
+      optimize: none
+      debug: on
+
+    - type: Release
+      optimize: balanced
+      debug: off
+  
+  projects:
+    - project: Project.cproject.yaml

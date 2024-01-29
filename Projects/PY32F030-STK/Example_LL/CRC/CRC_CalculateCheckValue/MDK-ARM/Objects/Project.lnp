@@ -1,0 +1,11 @@
+--cpu Cortex-M0+
+".\objects\system_py32f0xx.o"
+".\objects\startup_py32f030xx.o"
+".\objects\main.o"
+".\objects\py32f0xx_it.o"
+".\objects\py32f030xx_ll_start_kit.o"
+".\objects\py32f0xx_ll_utils.o"
+--library_type=microlib --strict --scatter ".\Objects\Project.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Project.map" -o .\Objects\Project.axf

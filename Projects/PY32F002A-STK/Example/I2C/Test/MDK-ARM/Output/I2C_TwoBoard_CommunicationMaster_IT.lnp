@@ -1,0 +1,20 @@
+--cpu Cortex-M0+
+".\output\system_py32f0xx.o"
+".\output\startup_py32f002xx.o"
+".\output\main.o"
+".\output\py32f0xx_hal_msp.o"
+".\output\py32f0xx_it.o"
+".\output\at24c02.o"
+".\output\py32f002xx_start_kit.o"
+".\output\py32f0xx_hal.o"
+".\output\py32f0xx_hal_rcc.o"
+".\output\py32f0xx_hal_gpio.o"
+".\output\py32f0xx_hal_pwr.o"
+".\output\py32f0xx_hal_uart.o"
+".\output\py32f0xx_hal_cortex.o"
+".\output\py32f0xx_hal_i2c.o"
+".\output\py32f0xx_hal_irda.o"
+--library_type=microlib --strict --scatter ".\Output\I2C_TwoBoard_CommunicationMaster_IT.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Output\I2C_TwoBoard_CommunicationMaster_IT.map" -o .\Output\I2C_TwoBoard_CommunicationMaster_IT.axf

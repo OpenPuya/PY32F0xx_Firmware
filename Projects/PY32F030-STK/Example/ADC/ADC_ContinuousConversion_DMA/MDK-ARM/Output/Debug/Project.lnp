@@ -1,0 +1,24 @@
+--cpu Cortex-M0+
+".\output\debug\startup_py32f030xx.o"
+".\output\debug\system_py32f0xx.o"
+".\output\debug\main.o"
+".\output\debug\py32f0xx_hal_msp.o"
+".\output\debug\py32f0xx_it.o"
+".\output\debug\py32f030xx_start_kit.o"
+".\output\debug\py32f0xx_hal.o"
+".\output\debug\py32f0xx_hal_rcc.o"
+".\output\debug\py32f0xx_hal_rcc_ex.o"
+".\output\debug\py32f0xx_hal_adc.o"
+".\output\debug\py32f0xx_hal_adc_ex.o"
+".\output\debug\py32f0xx_hal_flash.o"
+".\output\debug\py32f0xx_hal_gpio.o"
+".\output\debug\py32f0xx_hal_tim.o"
+".\output\debug\py32f0xx_hal_tim_ex.o"
+".\output\debug\py32f0xx_hal_dma.o"
+".\output\debug\py32f0xx_hal_pwr.o"
+".\output\debug\py32f0xx_hal_uart.o"
+".\output\debug\py32f0xx_hal_cortex.o"
+--library_type=microlib --strict --scatter ".\Output\Debug\Project.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\output\debug\Project.map" -o .\Output\Debug\Project.axf
