@@ -39,8 +39,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -118,7 +126,7 @@ static uint32_t RCC_GetHSIFreq(void);
   */
 
 /** @defgroup RCC_Exported_Functions_Group1 Initialization and de-initialization functions
-  *  @brief    Initialization and Configuration functions
+  * @brief    Initialization and Configuration functions
   *
   @verbatim
  ===============================================================================
@@ -181,9 +189,6 @@ static uint32_t RCC_GetHSIFreq(void);
              adapted accordingly.
 
   @endverbatim
-
-
-
    * @{
   */
 
@@ -935,7 +940,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
 /** @defgroup RCC_Exported_Functions_Group2 Peripheral Control functions
  *  @brief   RCC clocks control functions
  *
-@verbatim
+  @verbatim
  ===============================================================================
                       ##### Peripheral Control functions #####
  ===============================================================================
@@ -946,7 +951,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
     (+) Retrieve current clock frequencies.
     (+) Enable the Clock Security System.
 
-@endverbatim
+  @endverbatim
   * @{
   */
 

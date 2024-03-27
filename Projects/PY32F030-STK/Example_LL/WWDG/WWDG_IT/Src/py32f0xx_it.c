@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -85,14 +93,14 @@ void SysTick_Handler(void)
   */
 void WWDG_IRQHandler(void)
 {
-  /* 查看提前中断是否使能*/
+  /* Check if early wakeup interrupt is enabled*/
   if (LL_WWDG_IsEnabledIT_EWKUP(WWDG) != RESET)
   {
-    /* 查看提前中断是否出现 */
+    /* Check if early wakeup interrupt occurred */
     if(LL_WWDG_IsActiveFlag_EWKUP(WWDG) != RESET)
     {
       LL_WWDG_ClearFlag_EWKUP(WWDG);
-      /* 喂狗 */
+      /* Feed the watchdog */
       LL_WWDG_SetCounter(WWDG, 0x7F);
     }
   }

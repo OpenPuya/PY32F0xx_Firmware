@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -87,10 +95,10 @@ void ADC_COMP_IRQHandler(void)
 {
   if(LL_ADC_IsActiveFlag_AWD(ADC1) != 0)
   {
-    /* 清模拟看门狗标志位 */
+    /* Clear analog watchdog flag */
     LL_ADC_ClearFlag_AWD(ADC1);
     
-    /* 模拟看门狗函数回调 */
+    /* Call analog watchdog function callback */
     APP_AdcAnalogWatchdogCallback();
   }
 }

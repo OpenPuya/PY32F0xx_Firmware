@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@
 /* Private function prototypes -----------------------------------------------*/
 static void APP_SystemClockConfig(void);
 static void APP_ConfigLPTIM_OneShot(void);
-static void APP_uDelay(uint32_t Delay);
+static void APP_uDelay(uint32_t nus);
 static void APP_LPTIMClockconf(void);
 
 /**
@@ -76,8 +84,8 @@ int main(void)
     /* 使能LPTIM */
     LL_LPTIM_Enable(LPTIM1);
     
-    /* 延时65us */
-    APP_uDelay(65);
+    /* 延时75us */
+    APP_uDelay(75);
 
     /* 开启单次模式 */
     LL_LPTIM_StartCounter(LPTIM1,LL_LPTIM_OPERATING_MODE_ONESHOT);
@@ -149,22 +157,17 @@ void APP_LPTIMCallback(void)
 
 /**
   * @brief  微秒延时函数
-  * @param  Delay；延时值
+  * @param  nus ：延时值
   * @retval 无
   */
-static void APP_uDelay(uint32_t Delay)
+static void APP_uDelay(uint32_t nus)
 {
-  uint32_t temp;
-  SysTick->LOAD=Delay*(SystemCoreClock/1000000);
-  SysTick->VAL=0x00;
-  SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;
+  __IO uint32_t Delay =1+ nus * (SystemCoreClock / 24U) / 1000000U;
   do
   {
-    temp=SysTick->CTRL;
+    __NOP();
   }
-  while((temp&0x01)&&!(temp&(1<<16)));
-  SysTick->CTRL=0x00;
-  SysTick->VAL =0x00;
+  while(Delay--);
 }
 
 /**

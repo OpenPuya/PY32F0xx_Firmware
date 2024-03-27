@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -23,9 +31,60 @@
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal.h"
 
+/** @addtogroup PY32F0xx_HAL_Driver
+  * @{
+  */
 #ifdef HAL_LED_MODULE_ENABLED
-static void LED_SetConfig(LED_HandleTypeDef *hled);
 
+/** @defgroup LED LED
+  * @brief LED HAL module driver
+  * @{
+  */
+
+/* Private Functions --------------------------------------------------------*/
+/** @defgroup LED_Private_Functions  LED Private Functions
+ * @{
+ */
+static void LED_SetConfig(LED_HandleTypeDef *hled);
+/**
+  * @}
+  */
+
+/* Private Functions --------------------------------------------------------*/
+/** @defgroup LED_Private_Functions  LED Private Functions
+ * @{
+ */
+/**
+  * @brief  LED Register config
+  * @param  hled Pointer to a LED_HandleTypeDef structure that contains
+  *                the configuration information for the specified LED..
+  * @retval State
+  */
+static void LED_SetConfig(LED_HandleTypeDef *hled)
+{
+  uint32_t tmpreg;
+
+  tmpreg=hled->Init.ComDrive | (hled->Init.ComNum << LED_CR_LED_COM_SEL_Pos);
+  MODIFY_REG(hled->Instance->CR,
+             (uint32_t)(LED_CR_LED_COM_SEL | LED_CR_EHS),
+             tmpreg);
+  WRITE_REG(hled->Instance->PR, hled->Init.Prescaler);
+  WRITE_REG(hled->Instance->TR, (hled->Init.LightTime | (hled->Init.DeadTime<<LED_TR_T2_Pos)));
+}
+/**
+  * @}
+  */
+
+
+/* Exported Functions --------------------------------------------------------*/
+/** @defgroup LED_Exported_Functions LED Exported Functions
+ * @{
+ */
+
+/** @defgroup LED_Exported_Functions_Group1 Initialization/de-initialization functions
+ *  @brief    Initialization and Configuration functions
+ * @{
+ */
 /**
   * @brief  Initializes the LED according to the specified parameters
   *         in the LED_InitTypeDef and initialize the associated handle.
@@ -119,18 +178,25 @@ HAL_StatusTypeDef HAL_LED_DeInit(LED_HandleTypeDef *hled)
   
   return HAL_OK;
 }
+/**
+  * @}
+  */
 
+/** @defgroup LED_Exported_Functions_Group2 LED Operation Functions
+ *  @brief    LED operation functions
+ * @{
+ */
 /**
   * @brief  Sets the specified COM display value
   * @param  hled  Pointer to a LED_HandleTypeDef structure that contains
   *                the configuration information for the specified LED..
-  *         comCh Specify COM channels.
+  * @param  comCh Specify COM channels.
   *            @arg @ref LED_COM0
   *            @arg @ref LED_COM1
   *            @arg @ref LED_COM2
   *            @arg @ref LED_COM3
   *            @arg @ref LED_COM_ALL
-  *         data  Specify display values
+  * @param  data  Specify display values
   *            @arg @ref LED_DISP_0     display value 0
   *            @arg @ref LED_DISP_1     display value 1
   *            @arg @ref LED_DISP_2     display value 2
@@ -194,24 +260,6 @@ HAL_StatusTypeDef HAL_LED_SetComDisplay(LED_HandleTypeDef *hled, uint8_t comCh, 
 }
 
 /**
-  * @brief  LED Register config
-  * @param  hled Pointer to a LED_HandleTypeDef structure that contains
-  *                the configuration information for the specified LED..
-  * @retval State
-  */
-static void LED_SetConfig(LED_HandleTypeDef *hled)
-{
-  uint32_t tmpreg;
-
-  tmpreg=hled->Init.ComDrive | (hled->Init.ComNum << LED_CR_LED_COM_SEL_Pos);
-  MODIFY_REG(hled->Instance->CR,
-             (uint32_t)(LED_CR_LED_COM_SEL | LED_CR_EHS),
-             tmpreg);
-  WRITE_REG(hled->Instance->PR, hled->Init.Prescaler);
-  WRITE_REG(hled->Instance->TR, (hled->Init.LightTime | (hled->Init.DeadTime<<LED_TR_T2_Pos)));
-}
-
-/**
   * @brief Handle LED interrupt request.
   * @param hled LED handle.
   * @retval None
@@ -246,6 +294,21 @@ __weak void HAL_LED_LightCpltCallback(LED_HandleTypeDef *hled)
             the HAL_LED_LightCpltCallback could be implemented in the user file
    */
 }
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+
+/**
+  * @}
+  */
 
 #endif /* HAL_LED_MODULE_ENABLED */
+/**
+  * @}
+  */
 

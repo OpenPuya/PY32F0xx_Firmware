@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -597,14 +605,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 #define IS_SPI_NSS(__NSS__) (((__NSS__) == SPI_NSS_SOFT)       || \
                              ((__NSS__) == SPI_NSS_HARD_INPUT) || \
                              ((__NSS__) == SPI_NSS_HARD_OUTPUT))
-
-/** @brief  Checks if SPI NSS Pulse parameter is in allowed range.
-  * @param  __NSSP__ specifies the SPI NSS Pulse Mode parameter.
-  *         This parameter can be a value of @ref SPI_NSSP_Mode
-  * @retval None
-  */
-#define IS_SPI_NSSP(__NSSP__) (((__NSSP__) == SPI_NSS_PULSE_ENABLE) || \
-                               ((__NSSP__) == SPI_NSS_PULSE_DISABLE))
 
 /** @brief  Checks if SPI Baudrate prescaler parameter is in allowed range.
   * @param  __PRESCALER__ specifies the SPI Baudrate prescaler.

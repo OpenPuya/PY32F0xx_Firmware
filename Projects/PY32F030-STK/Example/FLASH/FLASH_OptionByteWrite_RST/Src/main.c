@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -34,25 +42,33 @@
 static void APP_FlashOBProgram(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
-  /* 初始化LED */  
+  /* Initialize LED */  
   BSP_LED_Init(LED_GREEN);
+  
+  /* Initialize button */
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  
+  /* Wait for button press */
+  while (BSP_PB_GetState(BUTTON_USER))
+  {
+  }
 
-  /* 判断RST管脚 */
+  /* Check RST pin mode */
 #if defined(RSTPIN_MODE_GPIO)
   if( READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE) == OB_RESET_MODE_RESET)
 #else
   if( READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE) == OB_RESET_MODE_GPIO)
 #endif
   {
-    /* 写OPTION */
+    /* Program OPTION byte */
     APP_FlashOBProgram();
   }
 
@@ -73,43 +89,43 @@ int main(void)
 }
 
 /**
-  * @brief  写option空间函数
-  * @param  无
-  * @retval 无
+  * @brief  Function to program option byte space
+  * @param  None
+  * @retval None
   */
 static void APP_FlashOBProgram(void)
 {
   FLASH_OBProgramInitTypeDef OBInitCfg;
 
-  HAL_FLASH_Unlock();        /* 解锁FLASH */
-  HAL_FLASH_OB_Unlock();     /* 解锁OPTION */
+  HAL_FLASH_Unlock();        /* Unlock FLASH */
+  HAL_FLASH_OB_Unlock();     /* Unlock OPTION */
 
-  /* 配置OPTION选项 */
+  /* Configure OPTION settings */
   OBInitCfg.OptionType = OPTIONBYTE_USER;
   OBInitCfg.USERType = OB_USER_BOR_EN | OB_USER_BOR_LEV | OB_USER_IWDG_SW | OB_USER_WWDG_SW | OB_USER_NRST_MODE | OB_USER_nBOOT1;
 
 #if defined(RSTPIN_MODE_GPIO)
-  /* BOR不使能/BOR上升3.2,下降3.1/软件模式看门狗/GPIO功能/System memory作为启动区 */
+  /* Disable BOR/Enable BOR rising 3.2V, falling 3.1V/Software watchdog mode/GPIO functionality/System memory as boot area */
   OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_WWDG_SW | OB_RESET_MODE_GPIO | OB_BOOT1_SYSTEM;
 #else
-  /* BOR不使能/BOR上升3.2,下降3.1/软件模式看门狗/RST功能/System memory作为启动区 */
+  /* Disable BOR/Enable BOR rising 3.2V, falling 3.1V/Software watchdog mode/RST functionality/System memory as boot area */
   OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_WWDG_SW | OB_RESET_MODE_RESET | OB_BOOT1_SYSTEM;
 #endif
 
-  /* 启动option byte编程 */
+  /* Start option byte programming */
   HAL_FLASH_OBProgram(&OBInitCfg);
 
-  HAL_FLASH_Lock();      /* 锁定FLASH */
-  HAL_FLASH_OB_Lock();   /* 锁定OPTION */
+  HAL_FLASH_Lock();      /* Lock FLASH */
+  HAL_FLASH_OB_Lock();   /* Lock OPTION */
 
-  /* 产生一个复位，option byte装载 */
+  /* Generate a reset to load the option bytes */
   HAL_FLASH_OB_Launch();
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -120,16 +136,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

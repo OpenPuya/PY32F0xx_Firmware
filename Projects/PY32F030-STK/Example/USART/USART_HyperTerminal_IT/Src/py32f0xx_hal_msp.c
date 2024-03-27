@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,7 +40,7 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
@@ -41,27 +49,27 @@ void HAL_MspInit(void)
 }
 
 /**
-  * @brief 初始化USART的MSP
+  * @brief Initialize USART-related MSP
   */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-  /* 使能时钟 */
+  /* Enable clock */
   __HAL_RCC_USART2_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /**USART2引脚配置
+  /**USART2 pin configuration
     PA9     ------> USART1_TX
     PA10    ------> USART1_RX
     */
   GPIO_InitTypeDef  GPIO_InitStruct;
-  GPIO_InitStruct.Pin = GPIO_PIN_3 | GPIO_PIN_4;
+  GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_10;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF9_USART2;
+  GPIO_InitStruct.Alternate = GPIO_AF4_USART2;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* 使能NVIC */
+  /* Enable NVIC */
   HAL_NVIC_SetPriority(USART2_IRQn, 0, 1);
   HAL_NVIC_EnableIRQ(USART2_IRQn);
 }

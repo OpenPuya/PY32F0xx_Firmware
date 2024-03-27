@@ -410,7 +410,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/BSP/PY32F30xx_Start_Kit</GroupName>
+          <GroupName>BSP/PY32F30xx_Start_Kit</GroupName>
           <Files>
             <File>
               <FileName>py32f030xx_ll_Start_Kit.c</FileName>

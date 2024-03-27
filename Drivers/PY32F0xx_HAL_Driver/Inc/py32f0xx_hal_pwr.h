@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -283,12 +291,9 @@ typedef struct
   * @}
   */
 
-/* Exported macros -----------------------------------------------------------*/
-/** @defgroup PWR_Exported_Macros  PWR Exported Macros
-  * @{
-  */
 
 #if defined(PWR_PVD_SUPPORT)
+/* Exported macros -----------------------------------------------------------*/
 /** @defgroup PWR_Exported_Macros  PWR Exported Macros
   * @{
   */
@@ -297,7 +302,6 @@ typedef struct
   *         This parameter can be one a combination of following values:
   *            @arg PWR_FLAG_PVDO: Power Voltage Detector Output. Indicates whether
   *                 VDD voltage is below or above the selected PVD threshold.
-  * @endif
   * @retval The new state of __FLAG__ (TRUE or FALSE).
   */
 #define __HAL_PWR_GET_FLAG(__FLAG__)        ((PWR->SR & (__FLAG__)) == (__FLAG__))
@@ -387,11 +391,10 @@ typedef struct
   * @retval None
   */
 #define __HAL_PWR_PVD_EXTI_CLEAR_FLAG()           WRITE_REG(EXTI->PR, PWR_EXTI_LINE_PVD)
-#endif /* PWR_PVD_SUPPORT */
-
 /**
   * @}
   */
+#endif /* PWR_PVD_SUPPORT */
 
 /* Private constants-------------------------------------------------------*/
 /** @defgroup PWREx_WUP_Polarity Shift to apply to retrieve polarity information from PWR_WAKEUP_PINy_xxx constants

@@ -1,0 +1,30 @@
+// File: PY32F071xx.dbgconf
+// Version: 1.0.0
+
+// <<< Use Configuration Wizard in Context Menu >>>
+
+// <h> Debug MCU configuration register (DBGMCU_CR)
+//   <o.1>  DBG_STOP                 <i> Debug stop mode
+// </h>
+DbgMCU_CR = 0x00000002;
+
+// <h> Debug MCU APB freeze1 register (DBG_APB_FZ1)
+//                                   <i> Reserved bits must be kept at reset value
+//   <o.31> DBG_LPTIM_STOP           <i> LPTIM stopped when core is halted
+//   <o.12> DBG_IWDG_STOP            <i> Independent watchdog stopped when core is halted
+//   <o.11> DBG_WWDG_STOP            <i> Window watchdog stopped when core is halted
+//   <o.10> DBG_RTC_STOP             <i> RTC stopped when core is halted
+//   <o.1>  DBG_TIM3_STOP            <i> TIM3 counter stopped when core is halted
+// </h>
+DbgMCU_APB_Fz1 = 0x00000000;
+
+// <h> Debug MCU APB freeze2 register (DBG_APB_FZ2)
+//                                   <i> Reserved bits must be kept at reset value
+//   <o.18> DBG_TIM17_STOP           <i> TIM17 counter stopped when core is halted
+//   <o.17> DBG_TIM16_STOP           <i> TIM16 counter stopped when core is halted
+//   <o.15> DBG_TIM14_STOP           <i> TIM14 counter stopped when core is halted
+//   <o.11> DBG_TIM1_STOP            <i> TIM1 counter stopped when core is halted
+// </h>
+DbgMCU_APB_Fz2 = 0x00000000;
+
+// <<< end of configuration section >>>

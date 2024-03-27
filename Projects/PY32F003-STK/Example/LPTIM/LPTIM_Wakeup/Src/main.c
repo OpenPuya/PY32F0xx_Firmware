@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -152,8 +160,8 @@ static void APP_LPTIMStart(void)
   /* 加载重载值 */
   __HAL_LPTIM_AUTORELOAD_SET(&LPTIMConf, 51);
 
-  /* 延时65us */
-  APP_delay_us(65);
+  /* 延时75us */
+  APP_delay_us(75);
   
   /* 开启单次计数模式 */
   __HAL_LPTIM_START_SINGLE(&LPTIMConf);
@@ -171,24 +179,17 @@ void HAL_LPTIM_AutoReloadMatchCallback(LPTIM_HandleTypeDef *hlptim)
 
 /**
   * @brief   微秒延时函数
-  * @param   nus：延时时间
+  * @param   nus ：延时时间
   * @retval  无
-  * @note    此函数会关闭SysTick中断，如需要使用请重新初始化SysTick
   */
 static void APP_delay_us(uint32_t nus)
  {
-  HAL_SuspendTick();
-  uint32_t temp;
-  SysTick->LOAD=nus*(SystemCoreClock/1000000);
-  SysTick->VAL=0x00;
-  SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;
+  __IO uint32_t Delay =1+ nus * (SystemCoreClock / 24U) / 1000000U;
   do
   {
-    temp=SysTick->CTRL;
+    __NOP();
   }
-  while((temp&0x01)&&!(temp&(1<<16)));
-  SysTick->CTRL=0x00;
-  SysTick->VAL =0x00;
+  while(Delay--);
  }
  
 /**

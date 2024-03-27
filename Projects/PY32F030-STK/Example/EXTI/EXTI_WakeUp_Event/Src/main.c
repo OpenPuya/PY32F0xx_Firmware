@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -33,41 +41,41 @@ EXTI_HandleTypeDef exti_handle;
 static void APP_ConfigureEXTI(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 复位所有外设，初始化flash接口和systick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* 初始化按键BUTTON */
+  /* Initialize button */
   BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
-  /* 配置外部中断 */
+  /* Configure external interrupt */
   APP_ConfigureEXTI();
   
-  /* 暂停systick */
+  /* Suspend SysTick */
   HAL_SuspendTick();
   
-  /* 点亮小灯 */
+  /* Turn on the LED */
   BSP_LED_On(LED_GREEN);
   
-  /* 等待用户按键按下，主机程序开始运行 */
+  /* Wait for the user to press the button to start the main program */
   while (BSP_PB_GetState(BUTTON_KEY) == 1)
   {
   }
   
-  /* 关闭小灯 */
+  /* Turn off the LED */
   BSP_LED_Off(LED_GREEN);
   
-  /* 进入STOP模式 */
-  HAL_PWR_EnterSTOPMode(1, PWR_SLEEPENTRY_WFE);
+  /* Enter STOP mode */
+  HAL_PWR_EnterSTOPMode(1, PWR_STOPENTRY_WFE);
   
-  /* 恢复systick */
+  /* Resume the SysTick interrupt */
   HAL_ResumeTick();
   
   while (1)
@@ -78,29 +86,28 @@ int main(void)
 }
 
 /**
-  * @brief  配置事件引脚引脚
-  * @param  无
-  * @retval 无
+  * @brief  Configure event pin
+  * @param  None
+  * @retval None
   */
 static void APP_ConfigureEXTI(void)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
-  __HAL_RCC_GPIOA_CLK_ENABLE();                  /* 使能GPIOA时钟 */
-  GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING; /* GPIO模式为下降沿中断 */
-  GPIO_InitStruct.Pull  = GPIO_PULLUP;           /* 上拉 */
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  /* 速度为高速 */
+  __HAL_RCC_GPIOA_CLK_ENABLE();                  /* Enable GPIOA clock */
+  GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING; /* GPIO mode set to falling edge event */
+  GPIO_InitStruct.Pull  = GPIO_PULLUP;           /* Pull-up */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  /* High-speed */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
   while (1)
   {
   }
@@ -108,16 +115,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

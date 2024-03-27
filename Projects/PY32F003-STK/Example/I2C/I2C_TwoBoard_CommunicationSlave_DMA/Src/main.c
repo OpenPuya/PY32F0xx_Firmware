@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -24,7 +32,7 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define DARA_LENGTH       15                /* 数据长度 */
+#define DATA_LENGTH       15                /* 数据长度 */
 #define I2C_ADDRESS        0xA0             /* 本机地址0xA0 */
 #define I2C_SPEEDCLOCK   100000             /* 通讯速度100K */
 #define I2C_DUTYCYCLE    I2C_DUTYCYCLE_2    /* 占空比 */
@@ -74,7 +82,7 @@ int main(void)
   }
 
   /*I2C从机DMA方式接收*/
-  while (HAL_I2C_Slave_Receive_DMA(&I2cHandle, (uint8_t *)aRxBuffer, DARA_LENGTH) != HAL_OK)
+  while (HAL_I2C_Slave_Receive_DMA(&I2cHandle, (uint8_t *)aRxBuffer, DATA_LENGTH) != HAL_OK)
   {
     APP_ErrorHandler();
   }
@@ -83,7 +91,7 @@ int main(void)
   {
   }
   /*I2C从机DMA方式发送*/
-  while (HAL_I2C_Slave_Transmit_DMA(&I2cHandle, (uint8_t *)aTxBuffer, DARA_LENGTH) != HAL_OK)
+  while (HAL_I2C_Slave_Transmit_DMA(&I2cHandle, (uint8_t *)aTxBuffer, DATA_LENGTH) != HAL_OK)
   {
     APP_ErrorHandler();
   }
@@ -142,7 +150,7 @@ static void APP_SystemClockConfig(void)
 static void APP_CheckEndOfTransfer(void)
 {
   /* 比较发送数据和接收数据 */
-  if(APP_Buffercmp8((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, DARA_LENGTH))
+  if(APP_Buffercmp8((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, DATA_LENGTH))
   {
     /* 错误处理 */
     APP_LedBlinking();

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -26,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
+TIM_HandleTypeDef      TimHandle;
 TIM_IC_InitTypeDef     sICConfig;
 uint32_t  StartCalibration = 0;
 uint32_t  __IO Capture = 0;
@@ -45,12 +53,32 @@ void HSI_CALIBRATION(uint32_t HSICLKSource_SET);
   */
 int main(void)
 {
-  HAL_RCC_MCOConfig(0, RCC_MCO1SOURCE_HSI, RCC_MCODIV_8);
+  HAL_RCC_MCOConfig(RCC_MCO2, RCC_MCO1SOURCE_HSI, RCC_MCODIV_8);
 
   HAL_Init();
+  /* Initialize LED */  
+  BSP_LED_Init(LED_GREEN);
+  
+  /* Initialize button */
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  
+  /* Wait for button press */
+  while (BSP_PB_GetState(BUTTON_USER))
+  {
+  }
+  
+  /* Turn on the LED */
+  BSP_LED_On(LED_GREEN);
+  
+  /* Calibrate the HSI */
   HSI_CALIBRATION(RCC_HSICALIBRATION_24MHz);
-
-  while (1);
+  
+  while (1)
+  {
+    HAL_Delay(100);
+    /* Toggle LED */
+    BSP_LED_Toggle(LED_GREEN);
+  }
 }
 
 /**
@@ -68,11 +96,9 @@ void HSI_CALIBRATION(uint32_t HSICLKSource_SET)
   /* Get frequency values before calibration */
   HSI_MeasurementInit(HSICLKSource_SET);
 
-  HSI_Rough_Value = Hsi_Rough_Trimming();       /* 高4位校准值 */
-  HSI_Fine_Value = Hsi_Fine_Trimming();         /* 低4位校准值 */
+  HSI_Calibration_value = Hsi_Trimming();         /* 13 bits calibration value */
 
-  HSI_Calibration_value = ((HSI_Rough_Value << 9) & 0x1E00) | (HSI_Fine_Value & 0x1FF);
-  MODIFY_REG(RCC->ICSCR, RCC_ICSCR_HSI_TRIM, (HSI_Calibration_value) << RCC_ICSCR_HSI_TRIM_Pos);
+  MODIFY_REG(RCC->ICSCR, RCC_ICSCR_HSI_TRIM, HSI_Calibration_value);
 }
 
 /**

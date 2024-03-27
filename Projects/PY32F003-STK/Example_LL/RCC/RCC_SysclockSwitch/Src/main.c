@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -29,7 +37,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 static void APP_SystemClockConfig(void);
-static void APP_SetSysclock(uint32_t SYSCLK);
+static void APP_SetSysclock(void);
 static void APP_GPIOConfig(void);
 
 /**
@@ -53,7 +61,7 @@ int main(void)
   LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_SYSCLK,LL_RCC_MCO1_DIV_1);
   
   /* 更换系统时钟为HSE */
-  APP_SetSysclock(LL_RCC_SYS_CLKSOURCE_HSE);
+  APP_SetSysclock();
   
   while (1)
   {
@@ -98,9 +106,10 @@ void APP_SystemClockConfig(void)
 
   /* 设置APB1分频及初始化 */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(24000000);
+  LL_Init1msTick(LSI_VALUE);
+  
   /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(24000000);
+  LL_SetSystemCoreClock(LSI_VALUE);
 }
 
 /**
@@ -108,13 +117,18 @@ void APP_SystemClockConfig(void)
   * @param  无
   * @retval 无
   */
-static void APP_SetSysclock(uint32_t SYSCLK)
+static void APP_SetSysclock(void)
 {
   /* 配置HSE为系统时钟及初始化 */
-  LL_RCC_SetSysClkSource(SYSCLK);
-  while(LL_RCC_GetSysClkSource() != SYSCLK)
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE)
   {
   }
+  
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
+  LL_SetSystemCoreClock(HSE_VALUE);
+  
+  LL_Init1msTick(HSE_VALUE);
 }
 
 /**

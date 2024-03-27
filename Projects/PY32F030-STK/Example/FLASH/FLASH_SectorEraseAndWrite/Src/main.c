@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -24,7 +32,7 @@
 #include "py32f030xx_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-#define FLASH_USER_START_ADDR     (0x08008000 + 1 - 128)
+#define FLASH_USER_START_ADDR     0x0800F000
 
 /* Private variables ---------------------------------------------------------*/
 const uint32_t DATA[64] =
@@ -49,44 +57,44 @@ static void APP_FlashBlank(void);
 static void APP_FlashVerify(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
   
-  /* 初始化按键*/
+  /* Initialize button*/
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN); 
 
-  /* 初始化时钟,配置系统时钟为HSI */
+  /* Initialize clock, configure system clock as HSI */
   APP_SystemClockConfig();  
 
-  /* 等待按键按下，防止每次上电都擦写FLASH */
+  /* Wait for button press to prevent flash programming on every power-up */
   while (BSP_PB_GetState(BUTTON_USER)) 
   {
   }
 
-  /* 解锁FLASH */
+  /* Unlock FLASH */
   HAL_FLASH_Unlock();
 
-  /* 擦除FLASH */
+  /* Erase FLASH */
   APP_FlashErase();
 
-  /* 查空FLASH */
+  /* Check if FLASH is blank */
   APP_FlashBlank();
 
-  /* 写FLASH */
+  /* program FLASH */
   APP_FlashProgram();
 
-  /* 锁定FLASH */
+  /* Lock FLASH */
   HAL_FLASH_Lock();
 
-  /* 校验FLASH */
+  /* Verify FLASH */
   APP_FlashVerify();
 
   BSP_LED_On(LED_GREEN);
@@ -97,89 +105,89 @@ int main(void)
 }
 
 /**
-  * @brief  配置系统时钟
-  * @param  无
-  * @retval 无
+  * @brief  Configure system clock
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* 配置HSI,HSE,LSE,LSI,PLL所有时钟 */
+  /* Configure HSI, HSE, LSI, LSE, PLL clocks */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* 使能HSI */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                      /* HSI预分频 */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;             /* 设置HSI输出时钟为24MHz,库会设置校准值 */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                     /* 禁止HSE */
-  RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* 设置HSE频率范围,没用可以不设置 */
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                     /* 禁止LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                     /* 禁止LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_LOW;                               /* 需要根据晶振规格设置驱动能力 */
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                                  /* 使能PLL */
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;                          /* PLL的时钟源，PLL时钟源只有24M时, 再使能PLL */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* Enable HSI */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                      /* HSI prescaler */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;             /* Set HSI output clock as 24MHz, the library will set the calibration value */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                     /* Disable HSE */
+  RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* Set HSE frequency range, not used, can be left unconfigured */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                     /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                     /* Disable LSE */
+  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_LOW;                               /* Set the drive capability of LSE, adjust according to crystal specifications */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                 /* Disable PLL */
+  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; */                   /* No clock source for PLL */
 
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* 配置时钟 */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* Configure clocks */
   {
     APP_ErrorHandler();
   }
 
-  /* 初始化AHB,APB总线时钟 */
+  /* Initialize AHB, APB bus clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                         /* 配置AHB时钟源 */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                             /* 设置AHB预分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                              /* 设置APB1预分频 */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                         /* Configure AHB clock source */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                             /* Set AHB prescaler */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                              /* Set APB1 prescaler */
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)        /* 配置总线 */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)        /* Configure bus clocks */
   {
     APP_ErrorHandler();
   }
 }
 
 /**
-  * @brief  擦除FLASH
-  * @param  无
-  * @retval 无
+  * @brief  Erase FLASH
+  * @param  None
+  * @retval None
   */
 static void APP_FlashErase(void)
 {
   uint32_t SECTORError = 0;
   FLASH_EraseInitTypeDef EraseInitStruct;
 
-  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* 擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦 */
-  EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* 擦写起始地址  */
-  EraseInitStruct.NbSectors  = 1;                                 /* 需要擦写的扇区数量  */
-  if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK)/* 执行sector擦除,SECTORError返回擦写错误的sector,返回0xFFFFFFFF,表示擦写成功  */
+  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* Erase type: FLASH_TYPEERASE_PAGEERASE = erase by page, FLASH_TYPEERASE_SECTORERASE = erase by sector */
+  EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* Erase start address  */
+  EraseInitStruct.NbSectors  = 1;                                 /* Number of sectors to erase  */
+  if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK)/* Perform sector erase, SECTORError returns the sector with erase error, 0xFFFFFFFF indicates successful erase  */
   {
     APP_ErrorHandler();
   }
 }
 
 /**
-  * @brief  写入FLASH
-  * @param  无
-  * @retval 无
+  * @brief  Program FLASH
+  * @param  None
+  * @retval None
   */
 static void APP_FlashProgram(void)
 {
-  uint32_t flash_program_start = FLASH_USER_START_ADDR ;                /* flash写起始地址 */
-  uint32_t flash_program_end = (FLASH_USER_START_ADDR + sizeof(DATA));  /* flash写结束地址 */
-  uint32_t *src = (uint32_t *)DATA;                                     /* 数组指针 */
+  uint32_t flash_program_start = FLASH_USER_START_ADDR ;                /* Start address for flash program */
+  uint32_t flash_program_end = (FLASH_USER_START_ADDR + sizeof(DATA));  /* End address for flash program */
+  uint32_t *src = (uint32_t *)DATA;                                     /* Pointer to the array */
 
   while (flash_program_start < flash_program_end)
   {
-    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_PAGE, flash_program_start, src) == HAL_OK)/* 执行Program */
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_PAGE, flash_program_start, src) == HAL_OK)/* Execute Program */
     {
-      flash_program_start += FLASH_PAGE_SIZE; /* flash起始指针指向第一个page */
-      src += FLASH_PAGE_SIZE / 4;             /* 更新数据指针 */
+      flash_program_start += FLASH_PAGE_SIZE; /* Set flash start pointer to the first page */
+      src += FLASH_PAGE_SIZE / 4;             /* Update the data pointer */
     }
   }
 }
 
 /**
-  * @brief  查空FLASH
-  * @param  无
-  * @retval 无
+  * @brief  Check if Flash is blank
+  * @param  None
+  * @retval None
   */
 static void APP_FlashBlank(void)
 {
@@ -196,9 +204,9 @@ static void APP_FlashBlank(void)
 }
 
 /**
-  * @brief  校验FLASH
-  * @param  无
-  * @retval 无
+  * @brief  Verify FLASH
+  * @param  None
+  * @retval None
   */
 static void APP_FlashVerify(void)
 {
@@ -215,9 +223,9 @@ static void APP_FlashVerify(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -228,16 +236,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

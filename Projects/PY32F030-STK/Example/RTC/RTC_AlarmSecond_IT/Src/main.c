@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -35,29 +43,29 @@ static void APP_RtcAlarmConfig(void);
 static void APP_RtcTimeShow(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 复位所有外设，初始化flash接口和systick.*/
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
-  /* 系统时钟配置 */
+  /* System clock configuration */
   APP_SystemClockConfig();
   
-  /* UART初始化 */
+  /* UART initialization */
   DEBUG_USART_Config();
   
-  /* RTC初始化 */
-  RtcHandle.Instance = RTC;                       /* 选择RTC */
-  RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND; /* RTC一秒时基自动计算 */
+  /* RTC initialization */
+  RtcHandle.Instance = RTC;                       /* Select RTC */
+  RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND; /* RTC asynchronous prescaler calculated automatically for one second time base */
   if (HAL_RTC_Init(&RtcHandle) != HAL_OK)
   {
     APP_ErrorHandler();
   }
   
-  /* RTC时钟配置 */
+  /* RTC clock configuration */
   APP_RtcAlarmConfig();
   
   while (1)
@@ -66,9 +74,9 @@ int main(void)
 }
 
 /**
-  * @brief  RTC事件执行函数，通过串口答应当前时间
-  * @param  hrtc：RTC句柄
-  * @retval 无
+  * @brief  RTC event callback function, prints the current time via UART
+  * @param  hrtc：RTC handle
+  * @retval None
   */
 void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc)
 {
@@ -77,9 +85,9 @@ void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc)
 }
 
 /**
-  * @brief  RTC闹钟配置
-  * @param  无
-  * @retval 无
+  * @brief  RTC alarm configuration
+  * @param  None
+  * @retval None
   */
 static void APP_RtcAlarmConfig(void)
 {
@@ -87,7 +95,7 @@ static void APP_RtcAlarmConfig(void)
   RTC_TimeTypeDef  stimestructure;
   RTC_AlarmTypeDef salarmstructure;
 
-  /* 设置日期: 2021/5/21 星期二 */
+  /* Set date: 2021/5/21, Tuesday */
   sdatestructure.Year = 0x21;
   sdatestructure.Month = 0x05;
   sdatestructure.Date = 0x21;
@@ -97,7 +105,7 @@ static void APP_RtcAlarmConfig(void)
     APP_ErrorHandler();
   }
 
-  /* 设置时间: 12:13:00 */
+  /* Set time: 12:13:00 */
   stimestructure.Hours = 0x12;
   stimestructure.Minutes = 0x13;
   stimestructure.Seconds = 0x00;
@@ -106,7 +114,7 @@ static void APP_RtcAlarmConfig(void)
     APP_ErrorHandler();
   }
 
-  /*设置RTC闹钟，时间到12:13:35产生中断*/
+  /* Set RTC alarm, generate interrupt when the time reaches 12:13:35 */
   salarmstructure.AlarmTime.Hours = 0x12;
   salarmstructure.AlarmTime.Minutes = 0x13;
   salarmstructure.AlarmTime.Seconds = 0x35;
@@ -117,56 +125,56 @@ static void APP_RtcAlarmConfig(void)
 }
 
 /**
-  * @brief  显示RTC当前时间
-  * @param  无
-  * @retval 无
+  * @brief  Show the current RTC time
+  * @param  None
+  * @retval None
   */
 static void APP_RtcTimeShow(void)
 {
   RTC_DateTypeDef sdatestructureget;
   RTC_TimeTypeDef stimestructureget;
   
-  /*设置RTC当前时间*/
+  /* Get the current RTC time */
   HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
 
-  /* 设置RTC当前日期 */
+  /* Get the current RTC date */
   HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
 
-  /* 显示时间格式为 : hh:mm:ss */
+  /* Display the time in the format: hh:mm:ss */
   printf("%02d:%02d:%02d\r\n", stimestructureget.Hours, stimestructureget.Minutes, stimestructureget.Seconds);
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /*配置时钟源HSE/HSI/LSE/LSI*/
+  /* Configure clock source HSE/HSI/LSE/LSI */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                    /* 开启HSI */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;            /* 配置HSI输出时钟为8MHz */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                    /* HSI不分频 */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                   /* 关闭HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                               /* HSE工作频率范围16M~32M */
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                   /* 关闭LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                   /* 关闭LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;                          /* LSE默认驱动能力 */
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                               /* 关闭PLL */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                    /* Enable HSI */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;            /* Configure HSI output clock as 8MHz */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                    /* HSI not divided */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                   /* Disable HSE */
+  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                               /* HSE frequency range 16M~32M */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                   /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                   /* Disable LSE */
+  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;                          /* LSE default driving capability */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                               /* Disable PLL */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  /*初始化CPU,AHB,APB总线时钟 */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC系统时钟类型 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                        /* SYSCLK的源选择为HSI */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                            /* APH时钟不分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟不分频 */
+  /* Initialize CPU, AHB, APB bus clocks */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                        /* SYSCLK source selection as HSI */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                            /* AHB clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB clock not divided */
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     APP_ErrorHandler();
@@ -174,13 +182,12 @@ static void APP_SystemClockConfig(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
   while (1)
   {
   }
@@ -188,16 +195,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

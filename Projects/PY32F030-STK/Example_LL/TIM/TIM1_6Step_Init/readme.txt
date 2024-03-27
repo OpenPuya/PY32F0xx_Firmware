@@ -1,20 +1,35 @@
 ================================================================================
                                 样例使用说明
+                             Sample Description
 ================================================================================
 功能描述：
 此样例演示了使用TIM1产生“六步PWM信号”，每间隔1ms在SysTick中断中触发换向，实现无刷
 电机的换向。
 
+Function descriptions:
+This sample demonstrates the generation of "six-step PWM signals" using TIM1. 
+The commutation of the brushless motor is triggered every 1ms in the SysTick 
+interrupt.
 ================================================================================
 测试环境：
 测试用板：PY32F030_STK
 MDK版本： 5.28
 IAR版本： 9.20
+GCC版本： GNU Arm Embedded Toolchain 10.3-2021.10
+
+Test environment:
+Test board: PY32F030_STK
+MDK Version: 5.28
+IAR Version: 9.20
+GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
-1. 编译下载程序到MCU，并运行
-2. 使用逻辑分析仪观察引脚PA7/PA8/PA9/PA10/PB0/PB1的波形
+1. 编译下载程序到MCU，并运行；
+2. 使用逻辑分析仪观察引脚PA7/PA8/PA9/PA10/PB0/PB1的波形。
 
+Example execution steps:
+1.Compile and download the program to the MCU, and then run it.
+2.Use a logic analyzer to observe the waveforms on pins PA7/PA8/PA9/PA10/PB0/PB1.
 ================================================================================
 注意事项：
 换向步骤和波形如下所示：
@@ -35,4 +50,22 @@ CH2N (PB00)   |||||||||||||||________________________________
 CH3  (PA10)   _______||||||||||||||||________________________
 CH3N (PB01)   ________________________________|||||||||||||||
 
+Notes:
+The commutation steps and waveforms are as follows:
+                step 1  step 2  step 3  step 4  step 5  step 6     
+CH1               1       0       0      0        0       1        
+CH1N              0       0       1      1        0       0        
+CH2               0       0       0      1        1       0        
+CH2N              1       1       0      0        0       0        
+CH3               0       1       1      0        0       0        
+CH3N              0       0       0      0        1       1        
+
+CH1  (PA08)   |||||||_________________________________|||||||
+CH1N (PA07)   _______________||||||||||||||||________________
+                                  
+CH2  (PA09)   _______________________||||||||||||||||________
+CH2N (PB00)   |||||||||||||||________________________________
+                                  
+CH3  (PA10)   _______||||||||||||||||________________________
+CH3N (PB01)   ________________________________|||||||||||||||
 ================================================================================

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup PY32F0XX_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -209,11 +217,10 @@ typedef struct
   */
 #define LL_RCC_LSCO_CLKSOURCE_LSI          0x00000000U                 /*!< LSI selection for low speed clock  */
 #define LL_RCC_LSCO_CLKSOURCE_LSE          RCC_BDCR_LSCOSEL            /*!< LSE selection for low speed clock  */
-#endif
 /**
   * @}
   */
-
+#endif
 
 /** @defgroup RCC_LL_EC_SYS_CLKSOURCE  System clock switch
   * @{
@@ -947,12 +954,12 @@ __STATIC_INLINE uint32_t LL_RCC_LSCO_GetSource(void)
 {
   return (uint32_t)(READ_BIT(RCC->BDCR, RCC_BDCR_LSCOSEL));
 }
-
+#endif
 /**
   * @}
   */
 #endif
-#endif
+
 /** @defgroup RCC_LL_EF_System System
   * @{
   */
@@ -1192,7 +1199,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetMCODiv(uint32_t MCOx)
 /**
   * @brief  Configure PVD clock source
   * @rmtoll CCIPR        PVDSEL     LL_RCC_SetCOMPClockSource
-  * @param  PVDxSource This parameter can be one of the following values:
+  * @param  PVDSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_PVD_CLKSOURCE_PCLK1
   *         @arg @ref LL_RCC_PVD_CLKSOURCE_LSC
   * @retval None
@@ -1881,7 +1888,7 @@ ErrorStatus LL_RCC_DeInit(void);
 void        LL_RCC_GetSystemClocksFreq(LL_RCC_ClocksTypeDef *RCC_Clocks);
 uint32_t    LL_RCC_GetMCOClockFreq(uint32_t MCOx);
 uint32_t    LL_RCC_GetLSCClockFreq(void);
-#if defined(PVD)
+#if defined(RCC_CCIPR_PVDSEL)
 uint32_t    LL_RCC_GetPVDClockFreq(void);
 #endif
 #if defined(COMP1)
@@ -1890,7 +1897,7 @@ uint32_t    LL_RCC_GetCOMPClockFreq(uint32_t COMPx);
 #if defined(LPTIM1)
 uint32_t    LL_RCC_GetLPTIMClockFreq(uint32_t LPTIMx);
 #endif 
-#if defined(TRC)
+#if defined(RTC)
 uint32_t    LL_RCC_GetRTCClockFreq(void);
 #endif
 /**

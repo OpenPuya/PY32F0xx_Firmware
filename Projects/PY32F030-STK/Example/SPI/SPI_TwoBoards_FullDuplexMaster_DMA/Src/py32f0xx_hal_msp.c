@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,7 +40,7 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
@@ -41,19 +49,19 @@ void HAL_MspInit(void)
 }
 
 /**
-  * @brief 初始化SPI的MSP
+  * @brief Initialize MSP for SPI
   */
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
-  /* SPI1 初始化 */
+  /* Initialize SPI1 */
   if (hspi->Instance == SPI1)
   {
-    __HAL_RCC_GPIOB_CLK_ENABLE();                   /* GPIOB时钟使能 */
-    __HAL_RCC_GPIOA_CLK_ENABLE();                   /* GPIOA时钟使能 */
-    __HAL_RCC_SYSCFG_CLK_ENABLE();                  /* 使能SYSCFG时钟 */
-    __HAL_RCC_SPI1_CLK_ENABLE();                    /* SPI1时钟使能 */
-    __HAL_RCC_DMA_CLK_ENABLE();                     /* DMA时钟使能 */
+    __HAL_RCC_GPIOB_CLK_ENABLE();                   /* Enable GPIOB clock */
+    __HAL_RCC_GPIOA_CLK_ENABLE();                   /* Enable GPIOA clock */
+    __HAL_RCC_SYSCFG_CLK_ENABLE();                  /* Enable SYSCFG clock */
+    __HAL_RCC_SPI1_CLK_ENABLE();                    /* Enable SPI1 clock */
+    __HAL_RCC_DMA_CLK_ENABLE();                     /* Enable DMA clock */
     HAL_SYSCFG_DMA_Req(1);                          /* SPI1_TX DMA_CH1 */
     HAL_SYSCFG_DMA_Req(0x200);                      /* SPI1_RX DMA_CH2 */
     /*
@@ -62,7 +70,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
       PB5-MOSI(AF0)
       PA15-NSS(AF0)
     */
-    /*SCK*/
+    /* SPI SCK GPIO pin configuration  */
     GPIO_InitStruct.Pin       = GPIO_PIN_3;
     if (hspi->Init.CLKPolarity == SPI_POLARITY_LOW)
     {
@@ -86,16 +94,16 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 
-    /*GPIO配置为SPI：MISO/MOSI*/
+    /* Configure GPIO as SPI: MISO/MOSI*/
     GPIO_InitStruct.Pin       = GPIO_PIN_4 | GPIO_PIN_5;
     GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-    /*中断配置*/
+    /* Interrupt configuration */
     HAL_NVIC_SetPriority(SPI1_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(SPI1_IRQn);
-    /*DMA_CH1配置*/
+    /* DMA_CH1 configuration */
     HdmaCh1.Instance                 = DMA1_Channel1;
     HdmaCh1.Init.Direction           = DMA_MEMORY_TO_PERIPH;
     HdmaCh1.Init.PeriphInc           = DMA_PINC_DISABLE;
@@ -112,12 +120,12 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     }
     HdmaCh1.Init.Mode                = DMA_NORMAL;
     HdmaCh1.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-    /*DMA初始化*/
+    /* DMA initialization */
     HAL_DMA_Init(&HdmaCh1);
-    /*DMA句柄关联到SPI句柄*/
+    /* Link DMA handle with SPI handle */
     __HAL_LINKDMA(hspi, hdmatx, HdmaCh1);
 
-    /*DMA_CH2配置*/
+    /* DMA_CH2 configuration */
     HdmaCh2.Instance                 = DMA1_Channel2;
     HdmaCh2.Init.Direction           = DMA_PERIPH_TO_MEMORY;
     HdmaCh2.Init.PeriphInc           = DMA_PINC_DISABLE;
@@ -134,11 +142,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     }
     HdmaCh2.Init.Mode                = DMA_NORMAL;
     HdmaCh2.Init.Priority            = DMA_PRIORITY_LOW;
-    /*DMA初始化*/
+    /* DMA initialization */
     HAL_DMA_Init(&HdmaCh2);
-    /*DMA句柄关联到SPI句柄*/
+    /* Link DMA handle with SPI handle */
     __HAL_LINKDMA(hspi, hdmarx, HdmaCh2);
-    /*DMA中断设置*/
+    /* DMA interrupt configuration */
     HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
     HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 1, 0);
@@ -146,20 +154,20 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
   }
   else if (hspi->Instance == SPI2)
   {
-    __HAL_RCC_GPIOA_CLK_ENABLE();                   /* GPIOA时钟使能 */
-    __HAL_RCC_GPIOB_CLK_ENABLE();                   /* GPIOB时钟使能 */
-    __HAL_RCC_SYSCFG_CLK_ENABLE();                  /* 使能SYSCFG时钟 */
-    __HAL_RCC_SPI2_CLK_ENABLE();                    /* SPI2时钟使能 */
+    __HAL_RCC_GPIOA_CLK_ENABLE();                   /* Enable GPIOA clock */
+    __HAL_RCC_GPIOB_CLK_ENABLE();                   /* Enable GPIOB clock */
+    __HAL_RCC_SYSCFG_CLK_ENABLE();                  /* Enable SYSCFG clock */
+    __HAL_RCC_SPI2_CLK_ENABLE();                    /* Enable SPI2 clock */
     HAL_SYSCFG_DMA_Req(3);                          /* SPI2_TX DMA_CH1 */
     HAL_SYSCFG_DMA_Req(0x00);                       /* SPI2_RX DMA_CH2 */
-    /*GPIO配置为SPI：SCK/MISO/MOSI*/
+    /* Configure GPIO pins for SPI: SCK/MISO/MOSI*/
     /*
       PA0-SCK  (AF0)
       PA3-MISO(AF0)
       PB7-MOSI(AF1)
       PB8-NSS  (AF1)
     */
-    /*GPIO配置为SPI：SCK*/
+    /* Configure GPIO pins for SPI: SCK*/
     GPIO_InitStruct.Pin       = GPIO_PIN_0;
     GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
     if (hspi->Init.CLKPolarity == SPI_POLARITY_LOW)
@@ -174,7 +182,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     GPIO_InitStruct.Alternate = GPIO_AF0_SPI2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    /*GPIO配置为SPI：MOSI/NSS*/
+    /* Configure GPIO pins for SPI: MOSI/NSS*/
     GPIO_InitStruct.Pin       = GPIO_PIN_7 | GPIO_PIN_8;
     GPIO_InitStruct.Alternate = GPIO_AF1_SPI2;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -184,7 +192,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 
     HAL_NVIC_SetPriority(SPI2_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(SPI2_IRQn);
-    /*DMA_CH1配置*/
+    /* DMA_CH1 configuration */
     HdmaCh1.Instance                 = DMA1_Channel1;
     HdmaCh1.Init.Direction           = DMA_MEMORY_TO_PERIPH;
     HdmaCh1.Init.PeriphInc           = DMA_PINC_DISABLE;
@@ -202,12 +210,12 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     }
     HdmaCh1.Init.Mode                = DMA_NORMAL;
     HdmaCh1.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-    /*DMA初始化*/
+    /* DMA initialization */
     HAL_DMA_Init(&HdmaCh1);
-    /*DMA句柄关联到SPI句柄*/
+    /* Link the DMA handle with the SPI handle */
     __HAL_LINKDMA(hspi, hdmatx, HdmaCh1);
 
-    /*DMA_CH2配置*/
+    /* DMA_CH2 configuration */
     HdmaCh2.Instance                 = DMA1_Channel2;
     HdmaCh2.Init.Direction           = DMA_PERIPH_TO_MEMORY;
     HdmaCh2.Init.PeriphInc           = DMA_PINC_DISABLE;
@@ -224,11 +232,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     }
     HdmaCh2.Init.Mode                = DMA_NORMAL;
     HdmaCh2.Init.Priority            = DMA_PRIORITY_HIGH;
-    /*DMA初始化*/
+    /* DMA initialization */
     HAL_DMA_Init(&HdmaCh2);
-    /*DMA句柄关联到SPI句柄*/
+    /* Link the DMA handle with the SPI handle */
     __HAL_LINKDMA(hspi, hdmarx, HdmaCh2);
-    /*DMA中断设置*/
+    /* DMA interrupt configuration */
     HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 1);
     HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
     HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 1, 1);
@@ -237,18 +245,18 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 }
 
 /**
-  * @brief 反初始化I2C的MSP
+  * @brief Deinitializes the SPI's MSP
   */
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi)
 {
   if (hspi->Instance == SPI1)
   {
-    /* 复位SPI外设 */
+    /* Reset SPI clock */
     __HAL_RCC_SPI1_FORCE_RESET();
     __HAL_RCC_SPI1_RELEASE_RESET();
 
-    /* 关闭外设和GPIO时钟 */
-    /* 取消配置SPI SCK*/
+    /* Disable peripheral and GPIO clocks */
+    /* Deconfigure SPI SCK */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_15);
 

@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -19,7 +27,7 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
- */
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "py32f030xx_ll_Start_Kit.h"
@@ -204,6 +212,10 @@ uint32_t BSP_PB_GetState(Button_TypeDef Button)
   */
 void BSP_USART_Config(void)
 {
+#if  defined(__GNUC__)
+  setvbuf(stdout, NULL, _IONBF, 0 );
+#endif
+
   DEBUG_USART_CLK_ENABLE();
 
   /* USART Init */
@@ -280,6 +292,31 @@ int putchar(int ch)
 
   return (ch);
 }
+#elif  defined(__GNUC__)
+/**
+  * @brief  writes a character to the usart
+  * @param  ch
+  * @retval the character
+  */
+int __io_putchar(int ch)
+{
+  /* Send a byte to USART */
+  LL_USART_TransmitData8(DEBUG_USART, ch);
+  while (!LL_USART_IsActiveFlag_TC(DEBUG_USART));
+  LL_USART_ClearFlag_TC(DEBUG_USART);
+  return ch;
+}
+
+int _write(int file, char *ptr, int len)
+{
+  int DataIdx;
+  for (DataIdx=0;DataIdx<len;DataIdx++)
+  {
+    __io_putchar(*ptr++);
+  }
+  return len;
+}
+
 #endif
 
 //#endif

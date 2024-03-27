@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -85,22 +93,22 @@ void SysTick_Handler(void)
   */
 void SPI1_IRQHandler(void)
 {
-  /* 检查 ISR 寄存器中的 RXNE 标志值 */
+  /* Check RXNE flag value in ISR register */
   if(LL_SPI_IsActiveFlag_RXNE(SPI1))
   {
-    /* 调用接收回调 */
+    /* Call receive callback function */
     APP_SpiRxCallback();
   }
   /* Check RXNE flag value in ISR register */
   else if(LL_SPI_IsActiveFlag_TXE(SPI1))
   {
-    /* 调用发送回调 */
+    /* Call transmit callback function */
     APP_SpiTxCallback();
   }
-  /* 检查 ISR 寄存器中的 STOP 标志值 */
+  /* Check OVR flag value in ISR register */
   else if(LL_SPI_IsActiveFlag_OVR(SPI1))
   {
-    /* 调用错误函数 */
+    /* Call error function */
     APP_SpiTransferErrorCallback();
   }
 }

@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>PY32F003x8</Device>
           <Vendor>Puya</Vendor>
-          <PackID>Puya.PY32F0xx_DFP.1.1.0</PackID>
+          <PackID>Puya.PY32F0xx_DFP.1.1.8</PackID>
           <PackURL>https://www.puyasemi.com/</PackURL>
           <Cpu>IRAM(0x20000000,0x00002000) IROM(0x08000000,0x00010000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>PY32F003x8,USE_FULL_LL_DRIVE</Define>
+              <Define>PY32F003x8,USE_FULL_LL_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Inc;..\Inc;..\..\..\..\..\..\Drivers\CMSIS\Device\PY32F0xx\Include;..\..\..\..\..\..\Drivers\BSP\PY32F003xx_Start_Kit</IncludePath>
             </VariousControls>

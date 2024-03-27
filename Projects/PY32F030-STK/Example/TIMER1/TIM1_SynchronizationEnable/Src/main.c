@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -37,70 +45,70 @@ TIM_OC_InitTypeDef sConfig;
 static void APP_SystemClockConfig(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
   
-  /* 系统时钟配置 */
+  /* System clock configuration */
   APP_SystemClockConfig(); 
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  TimHandle.Instance = TIM1;                                           /* 选择TIM1 */
-  TimHandle.Init.Period            = 8000 - 1;                         /* 自动重装载值 */
-  TimHandle.Init.Prescaler         = 100 - 1;                          /* 预分频为100-1 */
-  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;           /* 时钟不分频 */
-  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;               /* 向上计数 */
-  TimHandle.Init.RepetitionCounter = 1 - 1;                            /* 不重复计数 */
-  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;   /* 自动重装载寄存器没有缓冲 */
-  /* TIM1初始化 */
+  TimHandle.Instance = TIM1;                                           /* Select TIM1 */
+  TimHandle.Init.Period            = 8000 - 1;                         /* Auto-reload value */
+  TimHandle.Init.Prescaler         = 100 - 1;                          /* Prescaler of 100-1 */
+  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;           /* No clock division */
+  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;               /* Up counting */
+  TimHandle.Init.RepetitionCounter = 1 - 1;                            /* No repetition counting */
+  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;   /* Auto-reload register not buffered */
+  /* Initialize TIM1 */
   if (HAL_TIM_Base_Init(&TimHandle) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  htim3.Instance = TIM3;                                               /* 选择TIM3 */
-  htim3.Init.Prescaler = 1000 - 1;                                     /* 预分频为1000-1 */
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;                         /* 向上计数 */
-  htim3.Init.Period = 8000 - 1;                                        /* 自动重装载值 */
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;                   /* 时钟不分频 */
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;       /* 自动重装载寄存器没有缓冲 */
-  /* OC输出初始化 */
+  htim3.Instance = TIM3;                                               /* Select TIM3 */
+  htim3.Init.Prescaler = 1000 - 1;                                     /* Prescaler of 1000-1 */
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;                         /* Up counting */
+  htim3.Init.Period = 8000 - 1;                                        /* Auto-reload value */
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;                   /* No clock division */
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;       /* Auto-reload register not buffered */
+  /* Initialize OC output */
   if (HAL_TIM_OC_Init(&htim3) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;                 /* 主时钟更新事件产生TRGO信号 */
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;         /* 主从模式关闭 */
-  /* TIM3配置为主模式 */
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;                 /* Master clock generates TRGO signal on update event */
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;         /* Master/slave mode disabled */
+  /* Configure TIM3 as master mode */
   HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
 
-  sSlaveConfig.SlaveMode        = TIM_SLAVEMODE_TRIGGER;               /* 从模式选择为触发模式 */
-  sSlaveConfig.InputTrigger     = TIM_TS_ITR2;                         /* TIM1的触发选择为TIM3 */
-  sSlaveConfig.TriggerPolarity  = TIM_TRIGGERPOLARITY_NONINVERTED;     /* 外部触发极性不反相 */
-  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;           /* 外部触发不分频 */
-  sSlaveConfig.TriggerFilter    = 0;                                   /* 不滤波 */
-  /* TIM1配置为从模式 */
+  sSlaveConfig.SlaveMode        = TIM_SLAVEMODE_TRIGGER;               /* Slave mode selected as trigger mode */
+  sSlaveConfig.InputTrigger     = TIM_TS_ITR2;                         /* Trigger source for TIM1 is TIM3 */
+  sSlaveConfig.TriggerPolarity  = TIM_TRIGGERPOLARITY_NONINVERTED;     /* External trigger polarity is non-inverted */
+  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;           /* External trigger is not prescaled */
+  sSlaveConfig.TriggerFilter    = 0;                                   /* No trigger input filter */
+  /* Configure TIM1 as slave mode */
   if (HAL_TIM_SlaveConfigSynchro(&TimHandle, &sSlaveConfig) != HAL_OK)
   {
     APP_ErrorHandler();
   }
-  /* 使能TIM1更新中断 */
+  /* Enable TIM1 update interrupt */
   __HAL_TIM_ENABLE_IT(&TimHandle, TIM_IT_UPDATE);
   
-  /* TIM3的OC输出启动 */
+  /* Start OC output of TIM3 */
   if (HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1) != HAL_OK)
   {
     APP_ErrorHandler();
   }
   
-  /*无限循环*/
+  /*Infinite loop*/
   while (1)
   {
   }
@@ -108,50 +116,50 @@ int main(void)
 }
 
 /**
-  * @brief  TIM更新中断回调函数
-  * @param  htim：TIM句柄
-  * @retval 无
+  * @brief  Period elapsed callback in non blocking mode
+  * @param  htim：TIM handle
+  * @retval None
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* 翻转LED */
+  /* Toggle LED */
   BSP_LED_Toggle(LED_GREEN);
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 void APP_SystemClockConfig(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* 振荡器配置 */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE; /* 选择振荡器HSE,HSI,LSI,LSE */
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* 开启HSI */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI 1分频 */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* 配置HSI时钟8MHz */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
+  /* Oscillator configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE; /* Select oscillators HSE, HSI, LSI, LSE */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* Enable HSI */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* Configure HSI clock as 8MHz */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
   /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* 关闭LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* 关闭LSE */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* 关闭PLL */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* Disable PLL */
   /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;*/
-  /* 配置振荡器 */
+  /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  /* 时钟源配置 */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* 选择配置时钟 HCLK,SYSCLK,PCLK1 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* 选择HSI作为系统时钟 */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB时钟 1分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB时钟 1分频 */
-  /* 配置时钟源 */
+  /* Clock source configuration */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* Select clock types HCLK, SYSCLK, PCLK1 */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* Select HSI as the system clock */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB  clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB  clock not divided */
+  /* Configure clock source */
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     APP_ErrorHandler();
@@ -159,13 +167,12 @@ void APP_SystemClockConfig(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
   while (1)
   {
   }
@@ -173,16 +180,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

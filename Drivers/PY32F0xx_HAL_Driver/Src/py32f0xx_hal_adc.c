@@ -16,8 +16,6 @@
   *           + State functions
   *             ++ ADC state machine management
   *             ++ Interrupts and flags management
-  *          Other functions (extended functions) are available in file
-  *          "py32f0xx_hal_adc_ex.c".
   *
   @verbatim
   ==============================================================================
@@ -50,12 +48,21 @@
 
   (+) ADC input range: from Vref- (connected to Vssa) to Vref+ (connected to
       Vdda or to an external voltage reference).
+  @endverbatim
 
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -71,7 +78,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal.h"
 
-/** @addtogroup PY32F0xxHAL_Driver
+/** @addtogroup PY32F0xx_HAL_Driver
   * @{
   */
 
@@ -298,7 +305,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef* hadc)
     /*  - data alignment                                                      */
     /*  - resolution                                                          */
     /*  - scan direction                                                      */
-    /*  - DMA continuous request                                              */	
+    /*  - DMA continuous request                                              */  
 #if (defined(DMA) || defined(DMA1))
     hadc->Instance->CFGR1 &= ~( ADC_CFGR1_DISCEN  |
                                 ADC_CFGR1_CONT    |
@@ -974,8 +981,8 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Ti
       return HAL_ERROR;
     }
     else
-    {	
-#endif	
+    {  
+#endif  
       tmp_Flag_EOC = (ADC_FLAG_EOC | ADC_FLAG_EOS);
 #if (defined(DMA) || defined(DMA1))
     }
@@ -1555,7 +1562,7 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef* hadc)
     /* overrun ")                                                             */
     /* Exception for usage with DMA overrun event always considered as an     */
     /* error.                                                                 */
-#if (defined(DMA) || defined(DMA1))		
+#if (defined(DMA) || defined(DMA1))    
     if ((hadc->Init.Overrun == ADC_OVR_DATA_PRESERVED)            ||
         HAL_IS_BIT_SET(hadc->Instance->CFGR1, ADC_CFGR1_DMAEN)  )
 #else
@@ -2234,6 +2241,13 @@ static void ADC_DMAError(DMA_HandleTypeDef *hdma)
 #endif /* USE_HAL_ADC_REGISTER_CALLBACKS */
 }
 #endif
+/**
+  * @}
+  */
+
+/** @addtogroup ADC_Exported_Functions_Group2
+  * @{
+  */
 
 /**
   * @brief  Config ADC Calibration Sample Time and Selection.

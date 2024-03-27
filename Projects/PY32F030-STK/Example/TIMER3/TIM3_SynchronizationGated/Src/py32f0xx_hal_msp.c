@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,26 +40,26 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief   初始化全局MSP
+  * @brief   Initialize global MSP
   */
 void HAL_MspInit(void)
 {
 }
 
 /**
-  * @brief   初始TIM相关MSP
+  * @brief   Initialize TIM-related MSP
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
   GPIO_InitTypeDef   GPIO_InitStruct;
-  /* 使能GPIOA时钟 */
+  /* Enable GPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  /* 使能TIM3时钟 */
+  /* Enable TIM3 clock */
   __HAL_RCC_TIM3_CLK_ENABLE();
-  /* 使能TIM1时钟 */
+  /* Enable TIM1 clock */
   __HAL_RCC_TIM1_CLK_ENABLE();
   
-  /*GPIOA8初始化*/
+  /* Initialize GPIOA8 */
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -59,9 +67,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* 设置中断优先级 */
+  /* Set interrupt priority */
   HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
-  /* 使能TIM3中断 */
+  /* Enable TIM3 interrupt */
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 

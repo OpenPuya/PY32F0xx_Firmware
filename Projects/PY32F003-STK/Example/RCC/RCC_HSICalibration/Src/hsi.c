@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -29,7 +37,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
-	/* If reference frequency is not the LSE and lower than 250 Hz (The TIM14 min frequency),
+  /* If reference frequency is not the LSE and lower than 250 Hz (The TIM14 min frequency),
   the TIMx counter prescaler should be used.
   Otherwise (the reference frequency is greater than 250 Hz),
   the TIMx counter prescaler should be set to 0
@@ -67,140 +75,58 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void    	HSI_TIMx_ConfigForCalibration(void);
-void    	HSI_RCC_AdjustCalibrationValue(uint32_t TrimmingValue);
+void      HSI_TIMx_ConfigForCalibration(void);
+void      HSI_RCC_AdjustCalibrationValue(uint32_t TrimmingValue);
 uint32_t  HSI_FreqMeasure(void);
 void HSI_MeasurementInit(uint32_t HSICLKSource_set);
-uint32_t Hsi_Rough_Trimming(void);
-uint32_t Hsi_Fine_Trimming(void);
 
 /* Private functions ---------------------------------------------------------*/
 
 /**
-  * @brief   粗调，校准高4位,循环4次，计算到准确值
-  * @param   无
-  * @retval  高4位校准值
+  * @brief   Iterating 12 times to obtain an accurate calibration value
+  * @param   None
+  * @retval  HSI calibration value
   */
-uint32_t Hsi_Rough_Trimming(void)
+uint32_t Hsi_Trimming(void)
 {
-	uint32_t i;
-	uint32_t trim_Dac;                             /* 粗调最终值，高4bit */
-  uint32_t dac_Index;
-  uint32_t dac_Array[15];
-	uint32_t first_Index=7;
-  uint32_t binary_Cyc=4;                         /* 定义循环次数 */
-	uint32_t sysclockfrequency = 0;
-  uint32_t measuredfrequency = 0;
-  /* uint32_t trim_Final_Value  =0; */
-  uint32_t Rough_trim_Final_freq  =0;
-  uint32_t Rough_trim_Final_Dac = 0;             /* 高4位，校准值 */
-
-  /* 设置初始值 */
-  for(i=0;i<15;i++)  /* 舍弃0点 */
-  {
-     dac_Array[i]=i+1;
-  }
-  
-  dac_Index=first_Index;
-  trim_Dac=dac_Array[dac_Index];
-  
-  /* Get system clock frequency */
-  sysclockfrequency = HAL_RCC_GetSysClockFreq();
-  
-/* 二分法主体 */
-  do
-  {
-      if (StartCalibration != 0)
-      {
-        /* Set the Intern Osc trimming bits to trimmingvalue */
-        HSI_RCC_AdjustCalibrationValue((trim_Dac<<9) + 255);
-      }
-      
-      /* Get actual frequency value */
-      measuredfrequency = HSI_FreqMeasure(); 
-      
-      if(ABS_RETURN((int32_t)(measuredfrequency-sysclockfrequency))<ABS_RETURN((int32_t)(Rough_trim_Final_freq-sysclockfrequency))) /* 选择最优DAC */
-      {
-        Rough_trim_Final_freq = measuredfrequency ;
-        Rough_trim_Final_Dac  = trim_Dac ;
-      }                              
-      if(measuredfrequency <sysclockfrequency)            /* 根据当前DAC测量的频率和目标频率关系，选择下一个DAC */
-      {
-         dac_Index  = dac_Index +(uint32_t)pow(2,binary_Cyc-2);
-         trim_Dac  = dac_Array[dac_Index ];
-      }
-      else                 
-      {
-        dac_Index  = dac_Index -(uint32_t)pow(2,binary_Cyc-2);
-        trim_Dac  = dac_Array[dac_Index];
-      }
-    binary_Cyc-=1;
-  }while(binary_Cyc>0); 
-  return Rough_trim_Final_Dac;
-}
-
-/**
-  * @brief   细调，校准低9位，循环9次，计算到准确值
-  * @param   无
-  * @retval  低9位校准值
-  */
-uint32_t Hsi_Fine_Trimming(void)
-{
-  uint32_t i;
-  uint32_t trim_Dac;                 /* 细调最终值，低9bit */
-  uint32_t dac_Index;
-  uint32_t dac_Array[511];
-  uint32_t first_Index=255;
-  uint32_t binary_Cyc=9;             /* 定义循环次数 */
+  uint32_t trim_Dac = 1<<12;                 /* Adjustment final value, 13 bits */
+  int32_t binary_Cyc=11;                     /* Define the number of loop cycles */
   uint32_t sysclockfrequency = 0;
   uint32_t measuredfrequency = 0;
   uint32_t Fine_trim_Final_freq  =0;
   uint32_t Fine_trim_Final_Dac = 0;
 
-  /* 设置初始值 */
-  for(i=0;i<511;i++)
-  {
-    dac_Array[i]=i+1;
-  }
-  
-  dac_Index=first_Index;
-  trim_Dac=dac_Array[dac_Index];
-  
-  /* Set measurement environment */
-  /* HSI_MeasurementInit(); */
   /* Get system clock frequency */
   sysclockfrequency = HAL_RCC_GetSysClockFreq();
 
-/* 二分法主体 */
+/* Binary search algorithm */
   do
   {
       if (StartCalibration != 0)
       {
         /* Set the Intern Osc trimming bits to trimmingvalue */
-        HSI_RCC_AdjustCalibrationValue((HSI_Rough_Value<<9) + trim_Dac);
+        HSI_RCC_AdjustCalibrationValue(trim_Dac);
       }
-
+      
       /* Get actual frequency value */
       measuredfrequency = HSI_FreqMeasure(); 
       
-      if(ABS_RETURN((int32_t)(measuredfrequency-sysclockfrequency))<ABS_RETURN((int32_t)(Fine_trim_Final_freq-sysclockfrequency))) /* 选择最优DAC */
+      if(ABS_RETURN((int32_t)(measuredfrequency-sysclockfrequency))<ABS_RETURN((int32_t)(Fine_trim_Final_freq-sysclockfrequency))) /* Select optimal DAC */
       {
         Fine_trim_Final_freq = measuredfrequency ;
         Fine_trim_Final_Dac  = trim_Dac ;
       }                              
-      if(measuredfrequency <sysclockfrequency)                                 /* 根据当前DAC测量的频率和目标频率关系，选择下一个DAC */
+      if(measuredfrequency <sysclockfrequency)                                 /* Select the next DAC based on the relationship between the current DAC-measured frequency and the target frequency */
       {
-         dac_Index  = dac_Index +(uint32_t)pow(2,binary_Cyc-2);
-         trim_Dac  = dac_Array[dac_Index ];
+        trim_Dac += 1<<binary_Cyc;
       }
       else                 
       {
-        dac_Index  = dac_Index -(uint32_t)pow(2,binary_Cyc-2);
-        trim_Dac  = dac_Array[dac_Index];
+        trim_Dac -= 1<<binary_Cyc;
       }
     binary_Cyc-=1;
-  }while(binary_Cyc>0);
-  return Fine_trim_Final_Dac;	
+  }while(binary_Cyc>=0);
+  return Fine_trim_Final_Dac;
 }
 
 /**
@@ -271,7 +197,7 @@ void HSI_MeasurementInit(uint32_t HSICLKSource_set)
 {
   SystemClock_Config(HSICLKSource_set);                                 /* 设置系统时钟 */
     
-  /* HSI_Rough_Value default value */	  
+  /* HSI_Rough_Value default value */    
   /* 导入缺省值 */
   HSI_Rough_Value  =  ( READ_REG(RCC->ICSCR) & 0x00001fff ) >>9;        /* High 4 bits  高4位 */
   HSI_Fine_Value   =  ( READ_REG(RCC->ICSCR) & 0x000001ff );            /* Low 9 bits   低4位 */

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -134,7 +142,7 @@ static void APP_AdcInit(void)
   AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* 触发边沿无 */
   AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* DMA连续模式设置 */
   AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* 当过载发生时，覆盖上一个值  */
-  /* AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_13CYCLES_5; */     /* 设置采样周期 */
+  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_71CYCLES_5;           /* 设置采样周期 */
   /* 初始化ADC */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                
   {
@@ -159,7 +167,6 @@ static void APP_AdcInit(void)
 
   sConfig.Channel = ADC_CHANNEL_4;                                       /* ADC通道选择 */
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;                                /* 设置加入规则组通道 */
-  sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5;                      /* 设置采样周期 */
   /* 配置ADC通道 */  
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)           
   {

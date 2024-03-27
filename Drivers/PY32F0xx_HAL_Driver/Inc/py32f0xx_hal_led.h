@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -30,8 +38,20 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal_def.h"
 
+/** @addtogroup PY32F0xx_HAL_Driver
+  * @{
+  */
 
+/** @defgroup LED LED
+  * @brief LED HAL module driver
+  * @{
+  */
 
+/* Exported Types ------------------------------------------------------------*/
+/** @defgroup LED_Exported_Types LED Exported Types
+  * @brief LED HAL module driver
+  * @{
+  */
 /**
   * @brief LED Init Structure definition
   */
@@ -86,7 +106,14 @@ typedef struct
   void (* LightComplateCallback)(struct __LED_HandleTypeDef *hled);
 #endif
 } LED_HandleTypeDef;
+/**
+  * @}
+  */
 
+/* Exported Macros -----------------------------------------------------------*/
+/** @defgroup LED_Exported_Macros  LED Exported Macros
+  * @{
+  */
 #define __HAL_LED_ENABLE(__HANDLE__)                  SET_BIT((__HANDLE__)->Instance->CR, LED_CR_LEDON)
 
 /** @brief  Disable the specified LED peripheral.
@@ -98,8 +125,16 @@ typedef struct
 #define __HAL_LED_CLEAR_FLAG(__HANDLE__, __FLAG__)    ((__HANDLE__)->Instance->IR = (__FLAG__))
 
 #define __HAL_LED_ENABLE_IT(__HANDLE__, __INTERRUPT__)       SET_BIT((__HANDLE__)->Instance->CR, (__INTERRUPT__))
+/**
+  * @}
+  */
 
-/** @defgroup LED_Display_Value  LED display value
+/* Exported Constants --------------------------------------------------------*/
+/** @defgroup LED_Exported_constants LED Exported Constants
+  * @{
+  */
+
+/** @defgroup LED_Display_Value  LED Display Value
   * @{
   */
 #define LED_DISP_NONE     0x00
@@ -150,8 +185,12 @@ typedef struct
   * @}
   */
 
+/**
+  * @}
+  */
+
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup EXTI_Private_Macros EXTI Private Macros
+/** @defgroup LED_Private_Macros LED Private Macros
   * @{
   */
 #define IS_LED_COM_DRIVE(__DRIVE__)          (((__DRIVE__) == LED_COMDRIVE_LOW) || \
@@ -165,25 +204,46 @@ typedef struct
 #define IS_LED_LIGHT_TIME(__TIME__)          (((__TIME__) >= 0x1u) && ((__TIME__) <= 0xFF))
 
 #define IS_LED_DEAD_TIME(__TIME__)           (((__TIME__) >= 0x1u) && ((__TIME__) <= 0xFF))
-
 /**
   * @}
   */
 
-/** @defgroup LED_Exported_Functions_Group LED operation functions
- *  @brief    LED operation functions
+/* Exported Functions --------------------------------------------------------*/
+/** @defgroup LED_Exported_Functions  LED Exported Functions
  * @{
  */
 
-/* LED operation functions *****************************************************/
+/** @addtogroup LED_Exported_Functions_Group1  Initialization/de-initialization functions
+ *  @brief    Initialization and Configuration functions
+ * @{
+ */
+/* Initialization and Configuration functions **********************************/
 HAL_StatusTypeDef HAL_LED_Init(LED_HandleTypeDef *hled);
 void HAL_LED_MspInit(LED_HandleTypeDef *hled);
+/**
+  * @}
+  */
+
+/** @addtogroup LED_Exported_Functions_Group2  LED Operation Functions
+ * @{
+ */
+/* LED operation functions *****************************************************/
 HAL_StatusTypeDef HAL_LED_SetComDisplay(LED_HandleTypeDef *hled, uint8_t comCh, uint8_t data);
 void HAL_LED_LightCpltCallback(LED_HandleTypeDef *hled);
 void HAL_LED_IRQHandler(LED_HandleTypeDef *hled);
+/**
+  * @}
+  */
 
 /**
   * @}
   */
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 #endif

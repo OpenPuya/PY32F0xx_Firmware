@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -183,8 +191,26 @@ int __low_level_init(void)
   main();
   return 0;
 }
-#endif
-#endif
-#endif
+#elif defined(__GNUC__)
+extern int32_t main(void);
+extern int entry(void);
+uint32_t VECT_SRAM_TAB[48]__attribute__((section(".vectable_sram")));
+int entry(void)
+{
+  uint8_t i;
+  uint32_t *pFmcVect = (uint32_t *)(FLASH_BASE | VECT_TAB_OFFSET);
+  for (i = 0; i < 48; i++)
+  {
+    VECT_SRAM_TAB[i] = pFmcVect[i];
+  }
+
+  SCB->VTOR = SRAM_BASE;
+	
+  main();
+  return 0;
+}
+#endif /* __ICCARM__ */
+#endif /* VECT_TAB_SRAM */
+#endif /* FORBID_VECT_TAB_MIGRATION */
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

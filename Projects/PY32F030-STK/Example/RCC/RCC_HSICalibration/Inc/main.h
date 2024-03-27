@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -38,18 +46,18 @@ extern "C" {
 
 /* Private defines -----------------------------------------------------------*/
 #define __TIMx_CLK_ENABLE()              __HAL_RCC_TIM14_CLK_ENABLE()
-#define	TIMx                      TIM14
-#define	TIM_CHANNEL_y             TIM_CHANNEL_1
-#define	HAL_TIM_ACTIVE_CHANNEL_y  HAL_TIM_ACTIVE_CHANNEL_1
-#define	TIM_TIMx_RTC              TIM_TIM14_RTC
-#define	TIM_TIMx_GPIO             TIM_TIM14_GPIO
-#define	TIM_TIMx_HSE              TIM_TIM14_HSE
-#define	TIM_TIMx_MCO              TIM_TIM14_MCO
-#define	TIMx_COUNTER_PRESCALER    TIM14_COUNTER_PRESCALER
-#define	TIMx_IC_DIVIDER           TIM14_IC_DIVIDER
-#define	TIMx_IRQn                 TIM14_IRQn
-#define	GPIO_AF4_TIMx             GPIO_AF4_TIM14
-#define	TIM_TIMx_MCO              TIM_TIM14_MCO
+#define TIMx                      TIM14
+#define TIM_CHANNEL_y             TIM_CHANNEL_1
+#define HAL_TIM_ACTIVE_CHANNEL_y  HAL_TIM_ACTIVE_CHANNEL_1
+#define TIM_TIMx_RTC              TIM_TIM14_RTC
+#define TIM_TIMx_GPIO             TIM_TIM14_GPIO
+#define TIM_TIMx_HSE              TIM_TIM14_HSE
+#define TIM_TIMx_MCO              TIM_TIM14_MCO
+#define TIMx_COUNTER_PRESCALER    TIM14_COUNTER_PRESCALER
+#define TIMx_IC_DIVIDER           TIM14_IC_DIVIDER
+#define TIMx_IRQn                 TIM14_IRQn
+#define GPIO_AF4_TIMx             GPIO_AF4_TIM14
+#define TIM_TIMx_MCO              TIM_TIM14_MCO
 
 #define INITIAL_ERROR             ((uint32_t)99999000)
 #define CAPTURE_START             ((uint32_t)0x00000001)

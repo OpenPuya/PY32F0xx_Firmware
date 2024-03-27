@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup py32f0xx_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -216,7 +224,7 @@ typedef struct
 /** @defgroup EXTI_LL_Exported_Functions EXTI Exported Functions
  * @{
  */
-/** @defgroup EXTI_LL_EF_IT_Management IT_Management
+/** @defgroup EXTI_LL_EF_IT_Management IT Management
   * @{
   */
 
@@ -696,7 +704,7 @@ __STATIC_INLINE void LL_EXTI_GenerateSWI(uint32_t ExtiLine)
   * @}
   */
 
-/** @defgroup EXTI_LL_EF_Flag_Management Flag_Management
+/** @defgroup EXTI_LL_EF_Flag_Management FLAG Management
   * @{
   */
 
@@ -847,6 +855,9 @@ __STATIC_INLINE uint32_t LL_EXTI_GetEXTISource(uint32_t Line)
   * @{
   */
 
+/**
+  * @}
+  */
 
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup EXTI_LL_EF_Init Initialization and de-initialization functions

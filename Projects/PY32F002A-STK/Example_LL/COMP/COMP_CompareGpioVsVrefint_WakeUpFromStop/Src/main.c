@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -58,7 +66,7 @@ int main(void)
   BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
 
   /* 初始化调试串口(printf使用) */
-  BSP_USART_Config();	
+  BSP_USART_Config();
   
   /* 比较器时钟切换 */
   APP_CompRccInit();
@@ -121,8 +129,8 @@ static void APP_CompInit(void)
   /* 极性不反向 */
   LL_COMP_SetOutputPolarity(COMP1,LL_COMP_OUTPUTPOL_NONINVERTED);
   
-  /* 功耗模式快速 */
-  LL_COMP_SetPowerMode(COMP1, LL_COMP_POWERMODE_HIGHSPEED);
+  /* 功耗模式中等 */
+  LL_COMP_SetPowerMode(COMP1, LL_COMP_POWERMODE_MEDIUMSPEED);
 
   /* 窗口模式使能选择COMP1的Plus端输入 */
   LL_COMP_SetCommonWindowMode(__LL_COMP_COMMON_INSTANCE(COMP1), LL_COMP_WINDOWMODE_DISABLE);

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -23,9 +31,9 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define WINDOW_IN                                   /* 窗口时间内喂狗 */
-/* #define WINDOW_UPPER */                          /* 窗口时间上限外喂狗 */
-/* #define WINDOW_LOWER */                          /* 窗口时间下限外喂狗 */
+#define WINDOW_IN                                   /* Feed the watchdog within the window time */
+/* #define WINDOW_UPPER */                          /* Feed the watchdog outside the upper limit of the window time */
+/* #define WINDOW_LOWER */                          /* Feed the watchdog outside the lower limit of the window time  */
 
 /* Private variables ---------------------------------------------------------*/
 WWDG_HandleTypeDef   WwdgHandle;
@@ -37,75 +45,75 @@ WWDG_HandleTypeDef   WwdgHandle;
 static uint32_t APP_TimeoutCalculation(uint32_t timevalue);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
   uint32_t delay;
 
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();  
   
-  /* 初始化按键 */
+  /* Initialize button */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN); 
 
   if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST) != RESET)
   {
-    /* LED 亮 */
+    /* Turn on LED */
     BSP_LED_On(LED_GREEN);
 
-    /* 等待4s */
+    /* Wait for 4s */
     HAL_Delay(4000);
     
-    /* LED 灭 */
+    /* Turn off LED */
     BSP_LED_Off(LED_GREEN);
 
-    /* 等待500ms */
+    /* Wait for 500ms */
     HAL_Delay(500);
 
-    /* 清除复位状态标志位 */
+    /* Clear reset flags */
     __HAL_RCC_CLEAR_RESET_FLAGS();
   }
   else
   {
-    /* LED 灭 */
+    /* Turn off LED */
     BSP_LED_Off(LED_GREEN);
   }
 
-  /* WWDG模块初始化 */
-  WwdgHandle.Instance = WWDG;                                                             /* 选择WWDG */
-  WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;                                           /* 选择8分频 */
-  WwdgHandle.Init.Window    = 0x50;                                                       /* 7位窗口值为0x40~0x7f */
-  WwdgHandle.Init.Counter   = 0x7F;                                                       /* 计数器值(7位) */
-  WwdgHandle.Init.EWIMode   = WWDG_EWI_DISABLE;                                           /* 关闭提前唤醒中断 */
-  /* WWDG初始化 */
+  /* Initialize WWDG module */
+  WwdgHandle.Instance = WWDG;                                                             /* Select WWDG */
+  WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;                                           /* Select prescaler 8 */
+  WwdgHandle.Init.Window    = 0x50;                                                       /* 7-bit window value 0x40~0x7f  */
+  WwdgHandle.Init.Counter   = 0x7F;                                                       /* Counter value (7-bit) */
+  WwdgHandle.Init.EWIMode   = WWDG_EWI_DISABLE;                                           /* Disable early wake-up interrupt */
+  /* WWDG initialization */
   if (HAL_WWDG_Init(&WwdgHandle) != HAL_OK)                                               
   {
     APP_ErrorHandler();
   }
 
 #if defined(WINDOW_IN)
-  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - WwdgHandle.Init.Window) + 1) + 1;   /* 窗口时间内 */
+  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - WwdgHandle.Init.Window) + 1) + 1;   /* Within the window time */
 #elif defined(WINDOW_UPPER)
-  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - WwdgHandle.Init.Window)-5 ) + 1;    /* 窗口时间上限外 */
+  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - WwdgHandle.Init.Window)-5 ) + 1;    /* Outside the upper limit of the window time */
 #else 
-  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - 0x3f) +5) + 1;                      /* 窗口时间下限外 */
+  delay = APP_TimeoutCalculation((WwdgHandle.Init.Counter - 0x3f) +5) + 1;                      /* Outside the lower limit of the window time */
 #endif
 
-  /* 无限循环 */
+  /* Infinite loop */
   while (1)
   {
-    /* 翻转LED灯 */
+    /* Toggle LED */
     BSP_LED_Toggle(LED_GREEN);
 
-    /* 插入上面计算好的延时 */
+    /* Insert the calculated delay */
     HAL_Delay(delay);
 
-    /* 更新看门狗计数器 */
+    /* Refresh the watchdog counter */
     if (HAL_WWDG_Refresh(&WwdgHandle) != HAL_OK)
     {
       APP_ErrorHandler();
@@ -114,8 +122,8 @@ int main(void)
 }
 
 /**
-  * @brief  超时计算函数.
-  * @param  timevalue：时间
+  * @brief  Timeout calculation function
+  * @param  timevalue：Time value
   * @retval int
   */
 static uint32_t APP_TimeoutCalculation(uint32_t timevalue)
@@ -123,19 +131,19 @@ static uint32_t APP_TimeoutCalculation(uint32_t timevalue)
   uint32_t timeoutvalue = 0;
   uint32_t pclk1 = 0;
   uint32_t wdgtb = 0;
-  /* 获取PCLK的值 */
+  /* Get the value of PCLK1 */
   pclk1 = HAL_RCC_GetPCLK1Freq();
-  /* 获取分频值 */
+  /* Get the prescaler value */
   wdgtb = (1 << ((WwdgHandle.Init.Prescaler) >> 7)); /* 2^WDGTB[1:0] */
-  /* 计算超时时间 */
+  /* Calculate the timeout value */
   timeoutvalue = ((4096 * wdgtb * timevalue) / (pclk1 / 1000));
   return timeoutvalue;
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -148,16 +156,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

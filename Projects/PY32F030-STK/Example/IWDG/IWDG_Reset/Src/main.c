@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -30,23 +38,23 @@
 
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
   IWDG_HandleTypeDef   IwdgHandle;
 
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  IwdgHandle.Instance = IWDG;                     /* 选择IWDG */
-  IwdgHandle.Init.Prescaler = IWDG_PRESCALER_32;  /* 配置32分频 */
-  IwdgHandle.Init.Reload = (1000);                /* IWDG计数器重装载值为1000，1s */
-  /* 初始化IWDG */
+  IwdgHandle.Instance = IWDG;                     /* Select IWDG */
+  IwdgHandle.Init.Prescaler = IWDG_PRESCALER_32;  /* Configure prescaler to 32 */
+  IwdgHandle.Init.Reload = (1000);                /* Set IWDG counter reload value to 1000, 1s */
+  /* Initialize IWDG */
   if (HAL_IWDG_Init(&IwdgHandle) != HAL_OK)       
   {
     APP_ErrorHandler();
@@ -54,13 +62,13 @@ int main(void)
 
   while (1)
   {
-    HAL_Delay(900);                               /* 每900ms喂一次狗，可以正常运行 */
-    /* HAL_Delay(1100); */                        /* 每1.1s喂一次狗，无法正常运行 */
+    HAL_Delay(900);                               /* Feed the watchdog every 900ms, it can run normally */
+    /* HAL_Delay(1100); */                        /* Feed the watchdog every 1.1s, it cannot run properly */
     
-    /* 翻转LED */
+    /* Toggle LED */
     BSP_LED_Toggle(LED_GREEN);                
     
-    /* 喂狗 */
+    /* Refresh the watchdog */
     if (HAL_IWDG_Refresh(&IwdgHandle) != HAL_OK)
     {
       APP_ErrorHandler();
@@ -69,13 +77,13 @@ int main(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  BSP_LED_Off(LED_GREEN);           /* 关闭LED */
+  BSP_LED_Off(LED_GREEN);           /* Turn off LED */
 
   while (1)
   {
@@ -84,16 +92,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

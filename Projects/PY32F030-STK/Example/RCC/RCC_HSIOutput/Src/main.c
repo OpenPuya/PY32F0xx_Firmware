@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,21 +39,21 @@
 static void APP_SystemClockConfig(void);
 
 /**
-  * @brief   应用程序入口函数
+  * @brief   Main program
   * @retval  int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
-  /* 初始化按键 */
+  /* Initialize button */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   
-  /* 配置PA08引脚为MCO功能，输出系统时钟 */
+  /* Configure PA08 pin as MCO function to output system clock */
   HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
 
-  /* 配置系统时钟为HSI */
+  /* Configure the system clock as HSI */
   APP_SystemClockConfig();
 
   while (1)
@@ -54,66 +62,67 @@ int main(void)
 }
 
 /**
-  * @brief   系统时钟配置函数
-  * @param   无
-  * @retval  无
+  * @brief   System clock configuration function
+  * @param   None
+  * @retval  None
   */
 static void APP_SystemClockConfig(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /*配置时钟源HSE/HSI/LSE/LSI*/
+  /* Configure clock sources HSE/HSI/LSE/LSI */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                       /* 开启HSI */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz;                               /* 配置HSI输出时钟为4MHz */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                       /* HSI不分频 */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                      /* 关闭HSE */
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                      /* 关闭LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                      /* 关闭LSE */
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                                  /* 关闭PLL */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                       /* Enable HSI */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz;                               /* Configure HSI output clock as 4MHz */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                       /* HSI not divided */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                      /* Disable HSE */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                      /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                      /* Disable LSE */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                                  /* Disable PLL */
 
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                           /* RCC振荡器初始化 */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                           /* Initialize RCC oscillators */
   {
     APP_ErrorHandler();
   }
 
-  /* 初始化CPU,AHB,APB总线时钟 */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC系统时钟类型 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                         /* SYSCLK的源选择为HSI */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* APH时钟不分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟不分频 */
+  /* Initialize CPU, AHB, and APB bus clocks */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                         /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* AHB clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB clock not divided */
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)                        /* 初始化RCC系统时钟 */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)                        /* Initialize RCC system clock */
   {
     APP_ErrorHandler();
   }
 }
 
 /**
-  * @brief   错误执行函数
-  * @param   无
-  * @retval  无
+  * @brief   This function is executed in case of error occurrence.
+  * @param   None
+  * @retval  None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
+  /* Infinite loop */
   while (1)
   {
   }
 }
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

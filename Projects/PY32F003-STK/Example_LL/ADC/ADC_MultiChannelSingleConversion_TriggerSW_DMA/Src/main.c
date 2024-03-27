@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -122,7 +130,7 @@ void APP_AdcConfig(void)
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
 
   /* 设置数据右对齐 */
-  LL_ADC_SetResolution(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
+  LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
   /* 设置低功耗模式无 */
   LL_ADC_SetLowPowerMode(ADC1, LL_ADC_LP_MODE_NONE);

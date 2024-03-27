@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,30 +39,30 @@ WWDG_HandleTypeDef   WwdgHandle;
 /* Private function prototypes -----------------------------------------------*/
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();                                         
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* WWDG模块初始化 */
-  WwdgHandle.Instance = WWDG;                         /* 选择WWDG */
-  WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;       /* 选择8分频 */
-  WwdgHandle.Init.Window    = 127;                    /* 7位窗口值为0x40~0x7f */
-  WwdgHandle.Init.Counter   = 127;                    /* 计数器值(7位) */
-  WwdgHandle.Init.EWIMode   = WWDG_EWI_ENABLE;        /* 使能提前唤醒中断 */
-  /* WWDG初始化 */ 
+  /* Initialize WWDG module */
+  WwdgHandle.Instance = WWDG;                         /* Select WWDG */
+  WwdgHandle.Init.Prescaler = WWDG_PRESCALER_8;       /* Select prescaler 8 */
+  WwdgHandle.Init.Window    = 127;                    /* 7-bit window value 0x40~0x7f  */
+  WwdgHandle.Init.Counter   = 127;                    /* Counter value (7-bit) */
+  WwdgHandle.Init.EWIMode   = WWDG_EWI_ENABLE;        /* Enable early wake-up interrupt */
+  /* WWDG initialization */ 
   if (HAL_WWDG_Init(&WwdgHandle) != HAL_OK)           
   {
     APP_ErrorHandler();
   }
 
-  /* 喂狗 */
+  /* Feed the watchdog */
   if (HAL_WWDG_Refresh(&WwdgHandle) != HAL_OK)        
   {
     APP_ErrorHandler();
@@ -62,22 +70,22 @@ int main(void)
 
   while (1)
   {
-    /* 等待500ms */
+    /* Wait for 500ms */
     HAL_Delay(500);
     
-    /* 翻转LED */
+    /* Toggle LED */
     BSP_LED_Toggle(LED_GREEN);   
   }
 }
 
 /**
-  * @brief  提前唤醒中断函数
-  * @param  hwwdg：WWDG句柄
-  * @retval 无
+  * @brief  Early wake-up interrupt callback function
+  * @param  hwwdg：WWDG handle
+  * @retval None
   */
 void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg)
 {
-  /* 喂狗 */
+  /* Feed the watchdog */
   if (HAL_WWDG_Refresh(hwwdg) != HAL_OK)              
   {
     APP_ErrorHandler();
@@ -85,9 +93,9 @@ void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -98,16 +106,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

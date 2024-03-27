@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -19,64 +27,95 @@
   *
   ******************************************************************************
   */
+  
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "py32f002xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+/* Private user code ---------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void APP_SystemClockConfig(void);
+static void APP_SystemClockConfig(void);
 static void APP_ConfigLPTIM_OneShot(void);
-static void APP_PwrEnterStopMode(void);
-void delay_us(uint32_t nus,uint32_t fac_us);
+static void APP_uDelay(uint32_t nus);
+static void APP_LPTIMClockconf(void);
 
 /**
   * @brief  应用程序入口函数.
-  * @param  无
   * @retval int
   */
 int main(void)
-{
-  
-  /*使能LPTIM时钟*/
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_LPTIM1);
-  
+{  
   /* 配置系统时钟 */
   APP_SystemClockConfig();
 
-  /* 初始化LED */
-  BSP_LED_Init(LED_GREEN);
-  /* 初始化按键 */
+  /* 使能LPTIM、PWR时钟 */
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_LPTIM1);
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+  
+  /* 初始化LED、按键 */  
+  BSP_LED_Init(LED3);
   BSP_PB_Init(BUTTON_USER,BUTTON_MODE_GPIO);
-  /*配置并开启LPTIM*/
+  
+  /* 配置LPTIM时钟源为LSI */
+  APP_LPTIMClockconf();
+  
+  /* 配置并使能LPTIM */
   APP_ConfigLPTIM_OneShot();
-
-  /*等待按键按下*/
+  
+  /* 点亮LED */
+  BSP_LED_On(LED3);
+  
+  /* 等待按键按下 */
   while(BSP_PB_GetState(BUTTON_USER) != 0)
-  {
+  {}
+  
+  /* 关闭LED */
+  BSP_LED_Off(LED3);
     
-  }
   while (1)
   {
-    /* 关闭LPTIM */
+    /* 使能低功耗运行模式 */
+    LL_PWR_EnableLowPowerRunMode();
+    /* 失能LPTIM */
     LL_LPTIM_Disable(LPTIM1);
     /* 使能LPTIM */
     LL_LPTIM_Enable(LPTIM1);
-    /* 延时 2*LSI时钟 */
-    delay_us(75,8);
-    /*使能ARR中断*/
-    LL_LPTIM_EnableIT_ARRM(LPTIM1); 
-    /*配置重装载值：62500*/
-    /*8000000/64/62500 = 2Hz*/
-    LL_LPTIM_SetAutoReload(LPTIM1,62500);
-  
-    /*开启单次模式*/
+    
+    /* 延时75us */
+    APP_uDelay(75);
+
+    /* 开启单次模式 */
     LL_LPTIM_StartCounter(LPTIM1,LL_LPTIM_OPERATING_MODE_ONESHOT);
-    /* 进入STOP模式 */
-    APP_PwrEnterStopMode();
+
+    /* 使能STOP模式 */
+    LL_LPM_EnableDeepSleep();
+    
+    /* 进入STOP模式，等待中断唤醒 */
+    __WFI();
   }
 }
+
+/**
+  * @brief  LPTIM 时钟配置
+  * @param  无
+  * @retval 无
+  */
+static void APP_LPTIMClockconf(void)
+{
+  /* 开启LSI */
+  LL_RCC_LSI_Enable();
+  
+  /* 等待LSI就绪 */
+  while(LL_RCC_LSI_IsReady() == 0)
+  {}
+    
+  /* 配置LSI为LPTIM时钟源 */
+  LL_RCC_SetLPTIMClockSource(LL_RCC_LPTIM1_CLKSOURCE_LSI);
+}
+
 /**
   * @brief  配置LPTIM单次模式
   * @param  无
@@ -84,29 +123,25 @@ int main(void)
   */
 static void APP_ConfigLPTIM_OneShot(void)
 {
-  /*配置LPTIM*/
-  /*LPTIM预分频器64分频    */
-  LL_LPTIM_SetPrescaler(LPTIM1,LL_LPTIM_PRESCALER_DIV64);
+  /* 配置LPTIM */
+  /* LPTIM预分频器128分频 */
+  LL_LPTIM_SetPrescaler(LPTIM1,LL_LPTIM_PRESCALER_DIV128);
   
-  /*LPTIM计数周期结束更新ARR*/
+  /* LPTIM计数周期结束更新ARR */
   LL_LPTIM_SetUpdateMode(LPTIM1,LL_LPTIM_UPDATE_MODE_ENDOFPERIOD);
   
-  /*使能ARR中断*/
+  /* 使能ARR中断 */
   LL_LPTIM_EnableIT_ARRM(LPTIM1);
   
-  /*使能LPTIM*/
-  LL_LPTIM_Enable(LPTIM1);
-  
-  /*配置重装载值：62500*/
-  /*8000000/64/62500 = 2Hz*/
-  LL_LPTIM_SetAutoReload(LPTIM1,62500);
-  
-  /*开启单次模式*/
-  LL_LPTIM_StartCounter(LPTIM1,LL_LPTIM_OPERATING_MODE_ONESHOT);
-  
-  /*使能NVIC请求*/
+  /* 使能NVIC请求 */
   NVIC_EnableIRQ(LPTIM1_IRQn);
   NVIC_SetPriority(LPTIM1_IRQn,0);
+  
+  /* 使能LPTIM */
+  LL_LPTIM_Enable(LPTIM1);
+  
+  /* 配置重装载值：128 */
+  LL_LPTIM_SetAutoReload(LPTIM1,128);
 }
 
 /**
@@ -116,33 +151,31 @@ static void APP_ConfigLPTIM_OneShot(void)
   */
 void APP_LPTIMCallback(void)
 {
-  /*翻转LED*/
+  /* 翻转LED */
   BSP_LED_Toggle(LED3);
-  
 }
+
 /**
-  * @brief  进入STOP模式
-  * @param  无
+  * @brief  微秒延时函数
+  * @param  nus :延时值
   * @retval 无
   */
-static void APP_PwrEnterStopMode(void)
+static void APP_uDelay(uint32_t nus)
 {
-  /*使能PWR时钟*/
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-  /* 低功耗工作在STOP模式 */
-  LL_PWR_EnableLowPowerRunMode();
-  /*进入DeepSleep模式*/
-  LL_LPM_EnableDeepSleep();
-
-  /*等待中断指令*/
-  __WFI();
+  __IO uint32_t Delay =1+ nus * (SystemCoreClock / 24U) / 1000000U;
+  do
+  {
+    __NOP();
+  }
+  while(Delay--);
 }
+
 /**
   * @brief  系统时钟配置函数
   * @param  无
   * @retval 无
   */
-void APP_SystemClockConfig(void)
+static void APP_SystemClockConfig(void)
 {
   /* 使能HSI */
   LL_RCC_HSI_Enable();
@@ -150,7 +183,7 @@ void APP_SystemClockConfig(void)
   {
   }
 
-  /* 设置 AHB 分频*/
+  /* 设置 AHB 分频 */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
   /* 配置HSISYS作为系统时钟源 */
@@ -159,44 +192,23 @@ void APP_SystemClockConfig(void)
   {
   }
 
-  /* 设置 APB1 分频*/
+  /* 设置 APB1 分频 */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_Init1msTick(8000000);
-
+  
   /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
   LL_SetSystemCoreClock(8000000);
 }
-/**
-  * @brief  us级延时
-  * @param  nus = 延时的us量,
-  *         fac_us=系统时钟/1000000
-  * @retval 无
-  */
-void delay_us(uint32_t nus,uint32_t fac_us)
- {
-  LL_SYSTICK_DisableIT();
-  uint32_t temp;
-  SysTick->LOAD=nus*fac_us;
-  SysTick->VAL=0x00;
-  SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;
-  do
-  {
-    temp=SysTick->CTRL;
-  }
-  while((temp&0x01)&&!(temp&(1<<16)));
-  SysTick->CTRL=0x00;
-  SysTick->VAL =0x00;
- }
- 
+
 /**
   * @brief  错误执行函数
   * @param  无
   * @retval 无
   */
-void Error_Handler(void)
+void APP_ErrorHandler(void)
 {
   /* 无限循环 */
-  while (1)
+  while(1)
   {
   }
 }
@@ -219,4 +231,4 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT Puya *****END OF FILE****/
+/************************ (C) COPYRIGHT Puya *****END OF FILE******************/

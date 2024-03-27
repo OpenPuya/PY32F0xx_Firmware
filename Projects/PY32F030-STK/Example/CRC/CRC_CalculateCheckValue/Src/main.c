@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -27,10 +35,10 @@
 #define BUFFER_SIZE    114
 
 /* Private variables ---------------------------------------------------------*/
-/* CRC句柄声明 */
+/* CRC handle declaration */
 CRC_HandleTypeDef   CrcHandle;
 
-/* 用来存放CRC校验值 */
+/* Variable used to store the CRC checksum value */
 __IO uint32_t uwCRCValue = 0;
 
 static const uint32_t aDataBuffer[BUFFER_SIZE] =
@@ -56,7 +64,7 @@ static const uint32_t aDataBuffer[BUFFER_SIZE] =
   0xdf7caf9b, 0xbfba8fd9, 0x9ff86e17, 0x7e364e55, 0x2e933eb2, 0x0ed11ef0
 };
 
-/* 期望的CRC校验值 */
+/* Expected CRC checksum value */
 uint32_t uwExpectedCRCValue = 0x379E9F06;
 
 /* Private user code ---------------------------------------------------------*/
@@ -64,33 +72,33 @@ uint32_t uwExpectedCRCValue = 0x379E9F06;
 /* Private function prototypes -----------------------------------------------*/
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化systick、LED灯 */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
-  /* 初始化CRC模块 */
+  /* Initialize CRC module */
   CrcHandle.Instance = CRC;
   if (HAL_CRC_Init(&CrcHandle) != HAL_OK)
   {
     while (1);
   }
 
-  /* 计算aDataBuffer的CRC */
+  /* Calculate CRC of aDataBuffer */
   uwCRCValue = HAL_CRC_Accumulate(&CrcHandle, (uint32_t *)aDataBuffer, BUFFER_SIZE);
 
-  /* 比较CRC值和预期值 */
+  /* Compare CRC value with expected value */
   if (uwCRCValue != uwExpectedCRCValue)
   {
-    /* 不相符，则关闭LED */
+    /* If not matching, turn off LED */
     BSP_LED_Off(LED_GREEN);
   }
   else
   {
-    /* 相符，则打开LED */
+    /* If matching, turn on LED */
     BSP_LED_On(LED_GREEN);
   }
 
@@ -100,13 +108,12 @@ int main(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
   while (1)
   {
   }
@@ -114,16 +121,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

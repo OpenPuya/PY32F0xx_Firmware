@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -25,7 +33,7 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define DARA_LENGTH      15                 /*数据长度*/
+#define DATA_LENGTH      15                 /*数据长度*/
 #define I2C_ADDRESS      0xA0               /*本机地址0xA0*/
 #define I2C_SPEEDCLOCK   100000             /*通讯速度100K*/
 #define I2C_DUTYCYCLE    I2C_DUTYCYCLE_16_9 /*占空比*/
@@ -65,14 +73,14 @@ int main(void)
   }
 
   /*I2C主机中断方式发送*/
-  while (HAL_I2C_Master_Transmit(&I2cHandle, I2C_ADDRESS, (uint8_t *)aTxBuffer, DARA_LENGTH,5000) != HAL_OK)
+  while (HAL_I2C_Master_Transmit(&I2cHandle, I2C_ADDRESS, (uint8_t *)aTxBuffer, DATA_LENGTH,5000) != HAL_OK)
   {
     Error_Handler();
   }
   /*判断当前I2C状态*/
   while (HAL_I2C_GetState(&I2cHandle) != HAL_I2C_STATE_READY);
   /*I2C主机中断方式接收*/
-  while (HAL_I2C_Master_Receive(&I2cHandle, I2C_ADDRESS, (uint8_t *)aRxBuffer, DARA_LENGTH,5000) != HAL_OK)
+  while (HAL_I2C_Master_Receive(&I2cHandle, I2C_ADDRESS, (uint8_t *)aRxBuffer, DATA_LENGTH,5000) != HAL_OK)
   {
     Error_Handler();
   }

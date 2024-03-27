@@ -333,7 +333,7 @@
                 <option>
                     <name>CMSISDAPJtagSpeedList</name>
                     <version>0</version>
-                    <state>11</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>CMSISDAPBreakpointRadio</name>
@@ -1863,7 +1863,7 @@
                 <option>
                     <name>CMSISDAPJtagSpeedList</name>
                     <version>0</version>
-                    <state>11</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>CMSISDAPBreakpointRadio</name>
@@ -3393,7 +3393,7 @@
                 <option>
                     <name>CMSISDAPJtagSpeedList</name>
                     <version>0</version>
-                    <state>11</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>CMSISDAPBreakpointRadio</name>

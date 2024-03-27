@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -384,7 +392,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /** @defgroup ADC_rank ADC rank
   * @{
   */
-#define ADC_RANK_CHANNEL_NUMBER                 (0x00001000U)  /*!< Enable the rank of the selected channels. Number of ranks in the sequence is defined by number of channels enabled, rank of each channel is defined by channel number (channel 0 fixed on rank 0, channel 1 fixed on rank1, ...) */
+#define ADC_RANK_CHANNEL_NUMBER                 (0x00001000U)  /*!< Enable the rank of the selected channels. Number of ranks in 
+                                                                    the sequence is defined by number of channels enabled, rank 
+                                                                    of each channel is defined by channel number (channel 0 fixed 
+                                                                    on rank 0, channel 1 fixed on rank1, ...) */
 #define ADC_RANK_NONE                           (0x00001001U)  /*!< Disable the selected rank (selected channel) from sequencer */
 /**
   * @}
@@ -393,7 +404,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /** @defgroup ADC_sampling_times ADC sampling times
   * @{
   */
-#define ADC_SAMPLETIME_3CYCLES_5      (0x00000000U)                                  /*!< Sampling time 3.5 ADC clock cycles */
+#define ADC_SAMPLETIME_3CYCLES_5      (0x10000000U)                                  /*!< Sampling time 3.5 ADC clock cycles */
 #define ADC_SAMPLETIME_5CYCLES_5      ((uint32_t) ADC_SMPR_SMP_0)                    /*!< Sampling time 5.5 ADC clock cycles */
 #define ADC_SAMPLETIME_7CYCLES_5      ((uint32_t) ADC_SMPR_SMP_1)                    /*!< Sampling time 7.5 ADC clock cycles */
 #define ADC_SAMPLETIME_13CYCLES_5     ((uint32_t) (ADC_SMPR_SMP_1 | ADC_SMPR_SMP_0)) /*!< Sampling time 13.5 ADC clock cycles */
@@ -482,7 +493,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /**
   * @}
   */
-	
+  
 /**
   * @}
   */
@@ -514,13 +525,12 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @}
   */
 
+/* Exported constants --------------------------------------------------------*/
+
 /** @defgroup ADC_Exported_Constants ADC Exported Constants
   * @{
   */
 #define ADC_CCR_ALL     (ADC_CCR_TSEN | ADC_CCR_VREFEN)
-/**
-  * @}
-  */
 
 /** @defgroup ADC_channels ADC channels
   * @{
@@ -561,6 +571,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_EXTERNALTRIGCONV_T1_CC4         ADC1_2_EXTERNALTRIG_T1_CC4
 #define ADC_EXTERNALTRIGCONV_T3_TRGO        ADC1_2_EXTERNALTRIG_T3_TRGO
 #define ADC_SOFTWARE_START                  (ADC_CFGR1_EXTSEL + 1U)
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -735,10 +749,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @param __HANDLE__ ADC handle
   * @retval SET (ADC enabled) or RESET (ADC disabled)
   */
-/* Note: If low power mode AutoPowerOff is enabled, power-on/off phases are   */
-/*       performed automatically by hardware and flag ADC_FLAG_RDY is not     */
-/*       set.                                                                 */
-#define ADC_IS_ENABLE(__HANDLE__) ((( ((((hadc)->Instance->CR) & (ADC_CR_ADEN)) == ADC_CR_ADEN) )  )  ? SET : RESET)
+#define ADC_IS_ENABLE(__HANDLE__) ((( ((((__HANDLE__)->Instance->CR) & (ADC_CR_ADEN)) == ADC_CR_ADEN) )  )  ? SET : RESET)
 
 /**
   * @brief Test if conversion trigger of regular group is software start
@@ -879,6 +890,9 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   */
 #define ADC_TRX_HIGHTHRESHOLD(_Threshold_)                                     \
   ((_Threshold_) << 16U)
+/**
+  * @}
+  */
 
 /** @defgroup ADCEx_Private_Macros ADCEx Private Macros
   * @{
@@ -1040,9 +1054,6 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /**
   * @}
   */
-
-/* Include ADC HAL Extension module */
-#include "py32f0xx_hal_adc_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup ADC_Exported_Functions

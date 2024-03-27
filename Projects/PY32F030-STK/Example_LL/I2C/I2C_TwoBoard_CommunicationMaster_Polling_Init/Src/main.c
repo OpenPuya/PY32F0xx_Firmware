@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -25,11 +33,11 @@
 #include "py32f030xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-#define I2C_ADDRESS        0xA0     /* 本机\从机地址 */
-#define I2C_SPEEDCLOCK     100000   /* 通讯速度100K */
-#define I2C_STATE_READY    0        /* 就绪状态 */
-#define I2C_STATE_BUSY_TX  1        /* 发送状态 */
-#define I2C_STATE_BUSY_RX  2        /* 接收状态 */
+#define I2C_ADDRESS        0xA0     /* Local/Slave address */
+#define I2C_SPEEDCLOCK     100000   /* Communication speed 100K */
+#define I2C_STATE_READY    0        /* Ready state */
+#define I2C_STATE_BUSY_TX  1        /* Transmission state */
+#define I2C_STATE_BUSY_RX  2        /* Reception state */
 
 /* Private variables ---------------------------------------------------------*/
 uint8_t aTxBuffer[15] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -52,40 +60,40 @@ static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t Buff
 static void APP_LedBlinking(void);
 
 /**
-  * @brief  应用程序入口函数.
-  * @param  无
+  * @brief  Main program.
+  * @param  None
   * @retval int
   */
 int main(void)
 {
-  /* 配置系统时钟 */
+  /* Configure system clock */
   APP_SystemClockConfig();
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* 初始化按键BUTTON */
+  /* Initialize button */
   BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
-  /* 配置I2C */
+  /* Configure I2C */
   APP_ConfigI2cMaster();
 
-  /*等待按键按下*/
+  /* Wait for button press */
   while(BSP_PB_GetState(BUTTON_KEY) == 1);
   
-  /* 主机发送数据 */
+  /* Master transmits data */
   APP_MasterTransmit(I2C_ADDRESS, (uint8_t *)aTxBuffer, sizeof(aTxBuffer));
   
-  /* 等待主机发送数据完成 */
+  /* Wait for master to finish sending data */
   while (State != I2C_STATE_READY);
   
-  /* 主机接收数据 */
+  /* Master receives data */
   APP_MasterReceive(I2C_ADDRESS, (uint8_t *)aRxBuffer, sizeof(aRxBuffer));
   
-  /* 等待主机接收数据完成 */
+  /* Wait for master to finish receiving data */
   while (State != I2C_STATE_READY);
   
-  /* 检查接收到的数据 */
+  /* Check the received data */
   APP_CheckEndOfTransfer();
   
   while (1)
@@ -94,49 +102,49 @@ int main(void)
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
-  /* 使能HSI */
+  /* Enable HSI */
   LL_RCC_HSI_Enable();
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
 
-  /* 设置 AHB 分频*/
+  /* Set AHB prescaler */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置HSISYS作为系统时钟源 */
+  /* Configure HSISYS as system clock source */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
-  /* 设置 APB1 分频*/
+  /* Set APB1 prescaler */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_Init1msTick(8000000);
 
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(8000000);
 }
 
 /**
-  * @brief  I2C配置函数
-  * @param  无
-  * @retval 无
+  * @brief  I2C configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_ConfigI2cMaster(void)
 {
-  /* 使能 GPIOA 的外设时钟 */
+  /* Enable GPIOA peripheral clock */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
-  /* 启用 I2C1 的外设时钟 */
+  /* Enable I2C1 peripheral clock */
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C1);
 
-  /* 将 SCL 引脚配置为：可选功能、高速、开漏、上拉 */
+  /* Configure SCL pin: Alternative function, High speed, Open-drain, Pull-up */
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   
   GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
@@ -147,7 +155,7 @@ static void APP_ConfigI2cMaster(void)
   GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* 将 SDA 引脚配置为：可选功能、高速、开漏、上拉 */
+  /* Configure SDA pin: Alternative function, High speed, Open-drain, Pull-up */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
@@ -156,11 +164,11 @@ static void APP_ConfigI2cMaster(void)
   GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   
-  /* 复位I2C */
+  /* Reset I2C */
   LL_APB1_GRP1_ForceReset(LL_APB1_GRP1_PERIPH_I2C1);
   LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_I2C1);
   
-  /* I2C初始化 */
+  /* Initialize I2C */
   LL_I2C_InitTypeDef I2C_InitStruct;
   I2C_InitStruct.ClockSpeed      = I2C_SPEEDCLOCK;
   I2C_InitStruct.DutyCycle       = LL_I2C_DUTYCYCLE_16_9;
@@ -168,43 +176,43 @@ static void APP_ConfigI2cMaster(void)
   I2C_InitStruct.TypeAcknowledge = LL_I2C_NACK;
   LL_I2C_Init(I2C1, &I2C_InitStruct);
   
-  /* 启用时钟拉伸 */
-  /* 复位值是启用时钟延长 */
+  /* Enable clock stretching */
+  /* Reset value is clock stretching enabled */
   /* LL_I2C_EnableClockStretching(I2C1); */
   
-  /* 启用广播呼叫 */
-  /* 复位值为禁用广播呼叫 */
+  /* Enable general call */
+  /* Reset value is general call disabled */
   /* LL_I2C_EnableGeneralCall(I2C1); */
 }
 
 /**
-  * @brief  I2C发送函数
-  * @param  DevAddress：从机地址
-  * @param  pData：要发送数据指针
-  * @param  Size：要发送数据大小
-  * @retval 无
+  * @brief  I2C transmission function
+  * @param  DevAddress：Slave address
+  * @param  pData：Pointer to data to be sent
+  * @param  Size：Size of data to be sent
+  * @retval None
   */
 static void APP_MasterTransmit(uint16_t DevAddress, uint8_t *pData, uint16_t Size)
 {
-  /* 清pos */
+  /* Clear POS bit */
   LL_I2C_DisableBitPOS(I2C1);
   
-  /* 将从机地址、要发送数据、数据大小、状态赋给全局变量 */
+  /* Assign slave address, data to be sent, data size, and state to global variables */
   pBuffPtr    = pData;
   XferCount   = Size;
   Devaddress  = DevAddress;
   State       = I2C_STATE_BUSY_TX;
   
-  /* 产生起始位 */
+  /* Generate start condition */
   LL_I2C_GenerateStartCondition(I2C1);
   while(LL_I2C_IsActiveFlag_SB(I2C1) != 1);
   
-  /* 发送从机地址 */
+  /* Send slave address */
   LL_I2C_TransmitData8(I2C1, (Devaddress & (uint8_t)(~0x01)));
   while(LL_I2C_IsActiveFlag_ADDR(I2C1) != 1);
   LL_I2C_ClearFlag_ADDR(I2C1);
   
-  /* 发送数据 */
+  /* Send data */
   while(XferCount > 0)
   {
     while(LL_I2C_IsActiveFlag_TXE(I2C1) != 1);
@@ -222,42 +230,42 @@ static void APP_MasterTransmit(uint16_t DevAddress, uint8_t *pData, uint16_t Siz
     while(LL_I2C_IsActiveFlag_BTF(I2C1) != 1);
   }
   
-  /* 产生停止位 */
+  /* Generate stop condition */
   LL_I2C_GenerateStopCondition(I2C1);
   
   State = I2C_STATE_READY;
 }
 
 /**
-  * @brief  I2C接收函数
-  * @param  DevAddress：从机地址
-  * @param  pData：要接收数据指针
-  * @param  Size：要接收数据大小
-  * @retval 无
+  * @brief  I2C reception function
+  * @param  DevAddress：Slave address
+  * @param  pData：Pointer to data to be received
+  * @param  Size：Size of data to be received
+  * @retval None
   */
 static void APP_MasterReceive(uint16_t DevAddress, uint8_t *pData, uint16_t Size)
 {
-  /* 清pos */
+  /* Clear POS bit */
   LL_I2C_DisableBitPOS(I2C1);
   
-  /* 将从机地址、要发送数据、数据大小赋给全局变量 */
+  /* Assign slave address, data to be sent, and data size to global variables */
   pBuffPtr    = pData;
   XferCount   = Size;
   Devaddress  = DevAddress;
   State       = I2C_STATE_BUSY_RX;
   
-  /* 使能应答 */
+  /* Enable acknowledge */
   LL_I2C_AcknowledgeNextData(I2C1, LL_I2C_ACK);
   
-  /* 产生起始位 */
+  /* Generate start condition */
   LL_I2C_GenerateStartCondition(I2C1);
   while(LL_I2C_IsActiveFlag_SB(I2C1) != 1);
   
-  /* 发送从机地址 */
+  /* Send slave address */
   LL_I2C_TransmitData8(I2C1, (Devaddress | 0x1));
   while(LL_I2C_IsActiveFlag_ADDR(I2C1) != 1);
   
-  /* 接收数据 */
+  /* Receive data */
   if (XferCount == 0U)
   {
     LL_I2C_ClearFlag_ADDR(I2C1);
@@ -356,31 +364,31 @@ static void APP_MasterReceive(uint16_t DevAddress, uint8_t *pData, uint16_t Size
 }
 
 /**
-  * @brief  校验数据函数
-  * @param  无
-  * @retval 无
+  * @brief  Check data function
+  * @param  None
+  * @retval None
   */
 static void APP_CheckEndOfTransfer(void)
 {
-  /* 比较发送数据和接收数据 */
+  /* Compare the transmitted data with the received data */
   if(APP_Buffercmp8((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, sizeof(aRxBuffer)))
   {
-    /* 错误处理 */
+    /* Error handling */
     APP_LedBlinking();
   }
   else
   {
-    /* 如果数据接收到，则打开 LED */
+    /* If data received, turn on the LED */
     BSP_LED_On(LED_GREEN);
   }
 }
 
 /**
-  * @brief  字符比较函数
-  * @param  pBuffer1：待比较缓冲区1
-  * @param  pBuffer2：待比较缓冲区2
-  * @param  BufferLength：待比较字符的个数
-  * @retval 0：比较值相同；1：比较值不同
+  * @brief  Character comparison function
+  * @param  pBuffer1：pointer to the buffer 1 to be compared
+  * @param  pBuffer2：pointer to the buffer 2 to be compared
+  * @param  BufferLength：number of characters to be compared
+  * @retval 0: comparison value is the same; 1: comparison value is different
   */
 static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength)
 {
@@ -398,9 +406,9 @@ static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t Buff
 }
 
 /**
-  * @brief  LED灯闪烁
-  * @param  无
-  * @retval 无
+  * @brief  LED blinking
+  * @param  None
+  * @retval None
   */
 static void APP_LedBlinking(void)
 {
@@ -412,13 +420,13 @@ static void APP_LedBlinking(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
+  /* Infinite loop */
   while (1)
   {
   }
@@ -426,16 +434,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

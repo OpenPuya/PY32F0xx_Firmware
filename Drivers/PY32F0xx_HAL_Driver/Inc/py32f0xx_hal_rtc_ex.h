@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal_def.h"
 
-/** @addtogroup PY32F0xxHAL_Driver
+/** @addtogroup PY32F0xx_HAL_Driver
   * @{
   */
 
@@ -111,7 +119,7 @@ extern "C" {
   *            @arg RTC_FLAG_SEC
   * @retval None
   */
-#define __HAL_RTC_SECOND_CLEAR_FLAG(__HANDLE__, __FLAG__)      ((__HANDLE__)->Instance->CRL) = ~(__FLAG__)
+#define __HAL_RTC_SECOND_CLEAR_FLAG(__HANDLE__, __FLAG__)      CLEAR_BIT((__HANDLE__)->Instance->CRL,(__FLAG__))
 
 /**
   * @brief  Enable the RTC Overflow interrupt.
@@ -161,7 +169,7 @@ extern "C" {
   *            @arg RTC_FLAG_OW
   * @retval None
   */
-#define __HAL_RTC_OVERFLOW_CLEAR_FLAG(__HANDLE__, __FLAG__)      ((__HANDLE__)->Instance->CRL) = ~(__FLAG__)
+#define __HAL_RTC_OVERFLOW_CLEAR_FLAG(__HANDLE__, __FLAG__)      CLEAR_BIT((__HANDLE__)->Instance->CRL,(__FLAG__))
 
 /**
   * @}

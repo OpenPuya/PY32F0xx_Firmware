@@ -204,8 +204,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -2534,12 +2542,12 @@ uint32_t HAL_UART_GetError(UART_HandleTypeDef *huart)
   * @{
   */
 
+#if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Initialize the callbacks to their default values.
   * @param  huart UART handle.
   * @retval none
   */
-#if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
 void UART_InitCallbacksToDefault(UART_HandleTypeDef *huart)
 {
   /* Init the UART Callback settings */

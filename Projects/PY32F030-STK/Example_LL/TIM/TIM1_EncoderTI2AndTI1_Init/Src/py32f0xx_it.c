@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -86,13 +94,13 @@ void SysTick_Handler(void)
   */
 void TIM1_CC_IRQHandler(void)
 {
-  /*清除CC1标志位*/
+  /* Clear CC1 flag */
   LL_TIM_ClearFlag_CC1(TIM1);
   
-  /*清除CC2标志位*/
+  /* Clear CC2 flag */
   LL_TIM_ClearFlag_CC2(TIM1);
   
-  /*CC回调函数*/
+  /* Call CC callback function */
   APP_CCCallback();
 }
 

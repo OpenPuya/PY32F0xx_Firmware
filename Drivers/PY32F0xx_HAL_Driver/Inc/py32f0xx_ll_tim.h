@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup PY32F0XX_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -912,7 +920,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup TIM_LL_EM_Exported_Macros Exported_Macros
+/** @defgroup TIM_LL_EM_Exported_Macros Exported Macros
   * @{
   */
 
@@ -2919,10 +2927,10 @@ __STATIC_INLINE void LL_TIM_ConfigDMABurst(TIM_TypeDef *TIMx, uint32_t DMABurstB
 {
   MODIFY_REG(TIMx->DCR, (TIM_DCR_DBL | TIM_DCR_DBA), (DMABurstBaseAddress | DMABurstLength));
 }
-#endif
 /**
   * @}
   */
+#endif
 
 /** @defgroup TIM_LL_EF_OCREF_Clear OCREF_Clear_Management
   * @{
@@ -2942,10 +2950,6 @@ __STATIC_INLINE void LL_TIM_SetOCRefClearInputSource(TIM_TypeDef *TIMx, uint32_t
 {
   MODIFY_REG(TIMx->SMCR, TIM_SMCR_OCCS, OCRefClearInputSource);
 }
-/**
-  * @}
-  */
-
 /**
   * @}
   */
@@ -3856,7 +3860,6 @@ ErrorStatus LL_TIM_BDTR_Init(TIM_TypeDef *TIMx, LL_TIM_BDTR_InitTypeDef *TIM_BDT
 /**
   * @}
   */
-
 #endif /* TIM1 || TIM2 || TIM3 || TIM4 || TIM5 || TIM6 || TIM7 || TIM8 || TIM9 || TIM10 || TIM11 || TIM12 || TIM13 || TIM14  || TIM15 || TIM16 || TIM17 */
 
 /**

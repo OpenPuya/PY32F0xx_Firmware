@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -25,11 +33,11 @@
 #include "py32f030xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-/* 定义与时钟配置相关的 */
+/* Definitions related to clock configuration */
 #define RTC_ASYNCH_PREDIV          ((uint32_t)0x7FFF)
 
 /* Private variables ---------------------------------------------------------*/
-/* 时间结构体及其变量 */
+/* Time structure and its variables */
 struct time_t
 {
   uint8_t sec;
@@ -38,7 +46,7 @@ struct time_t
 };
 struct time_t RTC_TimeStruct;
 struct time_t RTC_AlarmStruct;
-/* 日期结构体及其变量 */
+/* Date structure and its variables */
 struct date_t
 {
   uint8_t month;
@@ -47,7 +55,7 @@ struct date_t
 };
 struct date_t RTC_DateStruct;
 uint8_t EndOfMonth[12]= {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-/* 用于显示时间和日期的缓冲区 */
+/* Buffer for displaying time and date */
 uint32_t TimeCounter = 0;
 uint8_t aShowTime[50] = {0};
 uint8_t aShowDate[50] = {0};
@@ -64,90 +72,90 @@ static void APP_UpadateRtcTimeStruct(void);
 static void APP_UpadateRtcDateStruct(void);
 
 /**
-  * @brief  应用程序入口函数.
-  * @param  无
+  * @brief  Main program.
+  * @param  None
   * @retval int
   */
 int main(void)
 {
-  /* 配置系统时钟 */
+  /* Configure system clock */
   APP_SystemClockConfig();
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
   
-  /* 关闭LED */
+  /* Turn off LED */
   BSP_LED_Off(LED_GREEN);
 
-  /* 配置RTC外设 */
+  /* Configure RTC peripheral */
   APP_ConfigRtc();
 
-  /* 配置RTC闹钟 */
+  /* Configure RTC alarm */
   APP_ConfigRtcAlarm();
 
   while (1)
   {
-    /* 更新并显示时间和日期 */
+    /* Update and display time and date */
     APP_ShowRtcCalendar();
   }
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
-  /* 使能HSI */
+  /* Enable HSI */
   LL_RCC_HSI_Enable();
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
 
-  /* 设置 AHB 分频*/
+  /* Set AHB prescaler */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置HSISYS作为系统时钟源 */
+  /* Configure HSISYS as system clock source */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
-  /* 设置 APB1 分频*/
+  /* Set APB1 prescaler */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_Init1msTick(8000000);
 
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(8000000);
 }
 
 /**
-  * @brief  配置RTC时钟
-  * @param  无
-  * @retval 无
+  * @brief  Configure RTC clock
+  * @param  None
+  * @retval None
   */
 static void APP_ConfigRtc(void)
 {
   LL_RTC_InitTypeDef rtc_initstruct;
   
-  /*##-1- 启用 PWR 时钟并启用对备份域的访问 #######*/
-  /* 要更改 RTC 功能（LSE、LSI）的源时钟，必须：
-      - 启用PWR时钟
-      - 启用写访问以配置 RTC 时钟源（在复位后完成一次）。
-      - 复位备份域
-      - 配置需要的RTC时钟源 */
+  /*##-1- Enable PWR clock and enable access to the backup domain #######*/
+  /* To change the source clock of the RTC functionalities (LSE, LSI), you have to:
+      - Enable the PWR clock
+      - Enable write access to configure the RTC clock source (once after reset).
+      - Reset the Backup domain
+      - Configure the needed RTC clock source */
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
   LL_PWR_EnableBkUpAccess();
 
-  /*##-2- 将LSI配置为RTC时钟源##############################*/
-  /* 使能 LSI */
+  /*##-2- Configure LSI as RTC clock source##############################*/
+  /* Enable LSI */
   LL_RCC_LSI_Enable();
   while (LL_RCC_LSI_IsReady() != 1)
   {
   }
-  /* 仅当 LSI 尚未被选为 RTC 时钟源时才复位备份域 */
+  /* Reset backup domain only if LSI has not been selected as RTC clock source */
   if (LL_RCC_GetRTCClockSource() != LL_RCC_RTC_CLKSOURCE_LSI)
   {
     LL_RCC_ForceBackupDomainReset();
@@ -155,94 +163,94 @@ static void APP_ConfigRtc(void)
     LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
   }
   
-  /* 使能 RTC 时钟和 RTC APB 时钟*/
+  /* Enable RTC clock and RTC APB clock */
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_RTC);
   LL_RCC_EnableRTC();
   
-  /*##-4 配置RTC ######################################### ############*/
-  /* 配置 RTC 预分频器和 RTC 数据寄存器 */
+  /*##-4 Configure RTC ######################################### ############*/
+  /* Configure RTC prescaler and RTC data registers */
   if (LL_RTC_DeInit(RTC) != SUCCESS) 
   {
-    /* 错误提示 */
+    /* Error prompt */
     BSP_LED_Toggle(LED_GREEN);
   }
   
-  /* 配置分频因子和输出源 */
+  /* Configure prescaler and output source */
   rtc_initstruct.AsynchPrescaler = RTC_ASYNCH_PREDIV;
   rtc_initstruct.OutPutSource    = LL_RTC_CALIB_OUTPUT_NONE;
   if (LL_RTC_Init(RTC, &rtc_initstruct) != SUCCESS)
   {
-    /* 错误提示 */
+    /* Error prompt */
     BSP_LED_Toggle(LED_GREEN);
   }
 }
 
 /**
-  * @brief  配置RTC闹钟
-  * @param  无
-  * @retval 无
+  * @brief  Configure RTC alarm
+  * @param  None
+  * @retval None
   */
 static void APP_ConfigRtcAlarm(void)
 {
   LL_RTC_TimeTypeDef  rtc_time_initstruct;
   LL_RTC_AlarmTypeDef rtc_alarm_initstruct;
   
-  /*## 配置日期 ##################################################*/
-  /* 设定日期: 2022.08.16 */
+  /*## Configure Date ##################################################*/
+  /* Set date: 2022.08.16 */
   APP_ConfigRtcDate(16, 8, 22);
   
-  /*##-4- 配置时间 ################################################*/
+  /*##-4- Configure Time  ################################################*/
   /* Set Time: 11:59:55 */
   rtc_time_initstruct.Hours      =11;
   rtc_time_initstruct.Minutes    =59 ;
   rtc_time_initstruct.Seconds    =55;
-  /* 根据初始化结构中定义的参数初始化 RTC 时间 */  
+  /* Initialize RTC time according to the parameters defined in the initialization structure */  
   if (LL_RTC_TIME_Init(RTC, LL_RTC_FORMAT_BIN, &rtc_time_initstruct) != SUCCESS)   
   {
-    /* 错误提示 */
+    /* Error prompt */
     BSP_LED_Toggle(LED_GREEN);
   }
-  /*##-5-配置闹钟 #################################*/
-  /* 配置闹钟时间为 12:00:25 */
+  /*##-5-Configure Alarm #################################*/
+  /* Configure alarm time to 12:00:25 */
   rtc_alarm_initstruct.AlarmTime.Hours      = 12;
   rtc_alarm_initstruct.AlarmTime.Minutes    = 00;
   rtc_alarm_initstruct.AlarmTime.Seconds    = 25;
   if (LL_RTC_ALARM_Init(RTC, LL_RTC_FORMAT_BIN, &rtc_alarm_initstruct) != SUCCESS)   
   {
-    /* 错误提示 */
+    /* Error prompt */
     BSP_LED_Toggle(LED_GREEN);
   }
   
-  /* 禁用 RTC 寄存器的写保护 */
+  /* Disable write protection of RTC registers */
   LL_RTC_DisableWriteProtection(RTC);
   
-  /* 清除闹钟中断挂起位 */
+  /* Clear alarm interrupt flag */
   LL_RTC_ClearFlag_ALR(RTC);
   
-  /* 使能闹钟中断 */
+  /* Enable alarm interrupt */
   LL_RTC_EnableIT_ALR(RTC);
 
-  /* 使能 RTC 寄存器的写保护 */
+  /* Enable write protection of RTC registers */
   LL_RTC_EnableWriteProtection(RTC);
   
-  /*##-6- 配置RTC的NVIC ###############################*/
+  /*##-6- Configure RTC NVIC ###############################*/
   NVIC_SetPriority(RTC_IRQn, 0x00);
   NVIC_EnableIRQ(RTC_IRQn);
 
-  /*##-7- 退出初始化模式 #######################################*/
+  /*##-7- Exit Initialization Mode #######################################*/
   if (LL_RTC_ExitInitMode(RTC) != SUCCESS)   
   {
-    /* 错误提示 */
+    /* Error prompt */
     BSP_LED_Toggle(LED_GREEN);
   }
 }
 
 /**
-  * @brief  配置日期
-  * @param  fYear：年份
-  * @param  fMonth：月份
-  * @param  fDate：天
-  * @retval 无
+  * @brief  Configure Date
+  * @param  fYear：year
+  * @param  fMonth：month
+  * @param  fDate：day
+  * @retval None
   */
 static void APP_ConfigRtcDate(uint8_t fDate , uint8_t fMonth , uint8_t fYear)
 {
@@ -252,28 +260,28 @@ static void APP_ConfigRtcDate(uint8_t fDate , uint8_t fMonth , uint8_t fYear)
 }
 
 /**
-  * @brief  显示日期和时间
-  * @param  无
-  * @retval 无
+  * @brief  Show date and time
+  * @param  None
+  * @retval None
   */
 static void APP_ShowRtcCalendar(void)
 {
   APP_UpadateRtcTimeStruct();
   APP_UpadateRtcDateStruct();
-  /* 显示时间格式 : hh:mm:ss */
+  /* Time format: hh:mm:ss */
   sprintf((char*)aShowTime,"%.2d:%.2d:%.2d", RTC_TimeStruct.hour, 
           RTC_TimeStruct.min, 
           RTC_TimeStruct.sec);
-  /* 显示日期格式 : mm-dd-yy */
+  /* Date format: mm-dd-yy */
   sprintf((char*)aShowDate,"%.2d-%.2d-%.2d", RTC_DateStruct.day,
           RTC_DateStruct.month,
           (2000 + RTC_DateStruct.year));
 }
 
 /**
-  * @brief  更新时间
-  * @param  无
-  * @retval 无
+  * @brief  Update time
+  * @param  None
+  * @retval None
   */
 static void APP_UpadateRtcTimeStruct(void)
 {  
@@ -284,13 +292,13 @@ static void APP_UpadateRtcTimeStruct(void)
 }
 
 /**
-  * @brief  更新日期
-  * @param  无
-  * @retval 无
+  * @brief  Update date
+  * @param  None
+  * @retval None
   */
 static void APP_UpadateRtcDateStruct(void)
 {
-  /* 当时间为 23:59:59 时，更新日期 */
+  /* Update date when the time is 23:59:59 */
   if (TimeCounter == 0x0001517FU)
   {
     if(RTC_DateStruct.day == EndOfMonth[RTC_DateStruct.month -1])
@@ -306,13 +314,13 @@ static void APP_UpadateRtcDateStruct(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
+  /* Infinite loop */
   while (1)
   {
   }
@@ -320,16 +328,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

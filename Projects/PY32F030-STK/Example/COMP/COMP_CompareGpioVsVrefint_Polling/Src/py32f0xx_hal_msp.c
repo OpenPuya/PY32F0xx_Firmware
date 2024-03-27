@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,35 +40,35 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
 }
 
 /**
-  * @brief 初始化COMP相关MSP
+  * @brief Initialize COMP-related MSP
   */
 void HAL_COMP_MspInit(COMP_HandleTypeDef *hcomp)
 {
-  __HAL_RCC_GPIOA_CLK_ENABLE();                 /* 使能GPIOA时钟 */
-  __HAL_RCC_COMP1_CLK_ENABLE();                 /* 使能COMP1时钟 */
-  __HAL_RCC_COMP2_CLK_ENABLE();                 /* 使能COMP2时钟 */
-  /* GPIO PA1配置为模拟输入 */
+  __HAL_RCC_GPIOA_CLK_ENABLE();                 /* Enable GPIOA clock */
+  __HAL_RCC_COMP1_CLK_ENABLE();                 /* Enable COMP1 clock */
+  __HAL_RCC_COMP2_CLK_ENABLE();                 /* Enable COMP2 clock */
+  /* Configure GPIO PA1 as analog input */
   GPIO_InitTypeDef COMPINPUT;
   COMPINPUT.Pin = GPIO_PIN_1;
-  COMPINPUT.Mode = GPIO_MODE_ANALOG;            /* 模拟模式 */
+  COMPINPUT.Mode = GPIO_MODE_ANALOG;            /* Analog mode */
   COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;               /* 下拉 */
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);            /* GPIO初始化 */
+  COMPINPUT.Pull = GPIO_PULLDOWN;               /* Pull-down */
+  HAL_GPIO_Init(GPIOA,  &COMPINPUT);            /* Initialize GPIO */
 
-  /* GPIO PA6配置为输出  */
+  /* Configure GPIO PA6 as output  */
   COMPINPUT.Pin = GPIO_PIN_6;
-  COMPINPUT.Mode = GPIO_MODE_AF_PP;             /* 输出 */
+  COMPINPUT.Mode = GPIO_MODE_AF_PP;             /* Output mode */
   COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;               /* 下拉 */
-  COMPINPUT.Alternate = GPIO_AF7_COMP1;         /* 复用为COM1_OUT */
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);            /* 初始化GPIO */
+  COMPINPUT.Pull = GPIO_PULLDOWN;               /* Pull-down */
+  COMPINPUT.Alternate = GPIO_AF7_COMP1;         /* Alternate as COM1_OUT */
+  HAL_GPIO_Init(GPIOA,  &COMPINPUT);            /* Initialize GPIO */
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

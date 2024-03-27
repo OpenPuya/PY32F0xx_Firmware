@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+			"type": "shell",
+			"label": "make",
+			"command": "make",
+			"args": [],
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+		  "type": "shell",
+		  "label": "make and download",
+		  "command": "openocd",
+		  "args": [
+			"-s",
+			"../../../scripts",
+			"-f",
+			"interface/cmsis-dap.cfg",
+			"-f",
+			"target/py32f030.cfg",
+			"-c",
+			"program build/Project/Project.elf verify reset exit"
+		  ],
+		  "problemMatcher": [
+			"$gcc"
+		  ],
+		  "group": "build",
+		  "dependsOn": "make"
+		},
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "${command:eide.project.build}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "flash",
+            "type": "shell",
+            "command": "${command:eide.project.uploadToDevice}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "build and flash",
+            "type": "shell",
+            "command": "${command:eide.project.buildAndFlash}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "rebuild",
+            "type": "shell",
+            "command": "${command:eide.project.rebuild}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "${command:eide.project.clean}",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

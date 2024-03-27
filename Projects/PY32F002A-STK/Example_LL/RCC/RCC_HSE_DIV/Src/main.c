@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -65,15 +73,15 @@ static void APP_ConfigGPIO(void)
   LL_GPIO_InitTypeDef GPIO_InitStruct;  
   /* 选择1号引脚*/
   GPIO_InitStruct.Pin = LL_GPIO_PIN_1; 
-  /* 配置为复用模式*/	
+  /* 配置为复用模式*/
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE; 
-  /* 选择复用为AF15功能*/	
+  /* 选择复用为AF15功能*/
   GPIO_InitStruct.Alternate = LL_GPIO_AF15_MCO;     
-  /* 输出速度选择*/	
+  /* 输出速度选择*/
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;   
   /* 输出模式选择*/
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  /* 无上下拉*/	
+  /* 无上下拉*/
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;                
   
   /* 初始化GPIOA*/

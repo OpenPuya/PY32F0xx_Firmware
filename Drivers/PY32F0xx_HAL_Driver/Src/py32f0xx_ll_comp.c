@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -33,7 +41,7 @@
 #define assert_param(expr) ((void)0U)
 #endif /* USE_FULL_ASSERT */
 
-/** @addtogroup PY320xx_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -68,7 +76,7 @@
   (   ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO1)                             \
    || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO2)                             \
    || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO3)                             \
-   || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO4)	                           \
+   || ((__INPUT_PLUS__) == LL_COMP_INPUT_PLUS_IO4)                             \
   )
 
 /* Note: On this PY32 series, comparator input minus parameters are           */

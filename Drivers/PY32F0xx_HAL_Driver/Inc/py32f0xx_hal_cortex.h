@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,8 +40,12 @@ extern "C" {
 #include "py32f0xx_hal_def.h"
 
 
-/**
-  * @}
+/** @addtogroup PY32F0xx_HAL_Driver
+  * @{
+  */
+
+/** @defgroup CORTEX CORTEX
+  * @{
   */
 
 /* Exported constants --------------------------------------------------------*/
@@ -48,15 +60,13 @@ extern "C" {
 #define SYSTICK_CLKSOURCE_HCLK_DIV8       0x00000000U
 #define SYSTICK_CLKSOURCE_HCLK            0x00000004U
 
+/**
+  * @}
+  */
 
-
-
-
-
-
-
-
-
+ /**
+  * @}
+  */
 
 /* Exported macros -----------------------------------------------------------*/
 /** @defgroup CORTEX_Exported_Macros CORTEX Exported Macros
@@ -100,6 +110,10 @@ void HAL_SYSTICK_IRQHandler(void);
 void HAL_SYSTICK_Callback(void);
 
 
+/**
+  * @}
+  */
+
 
 /**
   * @}
@@ -118,8 +132,6 @@ void HAL_SYSTICK_Callback(void);
 
 #define IS_SYSTICK_CLK_SOURCE(SOURCE)             (((SOURCE) == SYSTICK_CLKSOURCE_HCLK) || \
                                                    ((SOURCE) == SYSTICK_CLKSOURCE_HCLK_DIV8))
-
-
 
 /**
   * @}

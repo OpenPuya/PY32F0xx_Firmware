@@ -311,8 +311,8 @@
   </Group>
 
   <Group>
-    <GroupName>Drivers/BSP/PY32F30xx_Start_Kit</GroupName>
-    <tvExp>0</tvExp>
+    <GroupName>BSP/PY32F30xx_Start_Kit</GroupName>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

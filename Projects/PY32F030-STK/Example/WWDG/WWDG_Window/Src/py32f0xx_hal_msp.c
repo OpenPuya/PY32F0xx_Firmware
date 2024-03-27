@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,18 +40,18 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
 }
 
 /**
-  * @brief 初始化WWDG相关MSP
+  * @brief Initialize WWDG-related MSP
   */
 void HAL_WWDG_MspInit(WWDG_HandleTypeDef *hwwdg)
 {
-  __HAL_RCC_WWDG_CLK_ENABLE();  /* 使能WWDG时钟 */
+  __HAL_RCC_WWDG_CLK_ENABLE();  /* Enable WWDG clock */
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

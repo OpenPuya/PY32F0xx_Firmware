@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,40 +40,40 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
 }
 
 /**
-  * @brief 初始TIM相关MSP
+  * @brief Initialize TIM-related MSP
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
   GPIO_InitTypeDef   GPIO_InitStruct;
-  /* GPPIOA时钟使能 */
+  /* Enable GPPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  /* TIM1时钟使能 */
+  /* Enable TIM1 clock */
   __HAL_RCC_TIM1_CLK_ENABLE();
   
-  /*GPIOA8初始化为TIM1_CH1*/
+  /*Initialize GPIOA8 as TIM1_CH1*/
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  /*GPIOA9初始化为TIM1_CH2*/
+  /*Initialize GPIOA9 as TIM1_CH2*/
   GPIO_InitStruct.Pin = GPIO_PIN_9;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  /*GPIOA10初始化为TIM1_CH3*/
+  /*Initialize GPIOA10 as TIM1_CH3*/
   GPIO_InitStruct.Pin = GPIO_PIN_10;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* 设置中断优先级 */
+  /* Set interrupt priority */
   HAL_NVIC_SetPriority(TIM1_CC_IRQn, 3, 0);
-  /* 中断使能 */
+  /* Enable interrupt */
   HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);
 }
 

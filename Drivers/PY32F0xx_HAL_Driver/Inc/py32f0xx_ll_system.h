@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup PY32F0XX_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -56,7 +64,9 @@ extern "C" {
 /* Private macros ------------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
+
 /* Exported constants --------------------------------------------------------*/
+
 /** @defgroup SYSTEM_LL_Exported_Constants SYSTEM Exported Constants
   * @{
   */
@@ -149,6 +159,7 @@ extern "C" {
   */
 
 /** @defgroup SYSTEM_LL_EC_ETR_SRC ETR SOURCE
+  * @{
   */
 #define LL_SYSCFG_ETR_SRC_TIM1_GPIO          0x00000000U
 #if defined(COMP1)
@@ -161,9 +172,10 @@ extern "C" {
 /**
   * @}
   */
-	
+  
 #if (defined(DMA) || defined(DMA1))
 /** @defgroup SYSTEM_LL_EC_DMA_MAP DMA MAP
+  * @{
   */
 #define LL_SYSCFG_DMA_MAP_ADC               0x00000000U
 #define LL_SYSCFG_DMA_MAP_SPI1_TX           SYSCFG_CFGR3_DMA1_MAP_0
@@ -197,6 +209,7 @@ extern "C" {
   */
 
 /** @defgroup SYSTEM_LL_EC_DMA_ACKLVL DMA SPEED ENABLE
+  * @{
   */
 #define LL_SYSCFG_DMA_ACKLVL_NORM          0x00000000U
 #define LL_SYSCFG_DMA_ACKLVL_FAST          SYSCFG_CFGR3_DMA1_ACKLVL
@@ -205,6 +218,7 @@ extern "C" {
   */
 
 /** @defgroup SYSTEM_LL_EC_DMA_CHNNEL_SHIFT DMA CHNNEL SHIFT ADDRESS
+  * @{
   */
 #define LL_SYSCFG_DMA_CH2_SHIFT            (8U)
 #define LL_SYSCFG_DMA_CH3_SHIFT            (16U)
@@ -549,7 +563,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetDMARemap_CH1(void)
 
 /**
   * @brief  Set the response speed of DMA channel 1
-  * @param  Requset This parameter can be one of the following values:
+  * @param  ResponseSpeed This parameter can be one of the following values:
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_NORM
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_FAST
   * @retval None
@@ -646,7 +660,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetDMARemap_CH2(void)
 
 /**
   * @brief  Set the response speed of DMA channel 2
-  * @param  Requset This parameter can be one of the following values:
+  * @param  ResponseSpeed This parameter can be one of the following values:
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_NORM
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_FAST
   * @retval None
@@ -742,7 +756,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetDMARemap_CH3(void)
 
 /**
   * @brief  Set the response speed of DMA channel 3
-  * @param  Requset This parameter can be one of the following values:
+  * @param  ResponseSpeed This parameter can be one of the following values:
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_NORM
   *         @arg @ref LL_SYSCFG_DMA_ACKLVL_FAST
   * @retval None
@@ -801,10 +815,9 @@ __STATIC_INLINE uint32_t LL_FLASH_GetLatency(void)
   * @}
   */
 
-/**
-  * @}
+/** @defgroup SYSTEM_LL_EF_DBGMCU DBGMCU
+  * @{
   */
-
 
 /**
   * @brief  Return the device identifier
@@ -949,6 +962,15 @@ __STATIC_INLINE uint32_t LL_DBGMCU_APB1_GRP2_IsFreezePeriph(uint32_t Periphs)
 {
   return ((READ_BIT(DBGMCU->APBFZ2, Periphs) == (Periphs)) ? 1UL : 0UL);
 }
+/**
+  * @}
+  */
+
+
+/**
+  * @}
+  */
+
 /**
   * @}
   */

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 #include "py32f0xx_ll_bus.h"
-/** @addtogroup PY320xx_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -599,7 +607,9 @@ typedef struct
 #define LL_ADC_CAL_STATUS_FAIL                    (                 ADC_CCSR_CALFAIL)        /*!< ADC calibration status FAIL */
 #define LL_ADC_CAL_STATUS_ONGOING                 (ADC_CCSR_CALON                   )        /*!< ADC calibration status ONGOING */
 #define LL_ADC_CAL_STATUS_INVALID                 (ADC_CCSR_CALON | ADC_CCSR_CALFAIL)        /*!< ADC calibration status INVALID */
-
+/**
+  * @}
+  */
 
 /** @defgroup ADC_LL_EC_HW_DELAYS  Definitions of ADC hardware constraints delays
   * @note   Only ADC IP HW delays are defined in ADC LL driver driver,
@@ -1280,6 +1290,9 @@ typedef struct
   * @}
   */
 
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup ADC_LL_Exported_Functions ADC Exported Functions
   * @{
@@ -2121,7 +2134,6 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerChRem(ADC_TypeDef *ADCx, uint32_t Ch
   *         @arg @ref LL_ADC_CHANNEL_7
   *         @arg @ref LL_ADC_CHANNEL_8
   *         @arg @ref LL_ADC_CHANNEL_9
-  *         @arg @ref LL_ADC_CHANNEL_10
   *         @arg @ref LL_ADC_CHANNEL_11
   *         @arg @ref LL_ADC_CHANNEL_12
   *         @arg @ref LL_ADC_CHANNEL_VREFINT
@@ -2212,7 +2224,7 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetContinuousMode(ADC_TypeDef *ADCx)
   *         ADC state:
   *         ADC must be disabled or enabled without conversion on going
   *         on group regular.
-	* @note   Depending on devices and packages, DMA may not be available.
+  * @note   Depending on devices and packages, DMA may not be available.
   *         Refer to device datasheet for DMA availability.
   * @rmtoll CFGR1    DMAEN          LL_ADC_REG_SetDMATransfer\n
   *         CFGR1    DMACFG         LL_ADC_REG_SetDMATransfer
@@ -2248,7 +2260,7 @@ __STATIC_INLINE void LL_ADC_REG_SetDMATransfer(ADC_TypeDef *ADCx, uint32_t DMATr
   *         (overrun flag and interruption if enabled).
   * @note   To configure DMA source address (peripheral address),
   *         use function @ref LL_ADC_DMA_GetRegAddr().
-	* @note   Depending on devices and packages, DMA may not be available.
+  * @note   Depending on devices and packages, DMA may not be available.
   *         Refer to device datasheet for DMA availability.
   * @rmtoll CFGR1    DMAEN          LL_ADC_REG_GetDMATransfer\n
   *         CFGR1    DMACFG         LL_ADC_REG_GetDMATransfer
@@ -3147,7 +3159,7 @@ __STATIC_INLINE uint32_t LL_ADC_IsEnabledIT_AWD(ADC_TypeDef *ADCx)
   * @note   Unit: ADC clock cycles.
   * @rmtoll CCSR     CALSMP            LL_ADC_SetCalSamplingTime
   * @param  ADCx ADC instance
-  * @param  SamplingTime This parameter can be one of the following values:
+  * @param  CalibrationSamplingTime This parameter can be one of the following values:
   *         @arg @ref LL_ADC_CAL_SAMPLINGTIME_2CYCLES
   *         @arg @ref LL_ADC_CAL_SAMPLINGTIME_4CYCLES
   *         @arg @ref LL_ADC_CAL_SAMPLINGTIME_8CYCLES
@@ -3206,7 +3218,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetCalibrationStatus(ADC_TypeDef *ADCx)
   * @brief  Set the calibration mode
   * @rmtoll CCSR     CALSEL            LL_ADC_SetCalibrationMode
   * @param  ADCx ADC instance
-  * @param  This parameter can be one of the following values:
+  * @param  CalibrationMode This parameter can be one of the following values:
             @arg @ref LL_ADC_CAL_MODE_OFFSET
   *         @arg @ref LL_ADC_CAL_MODE_OFFSETANDLINEARITY
   * @retval None     

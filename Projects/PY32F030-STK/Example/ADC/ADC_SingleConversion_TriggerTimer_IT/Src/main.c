@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -38,24 +46,24 @@ static void APP_TimerInit(void);
 static void APP_AdcConfig(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();   
   
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
   
-  /* 初始化UART */  
+  /* Initialize UART */  
   DEBUG_USART_Config();
   
-  /* 初始化Timer */
+  /* Initialize Timer */
   APP_TimerInit();  
 
-  /* 配置ADC */
+  /* Configure ADC */
   APP_AdcConfig();
   
   while (1)
@@ -64,36 +72,36 @@ int main(void)
 }
 
 /**
-  * @brief  ADC配置函数
-  * @param  无
-  * @retval 无
+  * @brief  ADC configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_AdcConfig(void)
 {
   __HAL_RCC_ADC_FORCE_RESET();
-  __HAL_RCC_ADC_RELEASE_RESET();                                                  /* 复位ADC */
-  __HAL_RCC_ADC_CLK_ENABLE();                                                     /* ADC时钟使能 */
+  __HAL_RCC_ADC_RELEASE_RESET();                                                  /* Reset ADC */
+  __HAL_RCC_ADC_CLK_ENABLE();                                                     /* Enable ADC clock */
 
   AdcHandle.Instance = ADC1;
-  /* ADC校准 */
+  /* ADC calibration */
   if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)                         
   {
     APP_ErrorHandler();
   }
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* 设置ADC时钟 */
-  AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit */
-  AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
-  AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_BACKWARD;             /* 扫描序列方向：向下 */
-  AdcHandle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;                     /* 转换结束标志 */
-  AdcHandle.Init.LowPowerAutoWait      = ENABLE;                                  /* 等待转换模式开启 */
-  AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* 单次转换模式 */
-  AdcHandle.Init.DiscontinuousConvMode = ENABLE;                                  /* 使能非连续模式 */
-  AdcHandle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_TRGO;            /* 外部触发转换启动事件为TIM1_TRGO */
-  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;  /* 触发边沿上升沿和下降沿 */
-  AdcHandle.Init.DMAContinuousRequests = DISABLE;                                 /* DMA不使能 */
-  AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* 当过载发生时，覆盖上一个值 */
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
-  /* ADC初始化 */
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* Set ADC clock */
+  AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 12-bit resolution for converted data */
+  AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* Right-alignment for converted data */
+  AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_BACKWARD;             /* Scan sequence direction: backward */
+  AdcHandle.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;                     /* Conversion completion flag */
+  AdcHandle.Init.LowPowerAutoWait      = ENABLE;                                  /* Enable wait for conversion mode */
+  AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* Single conversion mode */
+  AdcHandle.Init.DiscontinuousConvMode = ENABLE;                                  /* Enable discontinuous mode */
+  AdcHandle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_TRGO;            /* Set the external trigger for conversion start event to TIM1_TRGO */
+  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;  /* Trigger on both rising and falling edges */
+  AdcHandle.Init.DMAContinuousRequests = DISABLE;                                 /* Disable DMA */
+  AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* When an overload occurs, overwrite the previous value */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* The channel sampling time is 239.5 ADC clock cycles */
+  /* ADC initialization */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)
   {
     APP_ErrorHandler();
@@ -102,12 +110,12 @@ static void APP_AdcConfig(void)
   sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;
   sConfig.Channel      = ADC_CHANNEL_0;
   
-  /* 通道0配置 */
+  /* Channel 0 configuration */
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)                      
   {
     APP_ErrorHandler();
   }
-  /* ADC开启，并且开启中断 */
+  /* Enable ADC and enable interrupts */
   if (HAL_ADC_Start_IT(&AdcHandle) != HAL_OK)                                     
   {
     APP_ErrorHandler();
@@ -115,39 +123,39 @@ static void APP_AdcConfig(void)
 }
 
 /**
-  * @brief  TIM配置函数
-  * @param  无
-  * @retval 无
+  * @brief  TIM configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_TimerInit(void)
 {
 
-  __HAL_RCC_TIM1_CLK_ENABLE();                                        /* TIM1时钟使能 */
+  __HAL_RCC_TIM1_CLK_ENABLE();                                        /* Enable TIM1 clock */
   TimHandle.Instance = TIM1;                                          /* TIM1 */
-  TimHandle.Init.Period            = 8000 - 1;                        /* TIM1重装载值位8000-1 */
-  TimHandle.Init.Prescaler         = 1000 - 1;                        /* 预分频为1000-1 */
-  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;          /* 时钟不分配 */
-  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;              /* 向上计数 */
-  TimHandle.Init.RepetitionCounter = 0;                               /* 不重复 */
-  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* 自动重装载寄存器没有缓冲 */
-  if (HAL_TIM_Base_Init(&TimHandle) != HAL_OK)                        /* 初始化TIM1 */
+  TimHandle.Init.Period            = 8000 - 1;                        /* TIM1 reload value */
+  TimHandle.Init.Prescaler         = 1000 - 1;                        /* Prescaler value */
+  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;          /* Clock not allocated */
+  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;              /* Up-counting mode */
+  TimHandle.Init.RepetitionCounter = 0;                               /* No repetition */
+  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* Auto-reload register not buffered */
+  if (HAL_TIM_Base_Init(&TimHandle) != HAL_OK)                        /* Initialize TIM1 */
   {
     APP_ErrorHandler();
   }
-  /* 配置TIM1为主机模式 */
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;                /* 选择更新事件作为触发源 */
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;        /* 主/从模式无作用 */
-  HAL_TIMEx_MasterConfigSynchronization(&TimHandle, &sMasterConfig);  /* 配置TIM1 */
-  if (HAL_TIM_Base_Start(&TimHandle) != HAL_OK)                       /* TIM1启动 */
+  /* Configure TIM1 as master mode */
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;                /* Select update event as trigger source */
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;        /* No effect in master/slave mode */
+  HAL_TIMEx_MasterConfigSynchronization(&TimHandle, &sMasterConfig);  /* Configure TIM1 */
+  if (HAL_TIM_Base_Start(&TimHandle) != HAL_OK)                       /* Enable TIM1 */
   {
     APP_ErrorHandler();
   }
 }
 
 /**
-  * @brief  ADC传输完成回调函数
-  * @param  hadc：ADC句柄
-  * @retval 无
+  * @brief  ADC transfer complete callback function
+  * @param  hadc：ADC handle
+  * @retval None
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
@@ -156,9 +164,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -168,16 +176,17 @@ void APP_ErrorHandler(void)
 }
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

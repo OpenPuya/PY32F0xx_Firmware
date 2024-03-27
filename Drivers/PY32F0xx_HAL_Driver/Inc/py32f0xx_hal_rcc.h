@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -1216,27 +1224,6 @@ typedef struct
   * @}
   */
 
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
 /** @defgroup RCC_Backup_Domain_Reset RCC Backup Domain Reset
   * @{
   */
@@ -1419,10 +1406,10 @@ typedef struct
                         CLEAR_BIT(RCC->BDCR, RCC_BDCR_LSEBYP); \
                       }                                        \
                     } while(0U)
+#endif
 /**
   * @}
   */
-#endif
 
 #if defined(RTC)
 /** @addtogroup RCC_RTC_Clock_Configuration
@@ -1443,7 +1430,7 @@ typedef struct
   *            @arg @ref RCC_RTCCLKSOURCE_NONE No clock selected as RTC clock.
   *            @arg @ref RCC_RTCCLKSOURCE_LSE  LSE selected as RTC clock.
   *            @arg @ref RCC_RTCCLKSOURCE_LSI  LSI selected as RTC clock.
-  *            @arg @ref RCC_RTCCLKSOURCE_HSE_DIV32  HSE clock divided by 32 selected
+  *            @arg @ref RCC_RTCCLKSOURCE_HSE_DIV128  HSE clock divided by 128 selected
   *
   * @note   If the LSE or LSI is used as RTC clock source, the RTC continues to
   *         work in STOP and STANDBY modes, and can be used as wakeup source.
@@ -1462,7 +1449,7 @@ typedef struct
   *            @arg @ref RCC_RTCCLKSOURCE_NONE No clock selected as RTC clock.
   *            @arg @ref RCC_RTCCLKSOURCE_LSE  LSE selected as RTC clock.
   *            @arg @ref RCC_RTCCLKSOURCE_LSI  LSI selected as RTC clock.
-  *            @arg @ref RCC_RTCCLKSOURCE_HSE_DIV32  HSE clock divided by 32 selected
+  *            @arg @ref RCC_RTCCLKSOURCE_HSE_DIV128  HSE clock divided by 128 selected
   */
 #define  __HAL_RCC_GET_RTC_SOURCE() ((uint32_t)(READ_BIT(RCC->BDCR, RCC_BDCR_RTCSEL)))
 
@@ -1479,11 +1466,12 @@ typedef struct
   * @}
   */
 #endif
-  
-#if defined(RCC_PLL_SUPPORT)
+
 /** @addtogroup RCC_Clock_Configuration
   * @{
   */
+
+#if defined(RCC_PLL_SUPPORT)
 
 #define __HAL_RCC_PLL_ENABLE()         SET_BIT(RCC->CR, RCC_CR_PLLON)
 

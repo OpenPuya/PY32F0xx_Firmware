@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -213,15 +221,15 @@ typedef struct
   * @param  __COMP1_CLKSOURCE__ specifies the COMP1 clock source.
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_COMP1CLKSOURCE_PCLK   PCLK selected as COMP1 clock
-  *            @arg @ref RCC_COMP1CLKSOURCE_HSI  LSC selected as COMP1 clock
+  *            @arg @ref RCC_COMP1CLKSOURCE_LSC  LSC selected as COMP1 clock
   */
 #define __HAL_RCC_COMP1_CONFIG(__COMP1_CLKSOURCE__) \
                   MODIFY_REG(RCC->CCIPR, RCC_CCIPR_COMP1SEL, (uint32_t)(__COMP1_CLKSOURCE__))
 
 /** @brief  Macro to get the COMP1 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg @ref RCC_COMP1CLKSOURCE_PCLK1   PCLK selected as COMP1 clock
-  *            @arg @ref RCC_COMP1CLKSOURCE_HSI  LSC selected as COMP1 clock
+  *            @arg @ref RCC_COMP1CLKSOURCE_PCLK   PCLK selected as COMP1 clock
+  *            @arg @ref RCC_COMP1CLKSOURCE_LSC  LSC selected as COMP1 clock
   */
 #define __HAL_RCC_GET_COMP1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR, RCC_CCIPR_COMP1SEL)))
 #endif /* RCC_CCIPR_COMP1SEL */
@@ -232,51 +240,27 @@ typedef struct
   * @param  __COMP2_CLKSOURCE__ specifies the COMP2 clock source.
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_COMP2CLKSOURCE_PCLK   PCLK selected as COMP2 clock
-  *            @arg @ref RCC_COMP2CLKSOURCE_HSI  LSC selected as COMP2 clock
+  *            @arg @ref RCC_COMP2CLKSOURCE_LSC  LSC selected as COMP2 clock
   */
 #define __HAL_RCC_COMP2_CONFIG(__COMP2_CLKSOURCE__) \
                   MODIFY_REG(RCC->CCIPR, RCC_CCIPR_COMP2SEL, (uint32_t)(__COMP2_CLKSOURCE__))
 
 /** @brief  Macro to get the COMP2 clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg @ref RCC_COMP2CLKSOURCE_PCLK1   PCLK selected as COMP2 clock
-  *            @arg @ref RCC_COMP2CLKSOURCE_HSI  LSC selected as COMP2 clock
+  *            @arg @ref RCC_COMP2CLKSOURCE_PCLK   PCLK selected as COMP2 clock
+  *            @arg @ref RCC_COMP2CLKSOURCE_LSC  LSC selected as COMP2 clock
   */
 #define __HAL_RCC_GET_COMP2_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR, RCC_CCIPR_COMP2SEL)))
 #endif /* RCC_CCIPR_COMP2SEL */
-
-#if defined(RCC_CCIPR_LPUART1SEL)
-/** @brief  Macro to configure the LPUART1 clock (LPUART1CLK).
-  *
-  * @param  __LPUART1_CLKSOURCE__ specifies the LPUART1 clock source.
-  *          This parameter can be one of the following values:
-  *            @arg @ref RCC_LPUART1CLKSOURCE_PCLK1   PCLK1 selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_HSI  HSI selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_SYSCLK  System Clock selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_LSE  LSE selected as LPUART1 clock
-  */
-#define __HAL_RCC_LPUART1_CONFIG(__LPUART1_CLKSOURCE__) \
-                  MODIFY_REG(RCC->CCIPR, RCC_CCIPR_LPUART1SEL, (uint32_t)(__LPUART1_CLKSOURCE__))
-
-/** @brief  Macro to get the LPUART1 clock source.
-  * @retval The clock source can be one of the following values:
-  *            @arg @ref RCC_LPUART1CLKSOURCE_PCLK1  PCLK1 selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_HSI HSI selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_SYSCLK System Clock selected as LPUART1 clock
-  *            @arg @ref RCC_LPUART1CLKSOURCE_LSE LSE selected as LPUART1 clock
-  */
-#define __HAL_RCC_GET_LPUART1_SOURCE() ((uint32_t)(READ_BIT(RCC->CCIPR, RCC_CCIPR_LPUART1SEL)))
-#endif /* RCC_CCIPR_LPUART1SEL */
 
 #if defined(RCC_CCIPR_LPTIMSEL)
 /** @brief  Macro to configure the LPTIM1 clock (LPTIM1CLK).
   *
   * @param  __LPTIM1_CLKSOURCE__ specifies the LPTIM1 clock source.
   *          This parameter can be one of the following values:
-  *            @arg @ref RCC_LPTIM1CLKSOURCE_PCLK1  PCLK1 selected as LPTIM1 clock
-  *            @arg @ref RCC_LPTIM1CLKSOURCE_LSI  HSI  selected as LPTIM1 clock
-  *            @arg @ref RCC_LPTIM1CLKSOURCE_HSI  LSI  selected as LPTIM1 clock
-  *            @arg @ref RCC_LPTIM1CLKSOURCE_LSE  LSE  selected as LPTIM1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_PCLK  PCLK1 selected as LPTIM1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_LSI  LSI  selected as LPTIM1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_LSE  LSE  selected as LPTIM1 clock
   * @note   Depending on devices and packages, some clocks may not be available.
   *         Refer to device datasheet for clocks availability.
   */
@@ -285,9 +269,9 @@ typedef struct
 
 /** @brief  Macro to get the LPTIM clock source.
   * @retval The clock source can be one of the following values:
-  *            @arg @ref RCC_LPTIMCLKSOURCE_PCLK1  PCLK1 selected as LPUART1 clock
-  *            @arg @ref RCC_LPTIMCLKSOURCE_LSI  HSI selected as LPUART1 clock
-  *            @arg @ref RCC_LPTIMCLKSOURCE_LSE  LSE selected as LPUART1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_PCLK  PCLK1 selected as LPTIM1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_LSI  HSI selected as LPTIM1 clock
+  *            @arg @ref RCC_LPTIMCLKSOURCE_LSE  LSE selected as LPTIM1 clock
   * @note   Depending on devices and packages, some clocks may not be available.
   *         Refer to device datasheet for clocks availability.
   */

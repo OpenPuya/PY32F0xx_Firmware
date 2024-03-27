@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,27 +40,27 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief   初始化全局MSP
+  * @brief   Initialize global MSP
   */
 void HAL_MspInit(void)
 {
 }
 
 /**
-  * @brief   初始化LED相关MSP
+  * @brief   Initialize LED related MSP
   */
 void HAL_LED_MspInit(LED_HandleTypeDef *hled)
 {
   GPIO_InitTypeDef GPIO_Initure;
 
-  /* 开启LED时钟 */
+  /* Enable LED clock */
   __HAL_RCC_LED_CLK_ENABLE();
-  /* 开启GPIOA时钟 */
+  /* Enable GPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  /* 开启GPIOB时钟 */
+  /* Enable GPIOB clock */
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /* 配置PB3、PB4、PB5为com1 2 3 */
+  /* Configure PB3, PB4, PB5 as COM1, COM2, COM3 */
   GPIO_Initure.Pin = GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
   GPIO_Initure.Mode = GPIO_MODE_AF_PP;
   GPIO_Initure.Pull = GPIO_PULLUP;
@@ -60,7 +68,7 @@ void HAL_LED_MspInit(LED_HandleTypeDef *hled)
   GPIO_Initure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_Initure);
 
-  /* 配置PA15为com0 */
+  /* Configure PA15 as COM0 */
   GPIO_Initure.Pin = GPIO_PIN_15;
   GPIO_Initure.Mode = GPIO_MODE_AF_PP;
   GPIO_Initure.Pull = GPIO_PULLUP;
@@ -69,7 +77,7 @@ void HAL_LED_MspInit(LED_HandleTypeDef *hled)
   HAL_GPIO_Init(GPIOA, &GPIO_Initure);
 
 
-  /* 配置PA0、PA1、PA2、PA3、PA4、PA5、PA6为SEG B C D E F G DP */
+  /* Configure PA0, PA1, PA2, PA3, PA4, PA5, PA6 as SEG B, C, D, E, F, G, DP */
   GPIO_Initure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6;
   GPIO_Initure.Mode = GPIO_MODE_AF_PP;
   GPIO_Initure.Pull = GPIO_PULLUP;
@@ -77,7 +85,7 @@ void HAL_LED_MspInit(LED_HandleTypeDef *hled)
   GPIO_Initure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_Initure);
 
-  /* 配置PB8为SEG A */
+  /* Configure PB8 as SEG A */
   GPIO_Initure.Pin = GPIO_PIN_8;
   GPIO_Initure.Mode = GPIO_MODE_AF_PP;
   GPIO_Initure.Pull = GPIO_PULLUP;

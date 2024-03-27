@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -34,7 +42,7 @@ __IO uint32_t ubUserButtonPressed = 0;
 __IO uint16_t uhADCxConvertedData = VAR_CONVERTED_DATA_INIT_VALUE;
 __IO uint16_t uhADCxConvertedData_Voltage_mVolt = 0;
 
-/*DMA传输的目标源*/
+/* Destination source for DMA transfer */
 static uint32_t ADCxConvertedDatas;
 
 /* Private user code ---------------------------------------------------------*/
@@ -48,132 +56,131 @@ static void APP_TimerInit(void);
 static void APP_DmaConfig(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 配置系统时钟 */
+  /* Configure system clock */
   APP_SystemClockConfig();
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* 初始化调试串口(printf使用) */
+  /* Initialize debug USART (used for printf) */
   BSP_USART_Config();
   printf("ADC Timer Trigger DMA Demo");
 
-  /* 配置DMA */
+  /* Configure DMA */
   APP_DmaConfig();
 
-  /* 使能DMA */
+  /* Enable DMA */
   LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_1);
 
-  /* 复位ADC*/
+  /* Reset ADC */
   LL_ADC_Reset(ADC1);
 
-  /* 使能ADC1时钟 */
+  /* Enable ADC1 clock */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_ADC1);
 
-  /* ADC校准 */
+  /* ADC calibration */
   APP_AdcCalibrate();
 
-  /* 配置ADC参数 */
+  /* Configure ADC parameters */
   APP_AdcConfig();
 
-  /* 使能ADC */
+  /* Enable ADC */
   APP_AdcEnable();
 
-  /* 开始ADC转换(如果是软件触发则直接开始转换) */
+  /* Start ADC conversion (if software triggered, start conversion directly) */
   LL_ADC_REG_StartConversion(ADC1);
 
-  /* TIM1初始化*/
+  /* Initialize TIM1*/
   APP_TimerInit();
   while (1)
   {
-    /* LED灯闪烁 */
+    /* LED blinking */
     BSP_LED_Toggle(LED_GREEN);
     LL_mDelay(1000);
   }
 }
 
 /**
-  * @brief  ADC配置函数
-  * @param  无
-  * @retval 无
+  * @brief  ADC configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_AdcConfig(void)
 {
-  /* 使能GPIOA时钟 */
+  /* Enable GPIOA clock */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
-  /* 配置管脚4为模拟输入 */
+  /* Configure pin 4 as analog input */
   LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_4, LL_GPIO_MODE_ANALOG);
 
-  /* ADC通道和时钟源需在ADEN=0时配置，其余的需在ADSTART=0时配置 */
-  /* 配置内部转换通道 */
+  /* ADC channel and clock source should be configured when ADEN=0, others should be configured when ADSTART=0 */
+  /* Configure internal conversion channel */
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
 
-  /* 设置ADC时钟 */
+  /* Set ADC clock */
   LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
 
-  /* 设置12位分辨率 */
+  /* Set 12-bit resolution */
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
 
-  /* 设置数据右对齐 */
-  LL_ADC_SetResolution(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
+  /* Set data alignment to right */
+  LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 
-  /* 设置低功率模式无 */
+  /* Set low power mode to none */
   LL_ADC_SetLowPowerMode(ADC1, LL_ADC_LP_MODE_NONE);
 
-  /* 设置通道转换时间 */
+  /* Set channel conversion time */
   LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_41CYCLES_5);
 
-  /* 设置触发源为TIM1 TRGO */
+  /* Set the trigger source as TIM1 TRGO */
   LL_ADC_REG_SetTriggerSource(ADC1, LL_ADC_REG_TRIG_EXT_TIM1_TRGO);
 
-  /* 设置上升沿触发转换 */
+  /* Set trigger edge as rising edge */
   LL_ADC_REG_SetTriggerEdge(ADC1, LL_ADC_REG_TRIG_EXT_RISING);
 
-  /* 设置转换模式为单次转换 */
+  /* Set conversion mode to single */
   LL_ADC_REG_SetContinuousMode(ADC1, LL_ADC_REG_CONV_SINGLE);
 
-  /* 设置DMA模式为循环模式，并开启 */
+  /* Set DMA mode to circular mode and enable it */
   LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_UNLIMITED);
 
-  /* 设置过载管理模式为覆盖上一个值 */
+  /* Set overrun management mode to data overwritten */
   LL_ADC_REG_SetOverrun(ADC1, LL_ADC_REG_OVR_DATA_OVERWRITTEN);
 
-  /* 设置非连续模式为不使能 */
+  /* Set discontinuous mode to disabled */
   LL_ADC_REG_SetSequencerDiscont(ADC1, LL_ADC_REG_SEQ_DISCONT_DISABLE);
 
-  /* 设置通道4为转换通道      */
+  /* Set channel 4 as conversion channel      */
   LL_ADC_REG_SetSequencerChannels(ADC1, LL_ADC_CHANNEL_4);
 
 }
 
 /**
-  * @brief  ADC使能函数
-  * @param  无
-  * @retval 无
+  * @brief  ADC enable function
+  * @param  None
+  * @retval None
   */
 static void APP_AdcEnable(void)
 {
-  /* 使能ADC */
+  /* Enable ADC */
   LL_ADC_Enable(ADC1);
 
-  /* 使能ADC 稳定时间，最低8个ADC Clock */
+  /* ADC stabilization time, minimum 8 ADC Clock cycles */
   LL_mDelay(1);
 }
 
 /**
-  * @brief  ADC校准函数
-  * @param  无
-  * @retval 无
+  * @brief  ADC calibration function
+  * @param  None
+  * @retval None
   */
 static void APP_AdcCalibrate(void)
 {
-  __IO uint32_t wait_loop_index = 0;
   __IO uint32_t backup_setting_adc_dma_transfer = 0;
 #if (USE_TIMEOUT == 1)
   uint32_t Timeout = 0;
@@ -181,10 +188,10 @@ static void APP_AdcCalibrate(void)
 
   if (LL_ADC_IsEnabled(ADC1) == 0)
   {
-    /* 校准时关闭ADC的DMA配置 */
+    /* Disable ADC DMA transfer during calibration */
     backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
     LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
-    /* 使能校准 */
+    /* Enable calibration */
     LL_ADC_StartCalibration(ADC1);
 
 #if (USE_TIMEOUT == 1)
@@ -194,7 +201,7 @@ static void APP_AdcCalibrate(void)
     while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
     {
 #if (USE_TIMEOUT == 1)
-      /* 检测校准是否超时 */
+      /* Check if calibration is timeout */
       if (LL_SYSTICK_IsActiveCounterFlag())
       {
         if(Timeout-- == 0)
@@ -205,81 +212,81 @@ static void APP_AdcCalibrate(void)
 #endif
     }
 
-    /* ADC校准结束和使能ADC之间的延时最低4个ADC Clock */
+    /* Delay between ADC calibration end and ADC enable: minimum 4 ADC Clock cycles */
     LL_mDelay(1);
 
-    /* 还原ADC的DMA配置 */
+    /* Restore ADC DMA configuration */
     LL_ADC_REG_SetDMATransfer(ADC1, backup_setting_adc_dma_transfer);
   }
 }
 
 /**
-  * @brief  TIM配置函数
-  * @param  无
-  * @retval 无
+  * @brief  TIM configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_TimerInit(void)
 {
-  /* 使能TIM1时钟 */
+  /* Enable TIM1 clock */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
 
-  /* 设置TIM1预分频器 */
+  /* Set TIM1 prescaler */
   LL_TIM_SetPrescaler(TIM1,2000);
 
-  /* 设置TIM1自动重装载值 */
+  /* Set TIM1 auto-reload value */
   LL_TIM_SetAutoReload(TIM1, 4000);
 
-  /* 设置TIM1更新触发 */
+  /* Set TIM1 update trigger */
   LL_TIM_SetTriggerOutput(TIM1,LL_TIM_TRGO_UPDATE);
 
-  /* 使能TIM1 */
+  /* Enable TIM1 */
   LL_TIM_EnableCounter(TIM1);
 }
 
 /**
-  * @brief  DMA配置函数
-  * @param  无
-  * @retval 无
+  * @brief  DMA configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_DmaConfig(void)
 {
-  /* 使能DMA1 时钟 */
+  /* Enable DMA1 clock */
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
 
-  /* 使能syscfg 时钟 */
+  /* Enable syscfg clock */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
 
-  /* ADC对应通道LL_DMA_CHANNEL_1 */
+  /* ADC corresponds to channel LL_DMA_CHANNEL_1 */
   SET_BIT(SYSCFG->CFGR3, 0x0);
 
-  /* 配置DMA传输方向为外设到存储器 */
+  /* Configure DMA data transfer direction as peripheral to memory */
   LL_DMA_SetDataTransferDirection(DMA1, LL_DMA_CHANNEL_1, LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
 
-  /* 配置DMA优先级为高 */
+  /* Configure DMA priority as high */
   LL_DMA_SetChannelPriorityLevel(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PRIORITY_HIGH);
 
-  /* 配置DMA循环模式 */
+  /* Configure DMA in circular mode */
   LL_DMA_SetMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MODE_CIRCULAR);
 
-  /* 配置DMA外设地址不变模式 */
+  /* Configure DMA peripheral increment mode as no increment */
   LL_DMA_SetPeriphIncMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PERIPH_NOINCREMENT);
 
-  /* 配置DMA存储地址不变模式 */
+  /* Configure DMA memory increment mode as no increment */
   LL_DMA_SetMemoryIncMode(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MEMORY_NOINCREMENT);
 
-  /* 配置DMA外设传输方式为字 */
+  /* Configure DMA peripheral data size as word */
   LL_DMA_SetPeriphSize(DMA1, LL_DMA_CHANNEL_1, LL_DMA_PDATAALIGN_WORD);
 
-  /* 配置DMA存储器传输方式为字 */
+  /* Configure DMA memory data size as word */
   LL_DMA_SetMemorySize(DMA1, LL_DMA_CHANNEL_1, LL_DMA_MDATAALIGN_WORD);
 
-  /* 配置DMA传输长度为1 */
+  /* Configure DMA transfer length to 1 */
   LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_1, 1);
 
-  /* 配置DMA外设和存储器的地址 */
+  /* Configure DMA peripheral and memory addresses */
   LL_DMA_ConfigAddresses(DMA1, LL_DMA_CHANNEL_1, (uint32_t)&ADC1->DR, (uint32_t)&ADCxConvertedDatas, LL_DMA_GetDataTransferDirection(DMA1, LL_DMA_CHANNEL_1));
 
-  /* 使能DMA传输完成中断 */
+  /* Enable DMA transfer complete interrupt */
   LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_1);
 
   NVIC_SetPriority(DMA1_Channel1_IRQn, 0);
@@ -287,55 +294,55 @@ static void APP_DmaConfig(void)
 }
 
 /**
-  * @brief  DMA传输完成回调函数
-  * @param  无
-  * @retval 无
+  * @brief  DMA transfer complete callback function
+  * @param  None
+  * @retval None
   */
 void APP_TransferCompleteCallback(void)
 {
-  /*将ADC的采样值转换为电压值*/
+  /* Convert ADC sample value to voltage */
   uhADCxConvertedData_Voltage_mVolt = __LL_ADC_CALC_DATA_TO_VOLTAGE(VDDA_APPLI, ADCxConvertedDatas, LL_ADC_RESOLUTION_12B);
   printf("%s%s%d mV\r\n","Channel4","Voltage:",uhADCxConvertedData_Voltage_mVolt);
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
-  /* 使能HSI */
+  /* Enable HSI */
   LL_RCC_HSI_Enable();
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
 
-  /* 设置 AHB 分频*/
+  /* Set AHB prescaler */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置HSISYS作为系统时钟源 */
+  /* Configure HSISYS as system clock source */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
   while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
-  /* 设置 APB1 分频*/
+  /* Set APB1 prescaler */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_Init1msTick(8000000);
 
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(8000000);
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
+  /* Infinite loop */
   while (1)
   {
   }
@@ -343,16 +350,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

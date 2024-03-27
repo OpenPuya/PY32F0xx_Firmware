@@ -16,6 +16,9 @@
 extern "C" {
 #endif
 
+/* Includes ------------------------------------------------------------------*/
+#include "py32f0xx.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
@@ -50,7 +53,7 @@ extern "C" {
 #endif /* HSI_VALUE */
 
 /**
-  * @brief Adjust the value of External High Speed oscillator (HXT) used in your application.
+  * @brief Adjust the value of External High Speed oscillator (HSE) used in your application.
   *        This value is used by the RCC HAL module to compute the system frequency
   */
 #if !defined  (HSE_VALUE)
@@ -58,7 +61,7 @@ extern "C" {
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)
-#define HSE_STARTUP_TIMEOUT    ((uint32_t)200)   /*!< Time out for HXT start up, in ms */
+#define HSE_STARTUP_TIMEOUT    ((uint32_t)200)   /*!< Time out for HSE start up, in ms */
 #endif /* HSE_STARTUP_TIMEOUT */
 
 /**
@@ -70,8 +73,10 @@ extern "C" {
 The real value may vary depending on the variations
 in voltage and temperature. */
 
+#if defined (RCC_LSE_SUPPORT)
+#if defined (RCC_LSE_SUPPORT)
 /**
-  * @brief Adjust the value of External Low Speed oscillator (LXT) used in your application.
+  * @brief Adjust the value of External Low Speed oscillator (LSE) used in your application.
   *        This value is used by the RCC HAL module to compute the system frequency
   */
 #if !defined  (LSE_VALUE)
@@ -81,8 +86,10 @@ in voltage and temperature. */
 
 
 #if !defined  (LSE_STARTUP_TIMEOUT)
-#define LSE_STARTUP_TIMEOUT    ((uint32_t)5000)   /*!< Time out for LXT start up, in ms */
+#define LSE_STARTUP_TIMEOUT    ((uint32_t)5000)   /*!< Time out for LSE start up, in ms */
 #endif /* LSE_STARTUP_TIMEOUT */
+#endif
+#endif
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */

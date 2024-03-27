@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -116,7 +124,7 @@ static void APP_CompInit(void)
   __HAL_RCC_COMP1_CLK_ENABLE();                           /* 使能COMP1时钟 */
   COMP_InitTypeDef COMPCONF = {0};
   COMPINIT.Instance    = COMP1;                           /* COMP1 */
-  COMPCONF.Mode        = COMP_POWERMODE_HIGHSPEED;        /* COMP1功耗选择为High speed */
+  COMPCONF.Mode        = COMP_POWERMODE_MEDIUMSPEED;      /* Medium speed */
   COMPCONF.InputPlus   = COMP_INPUT_PLUS_IO3;             /* 正极引脚为PA1 */
   COMPCONF.InputMinus  = COMP_INPUT_MINUS_VREFINT;        /* 负极选择为VREFINT */
   COMPCONF.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* 触发方式为下降沿中断触发 */

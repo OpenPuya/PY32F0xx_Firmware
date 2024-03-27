@@ -1,0 +1,2154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<package schemaVersion="1.7.27"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.27/schema/PACK.xsd">
+  <vendor>Puya</vendor>
+  <url>https://www.puyasemi.com/uploadfiles/</url>
+  <name>PY32F0xx_DFP</name>
+  <description>Puya PY32F0 Series Device Support</description>
+  <releases>
+    <release version="1.2.0" date="2023-08-23">
+        Added: PY32F0-STK board description and examples.
+    </release>
+    <release version="1.1.0" date="2022-10-13">
+        Added: Added missing devices.
+    </release>
+    <release version="1.0.0" date="2022-09-22">
+        First Release version of PY32F0 Device Family Pack.
+    </release>
+  </releases>
+  <keywords>
+    <keyword>Puya</keyword>
+    <keyword>Device Support</keyword>
+    <keyword>PY32F0</keyword>
+  </keywords>
+  <devices>
+    <family Dfamily="PY32F0 Series" Dvendor="Puya:176">
+      <processor Dcore="Cortex-M0+" DcoreVersion="r0p1" Dfpu="0" Dmpu="0" Dendian="Little-endian"/>
+      <description>
+  The PY32F0 mainstream microcontrollers are based on high-performance Arm Cortex-M0+ 32-bit RISC core.
+
+  The chip provides sleep and stop low-power operating modes to meet different low-power applications.
+  Offering a high level of integration, they are suitable for a variety of application scenarios, such as controllers, handheld devices, PC peripherals, games and GPS platforms, industrial applications, etc.
+      </description>
+
+      <sequences>
+        <!-- Override for Pre-Defined Sequences -->
+        <sequence name="DebugCoreStart">
+          <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+          </block>
+
+          <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x4002103C, Read32(0x4002103C) | 0x08000000);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+          </block>
+        </sequence>
+      </sequences>
+
+      <!-- ************************  Subfamily 'PY32F002A'  **************************** -->
+      <subFamily DsubFamily="PY32F002A">
+        <processor Dclock="48000000"/>
+        <debugvars configfile="CMSIS/Debug/PY32F002Axx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+        <!-- *************************  Device 'PY32F002Ax5'  ***************************** -->
+        <device Dname="PY32F002Ax5">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00005000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_20.FLM" start="0x08000000" size="0x00005000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF3080" size="0x00000010" default="0"/>
+          <debug svd="CMSIS/SVD/PY32F002Axx.svd"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F002B'  **************************** -->
+      <subFamily DsubFamily="PY32F002B">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F002Bxx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F002xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+        <!-- *************************  Device 'PY32F002Bx5'  ***************************** -->
+        <device Dname="PY32F002Bx5">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00006000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_24.FLM" start="0x08000000" size="0x00006000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OPT.FLM" start="0x1FFF0080" size="0x00000010" default="0"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OTP.FLM" start="0x1FFF0280" size="0x00000080" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F002X'  **************************** -->
+      <subFamily DsubFamily="PY32F002X">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F002Xxx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F002xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+
+        <!-- *************************  Device 'PY32F002Xx2'  ***************************** -->
+        <device Dname="PY32F002Xx2">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00002000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_24.FLM" start="0x08000000" size="0x00002000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OPT.FLM" start="0x1FFF0080" size="0x00000010" default="0"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OTP.FLM" start="0x1FFF0280" size="0x00000080" default="0"/>
+        </device>
+        <!-- *************************  Device 'PY32F002Xx4'  ***************************** -->
+        <device Dname="PY32F002Xx4">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00004000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_24.FLM" start="0x08000000" size="0x00004000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OPT.FLM" start="0x1FFF0080" size="0x00000010" default="0"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OTP.FLM" start="0x1FFF0280" size="0x00000080" default="0"/>
+        </device>      
+        <!-- *************************  Device 'PY32F002Xx5'  ***************************** -->
+        <device Dname="PY32F002Xx5">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00006000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_24.FLM" start="0x08000000" size="0x00006000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OPT.FLM" start="0x1FFF0080" size="0x00000010" default="0"/>
+          <algorithm name="CMSIS/Flash/PY32F002Bxx_OTP.FLM" start="0x1FFF0280" size="0x00000080" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F003'  **************************** -->
+      <subFamily DsubFamily="PY32F003">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F003xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F003xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+        <!-- *************************  Device 'PY32F003x4'  ***************************** -->
+        <device Dname="PY32F003x4">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00004000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_16.FLM" start="0x08000000" size="0x00004000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F003x6'  ***************************** -->
+        <device Dname="PY32F003x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F003x7'  ***************************** -->
+        <device Dname="PY32F003x7">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x0000C000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_48.FLM" start="0x08000000" size="0x0000C000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F003x8'  ***************************** -->
+        <device Dname="PY32F003x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F030'  **************************** -->
+      <subFamily DsubFamily="PY32F030">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F030xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F030xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+        <!-- *************************  Device 'PY32F030x4'  ***************************** -->
+        <device Dname="PY32F030x4">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00004000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_16.FLM" start="0x08000000" size="0x00004000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+
+        <!-- *************************  Device 'PY32F030x6'  ***************************** -->
+        <device Dname="PY32F030x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F030x7'  ***************************** -->
+        <device Dname="PY32F030x7">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x0000C000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_48.FLM" start="0x08000000" size="0x0000C000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F030x8'  ***************************** -->
+        <device Dname="PY32F030x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F031'  **************************** -->
+      <subFamily DsubFamily="PY32F031">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F031xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F031xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+
+        <!-- *************************  Device 'PY32F031x4'  ***************************** -->
+        <device Dname="PY32F031x4">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00004000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_16.FLM" start="0x08000000" size="0x00004000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F031x6'  ***************************** -->
+        <device Dname="PY32F031x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F031x7'  ***************************** -->
+        <device Dname="PY32F031x7">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x0000C000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001800" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_48.FLM" start="0x08000000" size="0x0000C000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F031x8'  ***************************** -->
+        <device Dname="PY32F031x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F040'  **************************** -->
+      <subFamily DsubFamily="PY32F040">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F040xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F040xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+
+        <!-- *************************  Device 'PY32F040x6'  ***************************** -->
+        <device Dname="PY32F040x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040x8'  ***************************** -->
+        <device Dname="PY32F040x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040x9'  ***************************** -->
+        <device Dname="PY32F040x9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040xB'  ***************************** -->
+        <device Dname="PY32F040xB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F040C'  **************************** -->
+      <subFamily DsubFamily="PY32F040C">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F040Cxx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F040xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+        <!-- *************************  Device 'PY32F040Cx6'  ***************************** -->
+        <device Dname="PY32F040Cx6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040Cx8'  ***************************** -->
+        <device Dname="PY32F040Cx8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040Cx9'  ***************************** -->
+        <device Dname="PY32F040Cx9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F040CxB'  ***************************** -->
+        <device Dname="PY32F040CxB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F040xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F071'  **************************** -->
+      <subFamily DsubFamily="PY32F071">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F071xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F071xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+
+        <!-- *************************  Device 'PY32F071x6'  ***************************** -->
+        <device Dname="PY32F071x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071x8'  ***************************** -->
+        <device Dname="PY32F071x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071x9'  ***************************** -->
+        <device Dname="PY32F071x9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071xB'  ***************************** -->
+        <device Dname="PY32F071xB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F071C'  **************************** -->
+      <subFamily DsubFamily="PY32F071C">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F071Cxx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F071xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+        <!-- *************************  Device 'PY32F071Cx6'  ***************************** -->
+        <device Dname="PY32F071Cx6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071Cx8'  ***************************** -->
+        <device Dname="PY32F071Cx8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071Cx9'  ***************************** -->
+        <device Dname="PY32F071Cx9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F071CxB'  ***************************** -->
+        <device Dname="PY32F071CxB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F071xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F072'  **************************** -->
+      <subFamily DsubFamily="PY32F072">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F072xx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F072xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+
+        <!-- *************************  Device 'PY32F072x6'  ***************************** -->
+        <device Dname="PY32F072x6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072x8'  ***************************** -->
+        <device Dname="PY32F072x8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072x9'  ***************************** -->
+        <device Dname="PY32F072x9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072xB'  ***************************** -->
+        <device Dname="PY32F072xB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+      <!-- ************************  Subfamily 'PY32F072C'  **************************** -->
+      <subFamily DsubFamily="PY32F072C">
+        <processor Dclock="48000000"/>
+        <debug svd="CMSIS/SVD/PY32F072Cxx.svd"/>
+        <debugvars configfile="CMSIS/Debug/PY32F072xx.dbgconf">
+          __var DbgMCU_CR      = 0x00000002;   // DBGMCU_CR:  DBG_STOP, DBG_STANDBY
+          __var DbgMCU_APB_Fz1 = 0x00000000;   // DGBMCU_APB_FZ1: All Peripherals Operate as in Normal Mode
+          __var DbgMCU_APB_Fz2 = 0x00000000;   // DGBMCU_APB_FZ2: All Peripherals Operate as in Normal Mode
+        </debugvars>
+        <sequences>
+          <!-- Override for Pre-Defined Sequences -->
+          <sequence name="DebugCoreStart">
+            <block>
+            // Replication of Standard Functionality
+            Write32(0xE000EDF0, 0xA05F0001);                                        // Enable Core Debug via DHCSR
+            </block>
+
+            <block info="DbgMCU registers">
+            // Device Specific Debug Setup
+            Write32(0x40021040, Read32(0x40021040) | 0x00000400);                   // Set RCC_APBENR1.DBGEN
+
+            Write32(0x40015804, DbgMCU_CR);                                         // DBGMCU_CR: Configure MCU Debug
+            Write32(0x40015808, DbgMCU_APB_Fz1);                                    // DBGMCU_APB_FZ1: Configure APB Peripheral Freeze1 Behavior
+            Write32(0x4001580C, DbgMCU_APB_Fz2);                                    // DBGMCU_APB_FZ2: Configure APB Peripheral Freeze2 Behavior
+            </block>
+          </sequence>
+        </sequences>
+        <!-- *************************  Device 'PY32F072Cx6'  ***************************** -->
+        <device Dname="PY32F072Cx6">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00008000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00001000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_32.FLM" start="0x08000000" size="0x00008000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072Cx8'  ***************************** -->
+        <device Dname="PY32F072Cx8">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00010000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00002000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_64.FLM" start="0x08000000" size="0x00010000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072Cx9'  ***************************** -->
+        <device Dname="PY32F072Cx9">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00018000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00003000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_96.FLM" start="0x08000000" size="0x00018000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+
+        <!-- *************************  Device 'PY32F072CxB'  ***************************** -->
+        <device Dname="PY32F072CxB">
+          <compile header="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h" />
+          <memory name="IROM1" access="rx" start="0x08000000" size="0x00020000" startup="1" default="1"/>
+          <memory name="IRAM1" access="rw" start="0x20000000" size="0x00004000" init   ="0" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_128.FLM" start="0x08000000" size="0x00020000" default="1"/>
+          <algorithm name="CMSIS/Flash/PY32F072xx_OPT.FLM" start="0x1FFF3100" size="0x00000020" default="0"/>
+        </device>
+      </subFamily>
+
+    </family>
+  </devices>
+
+  <conditions>
+    <!-- Compiler Conditions -->
+    <condition id="Compiler ARMCC">
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <!-- Device Conditions -->
+    <condition id="PY32F0">
+      <description>Puya PYF0 Series Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F0*"/>
+    </condition>
+
+    <condition id="PY32F0 CMSIS">
+      <description>Puya PY32F0 Series devices and CMSIS</description>
+      <require condition="PY32F0"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+    <condition id="PY32F002A Series">
+      <description>Puya PY32F002A Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F002A*"/>
+    </condition>
+    <condition id="PY32F002Ax5">
+      <description>Puya PY32F002Ax5 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F002A?5*"/>
+    </condition>
+    <condition id="PY32F002B Series">
+      <description>Puya PY32F002B Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F002B*"/>
+    </condition>
+    <condition id="PY32F002Bx5">
+      <description>Puya PY32F002Bx5 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F002B?5*"/>
+    </condition>
+    <condition id="PY32F002X Series">
+      <description>Puya PY32F002X Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F002X*"/>
+    </condition>
+    <condition id="PY32F002Xx2">
+      <description>Puya PY32F002Xx2 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F002X?2*"/>
+    </condition>
+    <condition id="PY32F002Xx4">
+      <description>Puya PY32F002Xx4 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F002X?4*"/>
+    </condition>
+    <condition id="PY32F002Xx5">
+      <description>Puya PY32F002Xx5 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F002X?5*"/>
+    </condition>
+    <condition id="PY32F003 Series">
+      <description>Puya PY32F003 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F003*"/>
+    </condition>
+    <condition id="PY32F003x4">
+      <description>Puya PY32F003x4 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F003?4*"/>
+    </condition>
+    <condition id="PY32F003x6">
+      <description>Puya PY32F003x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F003?6*"/>
+    </condition>
+    <condition id="PY32F003x7">
+      <description>Puya PY32F003x7 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F003?7*"/>
+    </condition>
+    <condition id="PY32F003x8">
+      <description>Puya PY32F003x8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F003?8*"/>
+    </condition>
+    <condition id="PY32F030 Series">
+      <description>Puya PY32F030 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F030*"/>
+    </condition>
+    <condition id="PY32F030x4">
+      <description>Puya PY32F030x4 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F030?4*"/>
+    </condition>
+    <condition id="PY32F030x6">
+      <description>Puya PY32F030x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F030?6*"/>
+    </condition>
+    <condition id="PY32F030x7">
+      <description>Puya PY32F030x7 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F030?7*"/>
+    </condition>
+    <condition id="PY32F030x8">
+      <description>Puya PY32F030x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F030?8*"/>
+    </condition>
+    <condition id="PY32F031 Series">
+      <description>Puya PY32F031 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F031*"/>
+    </condition>
+    <condition id="PY32F031x4">
+      <description>Puya PY32F031x4 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F031?4*"/>
+    </condition>
+    <condition id="PY32F031x6">
+      <description>Puya PY32F031x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F031?6*"/>
+    </condition>
+    <condition id="PY32F031x7">
+      <description>Puya PY32F031x7 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F031?7*"/>
+    </condition>
+    <condition id="PY32F031x8">
+      <description>Puya PY32F031x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F031?8*"/>
+    </condition>
+    <condition id="PY32F040 Series">
+      <description>Puya PY32F040 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F040x*"/>
+    </condition>
+    <condition id="PY32F040x6">
+      <description>Puya PY32F040x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040?6*"/>
+    </condition>
+    <condition id="PY32F040x8">
+      <description>Puya PY32F040x8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040?8*"/>
+    </condition>
+    <condition id="PY32F040x9">
+      <description>Puya PY32F040x9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040?9*"/>
+    </condition>
+    <condition id="PY32F040xB">
+      <description>Puya PY32F040xB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040?B*"/>
+    </condition>
+    <condition id="PY32F040C Series">
+      <description>Puya PY32F040C Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F040Cx*"/>
+    </condition>
+    <condition id="PY32F040Cx6">
+      <description>Puya PY32F040Cx6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040C?6*"/>
+    </condition>
+    <condition id="PY32F040Cx8">
+      <description>Puya PY32F040Cx8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040C?8*"/>
+    </condition>
+    <condition id="PY32F040Cx9">
+      <description>Puya PY32F040Cx9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040C?9*"/>
+    </condition>
+    <condition id="PY32F040CxB">
+      <description>Puya PY32F040CxB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F040C?B*"/>
+    </condition>
+    <condition id="PY32F071 Series">
+      <description>Puya PY32F071 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F071x*"/>
+    </condition>
+    <condition id="PY32F071x6">
+      <description>Puya PY32F071x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071?6*"/>
+    </condition>
+    <condition id="PY32F071x8">
+      <description>Puya PY32F071x8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071?8*"/>
+    </condition>
+    <condition id="PY32F071x9">
+      <description>Puya PY32F071x9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071?9*"/>
+    </condition>
+    <condition id="PY32F071xB">
+      <description>Puya PY32F071xB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071?B*"/>
+    </condition>
+    <condition id="PY32F071C Series">
+      <description>Puya PY32F071C Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F071Cx*"/>
+    </condition>
+    <condition id="PY32F071Cx6">
+      <description>Puya PY32F071Cx6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071C?6*"/>
+    </condition>
+    <condition id="PY32F071Cx8">
+      <description>Puya PY32F071Cx8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071C?8*"/>
+    </condition>
+    <condition id="PY32F071Cx9">
+      <description>Puya PY32F071Cx9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071C?9*"/>
+    </condition>
+    <condition id="PY32F071CxB">
+      <description>Puya PY32F071CxB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F071C?B*"/>
+    </condition>
+    <condition id="PY32F072 Series">
+      <description>Puya PY32F072 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F072x*"/>
+    </condition>
+    <condition id="PY32F072x6">
+      <description>Puya PY32F072x6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072?6*"/>
+    </condition>
+    <condition id="PY32F072x8">
+      <description>Puya PY32F072x8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072?8*"/>
+    </condition>
+    <condition id="PY32F072x9">
+      <description>Puya PY32F072x9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072?9*"/>
+    </condition>
+    <condition id="PY32F072xB">
+      <description>Puya PY32F072xB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072?B*"/>
+    </condition>
+    <condition id="PY32F072C Series">
+      <description>Puya PY32F072 Series</description>
+      <require Dvendor="Puya:176" Dname="PY32F072Cx*"/>
+    </condition>
+    <condition id="PY32F072Cx6">
+      <description>Puya PY32F072Cx6 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072C?6*"/>
+    </condition>
+    <condition id="PY32F072Cx8">
+      <description>Puya PY32F072Cx8 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072C?8*"/>
+    </condition>
+    <condition id="PY32F072Cx9">
+      <description>Puya PY32F072Cx9 Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072C?9*"/>
+    </condition>
+    <condition id="PY32F072CxB">
+      <description>Puya PY32F072CxB Devices</description>
+      <require Dvendor="Puya:176" Dname="PY32F072C?B*"/>
+    </condition>
+    <condition id="PY32F002Ax5 ARMCC">
+      <description>Puya PY32F002Ax5 Devices and ARMCC Compiler</description>
+      <require condition="PY32F002Ax5"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F002Bx5 ARMCC">
+      <description>Puya PY32F002Bx5 Devices and ARMCC Compiler</description>
+      <require condition="PY32F002Bx5"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F002Xx2 ARMCC">
+      <description>Puya PY32F002Xx2 Devices and ARMCC Compiler</description>
+      <require condition="PY32F002Xx2"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F002Xx4 ARMCC">
+      <description>Puya PY32F002Xx4 Devices and ARMCC Compiler</description>
+      <require condition="PY32F002Xx4"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F002Xx5 ARMCC">
+      <description>Puya PY32F002Xx5 Devices and ARMCC Compiler</description>
+      <require condition="PY32F002Xx5"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F003x4 ARMCC">
+      <description>Puya PY32F003x4 Devices and ARMCC Compiler</description>
+      <require condition="PY32F003x4"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F003x6 ARMCC">
+      <description>Puya PY32F003x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F003x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F003x7 ARMCC">
+      <description>Puya PY32F003x7 Devices and ARMCC Compiler</description>
+      <require condition="PY32F003x7"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F003x8 ARMCC">
+      <description>Puya PY32F003x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F003x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F030x4 ARMCC">
+      <description>Puya PY32F030x4 Devices and ARMCC Compiler</description>
+      <require condition="PY32F030x4"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F030x6 ARMCC">
+      <description>Puya PY32F030x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F030x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F030x7 ARMCC">
+      <description>Puya PY32F030x7 Devices and ARMCC Compiler</description>
+      <require condition="PY32F030x7"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F030x8 ARMCC">
+      <description>Puya PY32F030x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F030x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F031x4 ARMCC">
+      <description>Puya PY32F031x4 Devices and ARMCC Compiler</description>
+      <require condition="PY32F031x4"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F031x6 ARMCC">
+      <description>Puya PY32F031x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F031x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F031x7 ARMCC">
+      <description>Puya PY32F031x7 Devices and ARMCC Compiler</description>
+      <require condition="PY32F031x7"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F031x8 ARMCC">
+      <description>Puya PY32F031x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F031x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040x6 ARMCC">
+      <description>Puya PY32F040x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040x8 ARMCC">
+      <description>Puya PY32F040x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040x9 ARMCC">
+      <description>Puya PY32F040x9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040x9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040xB ARMCC">
+      <description>Puya PY32F040xB Devices and ARMCC Compiler</description>
+      <require condition="PY32F040xB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040Cx6 ARMCC">
+      <description>Puya PY32F040Cx6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040Cx6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040Cx8 ARMCC">
+      <description>Puya PY32F040Cx8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040Cx8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040Cx9 ARMCC">
+      <description>Puya PY32F040Cx9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F040Cx9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F040CxB ARMCC">
+      <description>Puya PY32F040CxB Devices and ARMCC Compiler</description>
+      <require condition="PY32F040CxB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071x6 ARMCC">
+      <description>Puya PY32F071x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071x8 ARMCC">
+      <description>Puya PY32F071x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071x9 ARMCC">
+      <description>Puya PY32F071x9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071x9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071xB ARMCC">
+      <description>Puya PY32F071xB Devices and ARMCC Compiler</description>
+      <require condition="PY32F071xB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071Cx6 ARMCC">
+      <description>Puya PY32F071Cx6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071Cx6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071Cx8 ARMCC">
+      <description>Puya PY32F071Cx8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071Cx8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071Cx9 ARMCC">
+      <description>Puya PY32F071Cx9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F071Cx9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F071CxB ARMCC">
+      <description>Puya PY32F071CxB Devices and ARMCC Compiler</description>
+      <require condition="PY32F071CxB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072x6 ARMCC">
+      <description>Puya PY32F072x6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072x6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072x8 ARMCC">
+      <description>Puya PY32F072x8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072x8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072x9 ARMCC">
+      <description>Puya PY32F072x9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072x9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072xB ARMCC">
+      <description>Puya PY32F072xB Devices and ARMCC Compiler</description>
+      <require condition="PY32F072xB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072Cx6 ARMCC">
+      <description>Puya PY32F072Cx6 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072Cx6"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072Cx8 ARMCC">
+      <description>Puya PY32F072Cx8 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072Cx8"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072Cx9 ARMCC">
+      <description>Puya PY32F072Cx9 Devices and ARMCC Compiler</description>
+      <require condition="PY32F072Cx9"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F072CxB ARMCC">
+      <description>Puya PY32F072CxB Devices and ARMCC Compiler</description>
+      <require condition="PY32F072CxB"/>
+      <require condition="Compiler ARMCC"/>
+    </condition>
+    <condition id="PY32F0xx HAL">
+      <accept condition="PY32F002A Series"/>
+      <accept condition="PY32F003 Series"/>
+      <accept condition="PY32F030 Series"/>
+    </condition>
+    <condition id="PY32F002B HAL">
+      <accept condition="PY32F002B Series"/>
+    </condition>
+    <condition id="PY32F040 HAL">
+      <accept condition="PY32F040 Series"/>
+    </condition>
+    <condition id="PY32F071 HAL">
+      <accept condition="PY32F071 Series"/>
+    </condition>
+    <condition id="PY32F072 HAL">
+      <accept condition="PY32F072 Series"/>
+    </condition>
+
+  </conditions>
+  <components>
+    <bundle Cbundle="PY32F002A LL Start Kit BSP" Cclass="Board Support" Cversion="1.1.4">
+      <description>PY32F002A LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F002Axx_Start_Kit</doc>
+      <component Cgroup="PY32F002A LL Start Kit BSP" Cversion="1.1.4" condition="PY32F002A Series">
+        <description>PY32F002A Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F002Axx_Start_Kit/py32f002axx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F002Axx_Start_Kit/py32f002axx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F002A Start Kit BSP" Cclass="Board Support" Cversion="1.1.4" isDefaultVariant="true">
+      <description>PY32F002A Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F002Axx_Start_Kit</doc>
+      <component Cgroup="PY32F002A Start Kit BSP" Cversion="1.1.4" condition="PY32F002A Series">
+        <description>PY32F002A Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F002Axx_Start_Kit/py32f002axx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F002Axx_Start_Kit/py32f002axx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F002B LL Start Kit BSP" Cclass="Board Support" Cversion="0.0.4">
+      <description>PY32F002B LL Start Kit BSP</description>
+      <doc>Drivers/BSP/Drivers/BSP/PY32F002Bxx_Start_Kit</doc>
+      <component Cgroup="PY32F002B LL Start Kit BSP" Cversion="0.0.4" condition="PY32F002B Series">
+        <description>PY32F002B Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F002Bxx_Start_Kit/py32f002bxx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F002Bxx_Start_Kit/py32f002bxx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F002B Start Kit BSP" Cclass="Board Support" Cversion="0.0.4" isDefaultVariant="true">
+      <description>PY32F002B Start Kit BSP</description>
+      <doc>Drivers/BSP/Drivers/BSP/PY32F002Bxx_Start_Kit</doc>
+      <component Cgroup="PY32F002B Start Kit BSP" Cversion="0.0.4" condition="PY32F002B Series">
+        <description>PY32F002B Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F002Bxx_Start_Kit/py32f002bxx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F002Bxx_Start_Kit/py32f002bxx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F003 LL Start Kit BSP" Cclass="Board Support" Cversion="1.1.4">
+      <description>PY32F003 LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F003xx_Start_Kit</doc>
+      <component Cgroup="PY32F003 LL Start Kit BSP" Cversion="1.1.4" condition="PY32F003 Series">
+        <description>PY32F003 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F003xx_Start_Kit/py32f003xx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F003xx_Start_Kit/py32f003xx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F003 Start Kit BSP" Cclass="Board Support" Cversion="1.1.4" isDefaultVariant="true">
+      <description>PY32F003 Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F003xx_Start_Kit</doc>
+      <component Cgroup="PY32F003 Start Kit BSP" Cversion="1.1.4" condition="PY32F003 Series">
+        <description>PY32F003 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F003xx_Start_Kit/py32f003xx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F003xx_Start_Kit/py32f003xx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F030 LL Start Kit BSP" Cclass="Board Support" Cversion="1.1.4">
+      <description>PY32F030 LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F030xx_Start_Kit</doc>
+      <component Cgroup="PY32F030 LL Start Kit BSP" Cversion="1.1.4" condition="PY32F030 Series">
+        <description>PY32F030 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F030xx_Start_Kit/py32f030xx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F030xx_Start_Kit/py32f030xx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F030 Start Kit BSP" Cclass="Board Support" Cversion="1.1.4" isDefaultVariant="true">
+      <description>PY32F030 Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F030xx_Start_Kit</doc>
+      <component Cgroup="PY32F030 Start Kit BSP" Cversion="1.1.4" condition="PY32F030 Series">
+        <description>PY32F030 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F030xx_Start_Kit/py32f030xx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F030xx_Start_Kit/py32f030xx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F040 LL Start Kit BSP" Cclass="Board Support" Cversion="0.0.4">
+      <description>PY32F040 LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F040xx_Start_Kit</doc>
+      <component Cgroup="PY32F040 LL Start Kit BSP" Cversion="0.0.4" condition="PY32F040 Series">
+        <description>PY32F040 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F040xx_Start_Kit/py32f040xx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F040xx_Start_Kit/py32f040xx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F040 Start Kit BSP" Cclass="Board Support" Cversion="0.0.4" isDefaultVariant="true">
+      <description>PY32F040 Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F040xx_Start_Kit</doc>
+      <component Cgroup="PY32F040 Start Kit BSP" Cversion="0.0.4" condition="PY32F040 Series">
+        <description>PY32F040 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F040xx_Start_Kit/py32f040xx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F040xx_Start_Kit/py32f040xx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F071 LL Start Kit BSP" Cclass="Board Support" Cversion="0.0.3">
+      <description>PY32F071 LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F071xx_Start_Kit</doc>
+      <component Cgroup="PY32F071 LL Start Kit BSP" Cversion="0.0.3" condition="PY32F071 Series">
+        <description>PY32F071 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F071xx_Start_Kit/py32f071xx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F071xx_Start_Kit/py32f071xx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F071 Start Kit BSP" Cclass="Board Support" Cversion="0.0.3" isDefaultVariant="true">
+      <description>PY32F071 Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F071xx_Start_Kit</doc>
+      <component Cgroup="PY32F071 Start Kit BSP" Cversion="0.0.3" condition="PY32F071 Series">
+        <description>PY32F071 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F071xx_Start_Kit/py32f071xx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F071xx_Start_Kit/py32f071xx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F072 LL Start Kit BSP" Cclass="Board Support" Cversion="0.0.3">
+      <description>PY32F072 LL Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F072xx_Start_Kit</doc>
+      <component Cgroup="PY32F072 LL Start Kit BSP" Cversion="0.0.3" condition="PY32F072 Series">
+        <description>PY32F072 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F072xx_Start_Kit/py32f072xx_ll_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F072xx_Start_Kit/py32f072xx_ll_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+    <bundle Cbundle="PY32F072 Start Kit BSP" Cclass="Board Support" Cversion="0.0.3" isDefaultVariant="true">
+      <description>PY32F072 Start Kit BSP</description>
+      <doc>Drivers/BSP/PY32F072xx_Start_Kit</doc>
+      <component Cgroup="PY32F072 Start Kit BSP" Cversion="0.0.3" condition="PY32F072 Series">
+        <description>PY32F072 Start Kit Board</description>
+        <files>
+          <file category="source" name="Drivers/BSP/PY32F072xx_Start_Kit/py32f072xx_Start_Kit.c"/>
+          <file category="header" name="Drivers/BSP/PY32F072xx_Start_Kit/py32f072xx_Start_Kit.h"/>
+        </files>
+      </component>
+    </bundle>
+
+    <bundle Cbundle="Full HAL and LL Drivers" Cclass="Drivers" Cversion="1.1.5" isDefaultVariant="true">
+      <description>Full HAL and LL Drivers</description>
+      <doc>Drivers</doc>
+      <component Cgroup="PY32F0xx HAL Driver" Cversion="1.1.5" condition="PY32F0xx HAL">
+        <description>PY32F0xx HAL Drivers for PY32F002A,PY32F003,PY32F030 Series</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F0xx_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_comp.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_cortex.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_crc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_dma.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_exti.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_flash.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_gpio.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_i2c.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_irda.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_iwdg.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_led.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_lptim.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_pwr.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc_ex.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rtc_ex.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_spi.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_tim_ex.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_uart.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_usart.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_wwdg.c"/>
+
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_adc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_comp.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_crc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_dma.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_exti.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_gpio.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_i2c.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_led.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_lptim.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_pwr.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_rcc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_rtc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_spi.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_tim.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_usart.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c"/>
+
+          <file category="header" name="MDK/Templates/PY32F002A/Inc/py32f0xx_hal_conf.h" attr="config" version="1.1.5"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F002B HAL Driver" Cversion="0.0.5" condition="PY32F002B HAL">
+        <description>PY32F002B HAL Drivers for PY32F002B Series</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F002B_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_comp.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_cortex.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_crc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_exti.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_flash.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_gpio.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_i2c.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_iwdg.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_lptim.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_pwr.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_rcc_ex.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_spi.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_tim_ex.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_uart.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_hal_usart.c"/>
+
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_adc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_comp.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_crc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_exti.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_gpio.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_i2c.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_lptim.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_pwr.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_rcc.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_spi.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_tim.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_usart.c"/>
+          <file category="source" name="Drivers/PY32F002B_HAL_Driver/Src/py32f002b_ll_utils.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F040 HAL Driver" Cversion="0.0.5" condition="PY32F040 HAL">
+        <description>PY32F040 HAL Drivers for PY32F040 Series</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F040_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_adc_ex.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_comp.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_cortex.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_crc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_ctc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_div.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_dma.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_exti.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_flash.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_gpio.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_i2c.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_i2s.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_irda.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_iwdg.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_lcd.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_lptim.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_pwr.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_rcc_ex.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_rtc_ex.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_smartcard.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_spi.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_tim_ex.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_uart.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_usart.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_hal_wwdg.c"/>
+
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_adc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_comp.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_crc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_ctc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_dma.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_exti.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_gpio.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_i2c.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_lcd.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_lptim.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_pwr.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_rcc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_rtc.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_spi.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_tim.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_usart.c"/>
+          <file category="source" name="Drivers/PY32F040_HAL_Driver/Src/py32f040_ll_utils.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F071 HAL Driver" Cversion="0.0.5" condition="PY32F071 HAL">
+        <description>PY32F071 HAL Drivers for PY32F071 Series</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F071_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_adc_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_comp.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_cortex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_crc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_ctc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_dac.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_dac_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_div.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_dma.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_exti.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_flash.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_gpio.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_i2c.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_i2s.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_irda.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_iwdg.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_lcd.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_lptim.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_opa.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_opa_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_pwr.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_rcc_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_rtc_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_smartcard.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_spi.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_tim_ex.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_uart.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_usart.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_hal_wwdg.c"/>
+
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_adc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_comp.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_crc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_ctc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_dac.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_dma.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_exti.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_gpio.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_i2c.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_lcd.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_lptim.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_pwr.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_rcc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_rtc.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_spi.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_tim.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_usart.c"/>
+          <file category="source" name="Drivers/PY32F071_HAL_Driver/Src/py32f071_ll_utils.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Cversion="0.0.5" condition="PY32F072 HAL">
+        <description>PY32F072 HAL Drivers for PY32F072 Series</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F072_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_adc_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_comp.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_cortex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_crc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_ctc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dac.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dac_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_div.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dma.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_exti.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_flash.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_gpio.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_i2c.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_i2s.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_irda.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_iwdg.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_lcd.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_lptim.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_opa.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_opa_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_pwr.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rcc_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rtc_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_smartcard.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_spi.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_tim_ex.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_uart.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_usart.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_wwdg.c"/>
+
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_adc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_comp.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_crc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_ctc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_dac.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_dma.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_exti.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_gpio.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_i2c.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_lcd.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_lptim.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_pwr.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_rcc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_rtc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_spi.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_tim.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_usart.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_utils.c"/>
+        </files>
+      </component>
+    </bundle>
+
+    <bundle Cbundle="PY32F0xx Standalone" Cclass="Drivers" Cversion="1.1.5">
+      <description>PY32F0xx Standalone Drivers</description>
+      <doc>Drivers/PY32F0xx_HAL_Driver</doc>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="COMMON" condition="PY32F0xx HAL">
+      <description>COMMON Module</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F0xx_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal.c"/>
+          <file category="header" name="MDK/Templates/PY32F002A/Inc/py32f0xx_hal_conf.h" attr="config" version="1.1.5"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="ADC" condition="PY32F0xx HAL">
+        <description>ADC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_adc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="COMP" condition="PY32F0xx HAL">
+        <description>COMP Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_comp.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="CORTEX" condition="PY32F0xx HAL">
+        <description>CORTEX Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_cortex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="CRC" condition="PY32F0xx HAL">
+        <description>CRC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_crc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="DMA" condition="PY32F0xx HAL">
+        <description>DMA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_dma.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="EXTI" condition="PY32F0xx HAL">
+        <description>EXTI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_exti.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="FLASH" condition="PY32F0xx HAL">
+        <description>FLASH Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_flash.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="GPIO" condition="PY32F0xx HAL">
+        <description>GPIO Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_gpio.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="I2C" condition="PY32F0xx HAL">
+        <description>I2C Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_i2c.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="IRDA" condition="PY32F0xx HAL">
+        <description>IRDA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_irda.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="IWDG" condition="PY32F0xx HAL">
+        <description>IWDG Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_iwdg.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="LED" condition="PY32F0xx HAL">
+        <description>LED Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_led.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="LPTIM" condition="PY32F0xx HAL">
+        <description>LPTIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_lptim.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="PWR" condition="PY32F0xx HAL">
+        <description>PWR Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_pwr.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="RCC" condition="PY32F0xx HAL">
+        <description>RCC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="RTC" condition="PY32F0xx HAL">
+        <description>RTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rtc_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="SPI" condition="PY32F0xx HAL">
+        <description>SPI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_spi.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="TIM" condition="PY32F0xx HAL">
+        <description>TIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_tim_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="UART" condition="PY32F0xx HAL">
+        <description>UART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_uart.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="USART" condition="PY32F0xx HAL">
+        <description>USART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_usart.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx HAL Driver" Csub="WWDG" condition="PY32F0xx HAL">
+        <description>WWDG Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_wwdg.c"/>
+        </files>
+      </component>
+
+      <component Cgroup="PY32F0xx LL Driver" Csub="COMMON" condition="PY32F0xx HAL">
+        <description>COMMON Module</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F0xx_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="ADC" condition="PY32F0xx HAL">
+        <description>ADC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_adc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="COMP" condition="PY32F0xx HAL">
+        <description>COMP Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_comp.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="CRC" condition="PY32F0xx HAL">
+        <description>CRC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_crc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="DMA" condition="PY32F0xx HAL">
+        <description>DMA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_dma.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="EXTI" condition="PY32F0xx HAL">
+        <description>EXTI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_exti.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="GPIO" condition="PY32F0xx HAL">
+        <description>GPIO Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_gpio.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="I2C" condition="PY32F0xx HAL">
+        <description>I2C Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_i2c.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="LED" condition="PY32F0xx HAL">
+        <description>LED Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_led.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="LPTIM" condition="PY32F0xx HAL">
+        <description>LPTIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_lptim.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="PWR" condition="PY32F0xx HAL">
+        <description>PWR Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_pwr.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="RCC" condition="PY32F0xx HAL">
+        <description>RCC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_rcc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="RTC" condition="PY32F0xx HAL">
+        <description>RTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_rtc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="SPI" condition="PY32F0xx HAL">
+        <description>SPI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_spi.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F0xx LL Driver" Csub="USART" condition="PY32F0xx HAL">
+        <description>USART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_usart.c"/>
+        </files>
+      </component>
+    </bundle>
+
+    <bundle Cbundle="PY32F072 Standalone" Cclass="Drivers" Cversion="0.0.5">
+      <description>PY32F072 Standalone Drivers</description>
+      <doc>Drivers/PY32F072_HAL_Driver</doc>
+      <component Cgroup="PY32F072 HAL Driver" Csub="COMMON" condition="PY32F072 HAL">
+        <description>COMMON Module</description>
+        <Pre_Include_Global_h>
+#define USE_HAL_DRIVER
+#define USE_FULL_LL_DRIVER
+        </Pre_Include_Global_h>
+        <files>
+          <file category="include" name="Drivers/PY32F072_HAL_Driver/Inc/"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal.c"/>
+          <file category="header" name="MDK/Templates/PY32F072/Inc/py32f072_hal_conf.h" attr="config" version="0.0.5"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="ADC" condition="PY32F072 HAL">
+        <description>ADC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_adc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_adc_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="COMP" condition="PY32F072 HAL">
+        <description>COMP Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_comp.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="CORTEX" condition="PY32F072 HAL">
+        <description>CORTEX Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_cortex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="CRC" condition="PY32F072 HAL">
+        <description>CRC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_crc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="CTC" condition="PY32F072 HAL">
+        <description>CTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_ctc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="DAC" condition="PY32F072 HAL">
+        <description>DAC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dac.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dac_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="DIV" condition="PY32F072 HAL">
+        <description>DIV Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_div.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="DMA" condition="PY32F072 HAL">
+        <description>DMA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_dma.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="EXTI" condition="PY32F072 HAL">
+        <description>EXTI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_exti.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="FLASH" condition="PY32F072 HAL">
+        <description>FLASH Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_flash.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="GPIO" condition="PY32F072 HAL">
+        <description>GPIO Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_gpio.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="I2C" condition="PY32F072 HAL">
+        <description>I2C Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_i2c.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="I2S" condition="PY32F072 HAL">
+        <description>I2S Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_i2s.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="IRDA" condition="PY32F072 HAL">
+        <description>IRDA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_irda.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="IWDG" condition="PY32F072 HAL">
+        <description>IWDG Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_iwdg.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="LCD" condition="PY32F072 HAL">
+        <description>LCD Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_lcd.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="LPTIM" condition="PY32F072 HAL">
+        <description>LPTIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_lptim.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="OPA" condition="PY32F072 HAL">
+        <description>OPA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_opa.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_opa_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="PWR" condition="PY32F072 HAL">
+        <description>PWR Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_pwr.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="RCC" condition="PY32F072 HAL">
+        <description>RCC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rcc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rcc_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="RTC" condition="PY32F072 HAL">
+        <description>RTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rtc.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_rtc_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="SMARTCARD" condition="PY32F072 HAL">
+        <description>SMARTCARD Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_smartcard.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="SPI" condition="PY32F072 HAL">
+        <description>SPI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_spi.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="TIM" condition="PY32F072 HAL">
+        <description>TIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_tim.c"/>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_tim_ex.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="UART" condition="PY32F072 HAL">
+        <description>UART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_uart.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="USART" condition="PY32F072 HAL">
+        <description>USART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_usart.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 HAL Driver" Csub="WWDG" condition="PY32F072 HAL">
+        <description>WWDG Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_hal_wwdg.c"/>
+        </files>
+      </component>
+
+      <component Cgroup="PY32F072 LL Driver" Csub="ADC" condition="PY32F072 HAL">
+        <description>ADC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_adc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="COMP" condition="PY32F072 HAL">
+        <description>COMP Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_comp.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="CRC" condition="PY32F072 HAL">
+        <description>CRC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_crc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="CTC" condition="PY32F072 HAL">
+        <description>CTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_ctc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="DAC" condition="PY32F072 HAL">
+        <description>DAC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_dac.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="DMA" condition="PY32F072 HAL">
+        <description>DMA Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_dma.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="EXTI" condition="PY32F072 HAL">
+        <description>EXTI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_exti.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="GPIO" condition="PY32F072 HAL">
+        <description>GPIO Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_gpio.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="I2C" condition="PY32F072 HAL">
+        <description>I2C Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_i2c.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="LCD" condition="PY32F072 HAL">
+        <description>LCD Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_lcd.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="LPTIM" condition="PY32F072 HAL">
+        <description>LPTIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_lptim.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="PWR" condition="PY32F072 HAL">
+        <description>PWR Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_pwr.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="RCC" condition="PY32F072 HAL">
+        <description>RCC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_rcc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="RTC" condition="PY32F072 HAL">
+        <description>RTC Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_rtc.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="SPI" condition="PY32F072 HAL">
+        <description>SPI Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_spi.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="TIM" condition="PY32F072 HAL">
+        <description>TIM Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_tim.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="USART" condition="PY32F072 HAL">
+        <description>USART Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_usart.c"/>
+        </files>
+      </component>
+      <component Cgroup="PY32F072 LL Driver" Csub="UTILS" condition="PY32F072 HAL">
+        <description>UTILS Module</description>
+        <files>
+          <file category="source" name="Drivers/PY32F072_HAL_Driver/Src/py32f072_ll_utils.c"/>
+        </files>
+      </component>
+    </bundle>
+
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.0" condition="PY32F0 CMSIS">
+      <description>System Startup for Puya PY32F0 Series</description>
+      <files>
+        <!--  include folder -->
+        <file category="include" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/"/>
+        <!-- common device header file -->
+        <file category="header" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Include/py32f0xx.h"/>
+
+        <file category="source" condition="PY32F002Ax5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f002ax5.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Bx5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f002bx5.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx2 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f002xxx.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f002xxx.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f002xxx.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f003x4.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f003x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f003x7.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f003x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f030x4.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f030x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f030x7.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f030x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f031x4.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f031x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f031x7.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f031x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040xB.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f040xB.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071xB.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f071xB.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072xB.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x6.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x8.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x9.s" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072xB.s" attr="config" version="1.0.0"/>
+
+        <file category="source" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+      </files>
+    </component>
+  </components>
+</package>
+

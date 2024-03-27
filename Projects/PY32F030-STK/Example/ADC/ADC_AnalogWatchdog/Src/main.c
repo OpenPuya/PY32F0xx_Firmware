@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -35,112 +43,112 @@ uint32_t adc_value[2];
 static void APP_AdcInit(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 初始化所有外设，Flash接口，SysTick */
+  /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();  
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN); 
   
-  /* 初始化ADC */
+  /* Initialize ADC */
   APP_AdcInit();  
 
-  /* 初始化UART */
+  /* Initialize UART */
   DEBUG_USART_Config();                                                  
  
   while (1)
   {
-    /* ADC开启 */
+    /* Enable ADC */
     HAL_ADC_Start(&AdcHandle);                                           
     for (uint8_t i = 0; i < 2; i++)
     {
-      /* 等待ADC转换 */
+      /* Waiting for ADC conversion */
       HAL_ADC_PollForConversion(&AdcHandle, 10000);  
 
-      /* 获取AD值 */
+      /* Get ADC value */
       adc_value[i] = HAL_ADC_GetValue(&AdcHandle);                       
-      printf("adc[%d]:%d\r\n", i, adc_value[i]);
+      printf("adc[%u]:%u\r\n", i, (unsigned int)adc_value[i]);
     }
     HAL_Delay(500);
   }
 }
 
 /**
-  * @brief  ADC配置函数
-  * @param  无
-  * @retval 无
+  * @brief  ADC configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_AdcInit(void)
 {
   __HAL_RCC_ADC_FORCE_RESET();
-  __HAL_RCC_ADC_RELEASE_RESET();                                         /* 复位ADC */
-  __HAL_RCC_ADC_CLK_ENABLE();                                            /* 使能ADC时钟 */
+  __HAL_RCC_ADC_RELEASE_RESET();                                         /* Reset ADC */
+  __HAL_RCC_ADC_CLK_ENABLE();                                            /* Enable ADC clock */
 
   AdcHandle.Instance = ADC1;
   
-  /* ADC校准 */
+  /* ADC calibration */
   if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)                 
   {
     APP_ErrorHandler();
   }
  
-  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV32;             /* 设置ADC时钟 */
-  AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;                        /* 转换分辨率12bit */
-  AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;                        /* 数据右对齐 */
-  AdcHandle.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;              /* 扫描序列方向：向上 */
-  AdcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;                     /* 单次采样 */
-  AdcHandle.Init.LowPowerAutoWait = ENABLE;                              /* 等待转换模式开启 */
-  AdcHandle.Init.ContinuousConvMode = DISABLE;                           /* 单次转换模式 */
-  AdcHandle.Init.DiscontinuousConvMode = DISABLE;                        /* 不使能非连续模式 */
-  AdcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;                  /* 软件触发 */
-  AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* 触发边沿无 */
-  AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* DMA不使能 */
-  AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* 当过载发生时，覆盖上一个值 */
-  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_13CYCLES_5;           /* 设置采样周期 */
+  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV32;             /* Set ADC clock */
+  AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;                        /* 12-bit resolution for converted data */
+  AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;                        /* Right-alignment for converted data */
+  AdcHandle.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;              /* Scan sequence direction: forward  */
+  AdcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;                     /* Single sampling */
+  AdcHandle.Init.LowPowerAutoWait = ENABLE;                              /* Enable wait for conversion mode */
+  AdcHandle.Init.ContinuousConvMode = DISABLE;                           /* Single conversion mode */
+  AdcHandle.Init.DiscontinuousConvMode = DISABLE;                        /* Disable discontinuous mode */
+  AdcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;                  /* Software triggering */
+  AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* No external trigger edge */
+  AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* Disable DMA */
+  AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* Overrun handling: overwrite previous value */
+  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_13CYCLES_5;           /* Set sampling time */
 
-  if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                /* 初始化ADC */
+  if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                /* Initialize ADC */
   {
     APP_ErrorHandler();
   }
 
-  sConfig.Channel = ADC_CHANNEL_0;                                       /* ADC通道选择 */
-  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;                                /* 设置加入规则组通道 */
-  /* 配置ADC通道 */
+  sConfig.Channel = ADC_CHANNEL_0;                                       /* ADC channel selection */
+  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;                                /* Set the rank for the ADC channel order */
+  /* Configure ADC channels */
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)             
   {
     APP_ErrorHandler();
   }
 
-  sConfig.Channel = ADC_CHANNEL_1;                                       /* ADC通道选择 */
-  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;                                /* 设置加入规则组通道 */
-  /* 配置ADC通道 */
+  sConfig.Channel = ADC_CHANNEL_1;                                       /* ADC channel selection */
+  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;                                /* Set the rank for the ADC channel order */
+  /* Configure ADC channels */
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)             
   {
     APP_ErrorHandler();
   }
 
-  /* ADC 模拟看门狗初始化 */
-  ADCAnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_ALL_REG;            /* 所有通道*/
-  ADCAnalogWDGConfig.HighThreshold = 0X1FF;                                /* 设置上阈值 */
-  ADCAnalogWDGConfig.LowThreshold = 0;                                     /* 设置下阈值 */
-  ADCAnalogWDGConfig.ITMode = ENABLE;                                      /* 使能中断 */
-  /* ADC模拟看门狗配置 */
+  /* Initialize ADC analog watchdog */
+  ADCAnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_ALL_REG;            /* All channels */
+  ADCAnalogWDGConfig.HighThreshold = 0X1FF;                                /* Set upper threshold */
+  ADCAnalogWDGConfig.LowThreshold = 0;                                     /* Set lower threshold */
+  ADCAnalogWDGConfig.ITMode = ENABLE;                                      /* Enable interrupt */
+  /* ADC analog watchdog configuration */
   if (HAL_ADC_AnalogWDGConfig(&AdcHandle, &ADCAnalogWDGConfig) != HAL_OK)  
   {
     APP_ErrorHandler();
   }
-  HAL_NVIC_SetPriority(ADC_COMP_IRQn, 0, 0);                               /* 设置ADC中断优先级 */
-  HAL_NVIC_EnableIRQ(ADC_COMP_IRQn);                                       /* 设置ADC内核中断 */
+  HAL_NVIC_SetPriority(ADC_COMP_IRQn, 0, 0);                               /*  Set ADC interrupt priority */
+  HAL_NVIC_EnableIRQ(ADC_COMP_IRQn);                                       /*  Enable ADC interrupt */
 }
 
 /**
-  * @brief  看门狗中断回调函数
-  * @param  AdcHandle：ADC句柄
-  * @retval 无
+  * @brief  Analog watchdog interrupt callback function
+  * @param  AdcHandle: ADC handle
+  * @retval None
   */
 void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* AdcHandle)
 {
@@ -148,9 +156,9 @@ void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* AdcHandle)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -161,16 +169,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line)  */
+  /* Infinite loop */
   while (1)
   {
   }

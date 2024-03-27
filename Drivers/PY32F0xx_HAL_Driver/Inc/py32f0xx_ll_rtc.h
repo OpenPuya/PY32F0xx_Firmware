@@ -4,10 +4,18 @@
   * @author  MCU Application Team
   * @brief   Header file of RTC LL module.
   ******************************************************************************
-   * @attention
+  * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -391,7 +399,7 @@ __STATIC_INLINE uint32_t LL_RTC_CAL_GetCoarseDigital(RTC_TypeDef *RTCx)
   * @}
   */
 
-/** @defgroup RTC_LL_EF_FLAG_Management FLAG_Management
+/** @defgroup RTC_LL_EF_FLAG_Management FLAG Management
   * @{
   */
 
@@ -498,7 +506,7 @@ __STATIC_INLINE uint32_t LL_RTC_IsActiveFlag_RTOF(RTC_TypeDef *RTCx)
   * @}
   */
 
-/** @defgroup RTC_LL_EF_IT_Management IT_Management
+/** @defgroup RTC_LL_EF_IT_Management IT Management
   * @{
   */
 

@@ -1,0 +1,126 @@
+{
+  "name": "Project",
+  "type": "ARM",
+  "dependenceList": [],
+  "srcDirs": [
+    ".eide/deps"
+  ],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": [
+      {
+        "name": "BSP",
+        "files": [],
+        "folders": []
+      },
+      {
+        "name": "Common",
+        "files": [
+          {
+            "path": "../Src/system_py32f0xx.c"
+          },
+          {
+            "path": "startup_py32f030xx.s"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "Doc",
+        "files": [
+          {
+            "path": "../readme.txt"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "PY32F0xx_HAL_Driver",
+        "files": [
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "User",
+        "files": [
+          {
+            "path": "../Src/main.c"
+          },
+          {
+            "path": "../Src/py32f0xx_it.c"
+          }
+        ],
+        "folders": []
+      }
+    ]
+  },
+  "outDir": "build",
+  "deviceName": "PY32F030x8",
+  "packDir": ".pack/Puya/PY32F0xx_DFP.1.2.0",
+  "miscInfo": {
+    "uid": "36bcf0031e18a3008bbdaa90a96a7987"
+  },
+  "targets": {
+    "Project": {
+      "excludeList": [],
+      "toolchain": "GCC",
+      "compileConfig": {
+        "cpuType": "Cortex-M0+",
+        "floatingPointHardware": "none",
+        "scatterFilePath": "py32f030x8.ld",
+        "useCustomScatterFile": true,
+        "storageLayout": {
+          "RAM": [],
+          "ROM": []
+        },
+        "options": "null"
+      },
+      "uploader": "OpenOCD",
+      "uploadConfig": {
+        "bin": "",
+        "target": "py32f030",
+        "interface": "cmsis-dap",
+        "baseAddr": "0x08000000"
+      },
+      "uploadConfigMap": {
+        "JLink": {
+          "bin": "",
+          "baseAddr": "",
+          "cpuInfo": {
+            "vendor": "Puya",
+            "cpuName": "PY32F030x8"
+          },
+          "proType": 1,
+          "speed": 8000,
+          "otherCmds": ""
+        },
+        "OpenOCD": {
+          "bin": "",
+          "target": "py32f030",
+          "interface": "cmsis-dap",
+          "baseAddr": "0x08000000"
+        }
+      },
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          "../Inc",
+          "../../../Drivers/PY32F0xx_HAL_Driver/Inc",
+          "../../../Drivers/CMSIS/Include",
+          "../../../Drivers/CMSIS/Device/PY32F0xx/Include"
+        ],
+        "libList": [],
+        "sourceDirList": [],
+        "defineList": [
+          "USE_FULL_LL_DRIVER",
+          "PY32F030x8"
+        ]
+      }
+    }
+  },
+  "version": "3.3"
+}

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -27,6 +35,9 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "py32f0xx.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -59,7 +70,7 @@
 #endif /* HSI_VALUE */
 
 /**
-  * @brief Adjust the value of External High Speed oscillator (HXT) used in your application.
+  * @brief Adjust the value of External High Speed oscillator (HSE) used in your application.
   *        This value is used by the RCC HAL module to compute the system frequency
   */
 #if !defined  (HSE_VALUE) 
@@ -67,7 +78,7 @@
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)
-  #define HSE_STARTUP_TIMEOUT    ((uint32_t)200)   /*!< Time out for HXT start up, in ms */
+  #define HSE_STARTUP_TIMEOUT    ((uint32_t)200)   /*!< Time out for HSE start up, in ms */
 #endif /* HSE_STARTUP_TIMEOUT */
 
 /**
@@ -79,8 +90,9 @@
                                                 The real value may vary depending on the variations
                                                 in voltage and temperature. */
 
+#if defined (RCC_LSE_SUPPORT)
 /**
-  * @brief Adjust the value of External Low Speed oscillator (LXT) used in your application.
+  * @brief Adjust the value of External Low Speed oscillator (LSE) used in your application.
   *        This value is used by the RCC HAL module to compute the system frequency  
   */
 #if !defined  (LSE_VALUE)
@@ -88,8 +100,9 @@
 #endif /* LSE_VALUE */
 
 #if !defined  (LSE_STARTUP_TIMEOUT)
-  #define LSE_STARTUP_TIMEOUT    ((uint32_t)5000)   /*!< Time out for LXT start up, in ms */
+  #define LSE_STARTUP_TIMEOUT    ((uint32_t)5000)   /*!< Time out for LSE start up, in ms */
 #endif /* LSE_STARTUP_TIMEOUT */
+#endif
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */

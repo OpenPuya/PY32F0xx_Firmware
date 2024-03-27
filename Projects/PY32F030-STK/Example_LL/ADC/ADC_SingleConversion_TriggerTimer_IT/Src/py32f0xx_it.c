@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -85,13 +93,13 @@ void SysTick_Handler(void)
   */
 void ADC_COMP_IRQHandler(void)
 {
-  /* 检测是不是转换结束触发的中断 */
+  /* Check if it is an interrupt triggered by the end of conversion */
   if(LL_ADC_IsActiveFlag_EOC(ADC1) != 0)
   {
-    /* 清空ADC EOC 中断 */
+    /* Clear ADC EOC interrupt flag */
     LL_ADC_ClearFlag_EOC(ADC1);
 
-    /* 调用中断处理函数 */
+    /* Call the interrupt handler function */
     APP_AdcGrpRegularUnitaryConvCompleteCallback();
   }
 }

@@ -153,8 +153,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -202,6 +210,8 @@
   */
 
 /* Private variables ---------------------------------------------------------*/
+static __IO uint32_t      gCounter_Alarm = RTC_ALARM_RESETVALUE;
+
 /* Private function prototypes -----------------------------------------------*/
 /** @defgroup RTC_Private_Functions RTC Private Functions
   * @{
@@ -1211,7 +1221,7 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
     /* Add 1 day to alarm counter*/
     counter_alarm += (uint32_t)(24U * 3600U);
   }
-
+  
   /* Write alarm counter in RTC registers */
   if (RTC_WriteAlarmCounter(hrtc, counter_alarm) != HAL_OK)
   {
@@ -1606,12 +1616,8 @@ static HAL_StatusTypeDef RTC_WriteTimeCounter(RTC_HandleTypeDef *hrtc, uint32_t 
   */
 static uint32_t RTC_ReadAlarmCounter(RTC_HandleTypeDef *hrtc)
 {
-  uint16_t high1 = 0U, low = 0U;
-
-  high1 = READ_REG(hrtc->Instance->ALRH & RTC_CNTH_RTC_CNT);
-  low   = READ_REG(hrtc->Instance->ALRL & RTC_CNTL_RTC_CNT);
-
-  return (((uint32_t) high1 << 16U) | low);
+  (void)hrtc;
+  return gCounter_Alarm;
 }
 
 /**
@@ -1636,7 +1642,8 @@ static HAL_StatusTypeDef RTC_WriteAlarmCounter(RTC_HandleTypeDef *hrtc, uint32_t
     WRITE_REG(hrtc->Instance->ALRH, (AlarmCounter >> 16U));
     /* Set RTC COUNTER LSB word */
     WRITE_REG(hrtc->Instance->ALRL, (AlarmCounter & RTC_ALRL_RTC_ALR));
-
+    /* Update the global variable gCounter_Alarm */
+    gCounter_Alarm = AlarmCounter;
     /* Wait for synchro */
     if (RTC_ExitInitMode(hrtc) != HAL_OK)
     {
@@ -1686,8 +1693,8 @@ static HAL_StatusTypeDef RTC_ExitInitMode(RTC_HandleTypeDef *hrtc)
 
   /* Disable the write protection for RTC registers */
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
-	
-	tickstart = HAL_GetTick();
+  
+  tickstart = HAL_GetTick();
   /* Wait till RTC is in NOINIT state and if Time out is reached exit */
   while ((hrtc->Instance->CRL & RTC_CRL_RTOFF) == RTC_CRL_RTOFF)
   {

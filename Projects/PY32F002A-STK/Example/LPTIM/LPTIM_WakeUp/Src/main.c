@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -33,7 +41,7 @@ LPTIM_HandleTypeDef       LPTIMCONF = {0};
 /* Private function prototypes -----------------------------------------------*/
 void Error_Handler(void);
 static void APP_LPTIMConfig(void);
-void delay_us(uint32_t nus,uint32_t fac_us);
+void delay_us(uint32_t nus);
 
 /**
   * @brief  应用程序入口函数.
@@ -77,7 +85,7 @@ int main(void)
     LPTIM->CR &= ~LPTIM_CR_ENABLE;
     LPTIM->CR |= LPTIM_CR_ENABLE;
     
-    delay_us(75,8);                                                       /* delay 2*LSI时钟 */      
+    delay_us(75);                                                       /* delay 2*LSI时钟 */      
     LPTIM->CR |= LPTIM_CR_SNGSTRT;
     LPTIM->IER |=LPTIM_IER_ARRMIE;
     LPTIM->ARR=51;
@@ -115,24 +123,18 @@ void HAL_LPTIM_AutoReloadMatchCallback(LPTIM_HandleTypeDef *hlptim)
 }
 
  /**
-  * @brief  错误执行函数
-  * @param  无
+  * @brief  微秒延时函数
+  * @param  nus:要延时的微秒数
   * @retval 无
   */
-void delay_us(uint32_t nus,uint32_t fac_us)
+void delay_us(uint32_t nus)
  {
-  HAL_SuspendTick();
-  uint32_t temp;
-  SysTick->LOAD=nus*fac_us;
-  SysTick->VAL=0x00;
-  SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;
+  __IO uint32_t Delay =1+ nus * (SystemCoreClock / 24U) / 1000000U;
   do
   {
-    temp=SysTick->CTRL;
+    __NOP();
   }
-  while((temp&0x01)&&!(temp&(1<<16)));
-  SysTick->CTRL=0x00;
-  SysTick->VAL =0x00;
+  while(Delay--);
  }
 
 /**

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup PY32F0XX_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -44,7 +52,11 @@ extern "C" {
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
+
 /* Exported types ------------------------------------------------------------*/
+/** @defgroup LED_LL_Exported_Types LED Exported Types
+  * @{
+  */
 /**
   * @brief LED Init Structure definition
   */
@@ -66,8 +78,15 @@ typedef struct
                                      This parameter can be a number between Min_Data = 1 and Max_Data = 0xFF */
 
 } LL_LED_InitTypeDef;
+/**
+  * @}
+  */
 
-/* Exported constants --------------------------------------------------------*/
+/* Exported Constants --------------------------------------------------------*/
+/** @defgroup LED_LL_Exported_constants LED Exported Constants
+  * @{
+  */
+
 /** @defgroup LED_LL_EC_ComDrive ComDrive
   * @{
   */
@@ -78,7 +97,7 @@ typedef struct
   */
 
 
-/** @defgroup LED_LL_EC_ComSelct the number of COM open
+/** @defgroup LED_LL_EC_ComSelct Number of COM Open
   * @{
   */
 #define LL_LED_COMSELECT_1COM             0x00000000U
@@ -89,7 +108,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup LED_LL_EC_DisplayValue LED display value
+/** @defgroup LED_LL_EC_DisplayValue LED Display Value
   * @{
   */
 #define LL_LED_DISP_NONE            0x00U
@@ -130,7 +149,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup LED_LL_EC_DataReg Data Register Mask and position
+/** @defgroup LED_LL_EC_DataReg Data Register Mask and Position
   * @{
   */
 #define LL_LED_DR_DATA               LED_DR0_DATA0
@@ -139,7 +158,15 @@ typedef struct
   * @}
   */
 
+/**
+  * @}
+  */
+
 /* Exported functions --------------------------------------------------------*/
+/** @defgroup LED_LL_Exported_Functions LED Exported Functions
+  * @{
+  */
+
 /**
   * @brief  Set the LED COM drive capability.
   * @param  LEDx LED Instance
@@ -438,10 +465,6 @@ __STATIC_INLINE void LL_LED_ClearFlag_IT(LED_TypeDef *LEDx)
   SET_BIT(LEDx->IR, LED_IR_FLAG);
 }
 
-/**
-  * @}
-  */
-
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup LED_LL_EF_Init Initialization and de-initialization functions
   * @{
@@ -460,6 +483,9 @@ void LL_LED_StructInit(LL_LED_InitTypeDef *LED_InitStruct);
   * @}
   */
 
+/**
+  * @}
+  */
 #endif /* LED */
 
 /**

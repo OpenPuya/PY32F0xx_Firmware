@@ -11,8 +11,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -244,8 +252,21 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
 #if defined(PY32F002APRE)
 PeriphClkInit->PeriphClockSelection =  RCC_PERIPHCLK_LPTIM;
 #else
-PeriphClkInit->PeriphClockSelection = RCC_PERIPHCLK_COMP1 | RCC_PERIPHCLK_COMP2 | RCC_PERIPHCLK_PVD | \
-                                        RCC_PERIPHCLK_LPTIM     | RCC_PERIPHCLK_RTC ;
+#if defined(RCC_CCIPR_PVDSEL)
+PeriphClkInit->PeriphClockSelection |= RCC_PERIPHCLK_PVD;
+#endif
+#if defined(RCC_CCIPR_COMP1SEL)
+PeriphClkInit->PeriphClockSelection |= RCC_PERIPHCLK_COMP1;
+#endif
+#if defined(RCC_CCIPR_COMP2SEL)
+PeriphClkInit->PeriphClockSelection |= RCC_PERIPHCLK_COMP2;
+#endif
+#if defined(RCC_CCIPR_LPTIMSEL)
+PeriphClkInit->PeriphClockSelection |= RCC_PERIPHCLK_LPTIM;
+#endif
+#if defined(RCC_BDCR_RTCSEL)
+PeriphClkInit->PeriphClockSelection |= RCC_PERIPHCLK_RTC;
+#endif
 #endif
   
 #if defined(RCC_CCIPR_PVDSEL)
@@ -591,10 +612,6 @@ void HAL_RCCEx_DisableLSCO(void)
   * @}
   */
 
-
-/**
-  * @}
-  */
 
 /**
   * @}

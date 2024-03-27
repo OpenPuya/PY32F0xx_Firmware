@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -25,7 +33,7 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define DARA_LENGTH       15
+#define DATA_LENGTH       15
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef Spi1Handle;
 uint8_t TxBuff[15] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -76,7 +84,7 @@ int main(void)
     ;
   }
   /*SPI 中断方式传输*/
-  if (HAL_SPI_TransmitReceive_IT(&Spi1Handle, (uint8_t *)TxBuff, (uint8_t *)RxBuff, DARA_LENGTH) != HAL_OK)
+  if (HAL_SPI_TransmitReceive_IT(&Spi1Handle, (uint8_t *)TxBuff, (uint8_t *)RxBuff, DATA_LENGTH) != HAL_OK)
   {
     Error_Handler();
   }

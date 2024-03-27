@@ -9,13 +9,19 @@
   *           + Memory Control functions
   *           + Peripheral Errors functions
   *
- @verbatim
-
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -30,6 +36,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx_hal.h"
+/** @addtogroup PY32F0xx_HAL_Driver
+  * @{
+  */
 
 /** @defgroup FLASH FLASH
   * @brief FLASH HAL module driver
@@ -86,11 +95,32 @@ const uint32_t _FlashTimmingParam[8] = {0x1FFF0F1C, 0x1FFF0F30, 0x1FFF0F44, 0x1F
 /** @defgroup FLASH_Private_Functions FLASH Private Functions
  * @{
  */
-static  void  FLASH_MassErase(void);
-static  void  FLASH_Program_Page(uint32_t Address, uint32_t * DataAddress);
-static  void  FLASH_PageErase(uint32_t PageAddress);
+static void FLASH_MassErase(void);
+static void FLASH_Program_Page(uint32_t Address, uint32_t * DataAddress);
+static void FLASH_PageErase(uint32_t PageAddress);
+static HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout);
 /**
   * @}
+  */
+
+/* Exported functions --------------------------------------------------------*/
+/** @defgroup FLASH_Exported_Functions FLASH Exported Functions
+  * @{
+  */
+
+/** @defgroup FLASH_Exported_Functions_Group2 Peripheral Control functions
+  * @brief   Management functions
+  *
+@verbatim
+ ===============================================================================
+                      ##### Peripheral Control functions #####
+ ===============================================================================
+    [..]
+    This subsection provides a set of functions allowing to control the FLASH
+    memory operations.
+
+@endverbatim
+  * @{
   */
 
 /**
@@ -194,6 +224,23 @@ HAL_StatusTypeDef HAL_FLASH_OB_Launch(void)
      so return error */
   return HAL_ERROR;
 }
+/**
+  * @}
+  */
+
+/** @defgroup FLASH_Exported_Functions_Group3 Peripheral State and Errors functions
+  * @brief   Peripheral Errors functions
+  *
+@verbatim
+ ===============================================================================
+                ##### Peripheral Errors functions #####
+ ===============================================================================
+    [..]
+    This subsection permits to get in run-time Errors of the FLASH peripheral.
+
+@endverbatim
+  * @{
+  */
 
 /**
   * @brief  Get the specific FLASH error flag.
@@ -209,11 +256,25 @@ uint32_t HAL_FLASH_GetError(void)
 }
 
 /**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/* Private functions ---------------------------------------------------------*/
+
+/** @addtogroup FLASH_Private_Functions
+  * @{
+  */
+
+/**
   * @brief  Wait for a FLASH operation to complete.
   * @param  Timeout maximum flash operation timeout
   * @retval HAL_StatusTypeDef HAL Status
   */
-HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
+static HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
 {
   /* Wait for the FLASH operation to complete by polling on BUSY flag to be reset.
      Even if the FLASH operation fails, the BUSY flag will be reset and an error
@@ -278,7 +339,7 @@ static void FLASH_SectorErase(uint32_t SectorAddress)
   *
   * @retval None
   */
-static __RAM_FUNC void FLASH_Program_Page(uint32_t Address, uint32_t * DataAddress)
+static void FLASH_Program_Page(uint32_t Address, uint32_t * DataAddress)
 {
 
   uint8_t index=0;
@@ -306,6 +367,29 @@ static __RAM_FUNC void FLASH_Program_Page(uint32_t Address, uint32_t * DataAddre
   /* Exit critical section: restore previous priority mask */
   __set_PRIMASK(primask_bit);
 }
+
+/**
+  * @}
+  */
+
+/** @addtogroup FLASH_Exported_Functions
+  * @{
+  */
+
+/** @defgroup FLASH_Exported_Functions_Group1 Programming operation functions
+  *  @brief   Programming operation functions
+  *
+@verbatim
+ ===============================================================================
+                  ##### Programming operation functions #####
+ ===============================================================================
+    [..]
+    This subsection provides a set of functions allowing to manage the FLASH
+    program operations.
+
+@endverbatim
+  * @{
+  */
 
 /**
   * @brief  Perform a mass erase or erase the specified FLASH memory pages
@@ -494,7 +578,7 @@ HAL_StatusTypeDef HAL_FLASH_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
 /**
   * @brief  Program of a page at a specified address.
   * @param  Address Specifies the address to be programmed.
-  * @param  DataAddr:Page Start Address
+  * @param  DataAddr Page Start Address
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
@@ -508,7 +592,7 @@ HAL_StatusTypeDef HAL_FLASH_PageProgram(uint32_t Address, uint32_t * DataAddr )
   * @param  TypeProgram Indicate the way to program at a specified address.
   *                      This parameter can be a value of @ref FLASH_Type_Program
   * @param  Address Specifies the address to be programmed.
-  * @param  DataAddr:Page Start Address
+  * @param  DataAddr Page Start Address
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
@@ -618,6 +702,22 @@ HAL_StatusTypeDef HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, u
 }
 
 /**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/** @addtogroup FLASH_Exported_Functions
+  * @{
+  */
+
+/** @addtogroup FLASH_Exported_Functions_Group2
+  * @{
+  */
+
+/**
   * @brief  Set the read protection level.
   * @param  ReadProtectLevel specifies the read protection level.
   *         This parameter can be one of the following values:
@@ -666,6 +766,18 @@ HAL_StatusTypeDef HAL_FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel)
 
   return status;
 }
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/** @addtogroup FLASH_Private_Functions
+ * @{
+ */
 
 /**
   * @brief  Return the FLASH User Option Byte value.
@@ -738,6 +850,18 @@ static void FLASH_OB_OptrConfig(uint32_t UserType, uint32_t UserConfig, uint32_t
 }
 
 /**
+  * @}
+  */
+
+/** @addtogroup FLASH_Exported_Functions
+  * @{
+  */
+
+/** @addtogroup FLASH_Exported_Functions_Group2
+  * @{
+  */
+
+/**
   * @brief  Program option bytes
   * @note   The function @ref HAL_FLASH_Unlock() should be called before to unlock the FLASH interface
   *         The function @ref HAL_FLASH_OB_Unlock() should be called before to unlock the options bytes
@@ -749,6 +873,7 @@ static void FLASH_OB_OptrConfig(uint32_t UserType, uint32_t UserConfig, uint32_t
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
+
 HAL_StatusTypeDef HAL_FLASH_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
 {
   uint32_t optr;
@@ -858,6 +983,21 @@ void HAL_FLASH_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
 
 #endif
 }
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/** @addtogroup FLASH_Exported_Functions
+  * @{
+  */
+
+/** @addtogroup FLASH_Exported_Functions_Group2
+  * @{
+  */
 
 /**
   * @brief Handle FLASH interrupt request.
@@ -1000,6 +1140,13 @@ __weak void HAL_FLASH_OperationErrorCallback(uint32_t ReturnValue)
             the HAL_FLASH_OperationErrorCallback could be implemented in the user file
    */
 }
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 #endif /* HAL_FLASH_MODULE_ENABLED */
 

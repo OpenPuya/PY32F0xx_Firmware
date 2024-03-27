@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -32,7 +40,7 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief 初始化全局MSP
+  * @brief Initialize global MSP
   */
 void HAL_MspInit(void)
 {
@@ -41,18 +49,18 @@ void HAL_MspInit(void)
 }
 
 /**
-  * @brief 初始化USART的MSP
-  * @param  huart：初始化USART的句柄
+  * @brief Initialize USART-related MSP
+  * @param  huart：USART handle
   */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
   if (huart->Instance == USART1)
   {
-    /* USART1时钟使能 */
+    /* Enable USART1 clock */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_USART1_CLK_ENABLE();
-    /* GPIO初始化
+    /* GPIO initialization
     PA9 TX,PA10 RX
     */
     GPIO_InitStruct.Pin       = GPIO_PIN_9;
@@ -65,17 +73,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     GPIO_InitStruct.Pin = GPIO_PIN_10;
     GPIO_InitStruct.Alternate = GPIO_AF1_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-    /*USART1中断使能*/
+    /* Enable USART1 interrupt */
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   }
 
   if (huart->Instance == USART2)
   {
-    /* USART2时钟使能 */
+    /* Enable USART2 clock */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
-    /* GPIO初始化
+    /* GPIO initialization
     PA9 TX,PA10 RX
     */
     GPIO_InitStruct.Pin       = GPIO_PIN_9;
@@ -88,7 +96,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     GPIO_InitStruct.Pin = GPIO_PIN_10;
     GPIO_InitStruct.Alternate = GPIO_AF4_USART2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-    /*USART2中断使能*/
+    /* Enable USART2 interrupt */
     HAL_NVIC_SetPriority(USART2_IRQn, 0, 1);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   }

@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -28,7 +36,7 @@
 ADC_HandleTypeDef   AdcHandle;
 uint8_t             adcValueflag;
 uint32_t            adc_value;
-float               T_VCC;
+uint16_t            T_VCC;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -55,15 +63,15 @@ int main(void)
     /* 启动ADC */
     HAL_ADC_Start(&AdcHandle);
 
-    /* 等待ADC转换完成 */	
+    /* 等待ADC转换完成 */
     HAL_ADC_PollForConversion(&AdcHandle, 1000000); 
 
     /* 获取ADC值 */
     adc_value = HAL_ADC_GetValue(&AdcHandle); 
 
-    /* 计算VCC电压 */	
-    T_VCC = (4095 * 1.2) / adc_value;               
-    printf("VCC:%f V\r\n", T_VCC);
+    /* 计算VCC电压 */
+    T_VCC = (4095 * 1200) / adc_value;               
+    printf("VCC:%d mV\r\n", T_VCC);
     HAL_Delay(1000);
   }
 }

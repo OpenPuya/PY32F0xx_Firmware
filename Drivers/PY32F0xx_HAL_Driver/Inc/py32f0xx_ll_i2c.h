@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -207,7 +215,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_LL_EM_Exported_Macros_Helper Exported_Macros_Helper
+/** @defgroup I2C_LL_EM_Exported_Macros_Helper Exported Macros Helper
   * @{
   */
 
@@ -674,7 +682,7 @@ __STATIC_INLINE void LL_I2C_ConfigSpeed(I2C_TypeDef *I2Cx, uint32_t PeriphClock,
   * @}
   */
 
-/** @defgroup I2C_LL_EF_IT_Management IT_Management
+/** @defgroup I2C_LL_EF_IT_Management IT Management
   * @{
   */
 
@@ -892,7 +900,7 @@ __STATIC_INLINE uint32_t LL_I2C_IsEnabledIT_ERR(I2C_TypeDef *I2Cx)
   * @}
   */
 
-/** @defgroup I2C_LL_EF_FLAG_management FLAG_management
+/** @defgroup I2C_LL_EF_FLAG_management FLAG Management
   * @{
   */
 

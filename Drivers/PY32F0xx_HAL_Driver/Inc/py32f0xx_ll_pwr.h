@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -31,7 +39,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "py32f0xx.h"
 
-/** @addtogroup PY32F0XX_LL_Driver
+/** @addtogroup PY32F0xx_LL_Driver
   * @{
   */
 
@@ -161,6 +169,11 @@ extern "C" {
 /**
   * @}
   */
+
+/**
+  * @}
+  */
+
 
 /* Exported macro ------------------------------------------------------------*/
 /** @defgroup PWR_LL_Exported_Macros PWR Exported Macros
@@ -520,7 +533,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPVD(void)
 /**
   * @brief  PVD detection power supply selection
   * @rmtoll CR2          PWR_CR2_SRCSEL          LL_PWR_SetPVDSource
-  * @param  PVDSrcSel This parameter can be one of the following values:
+  * @param  PVDSrc This parameter can be one of the following values:
   *         @arg @ref LL_PWR_PVD_SOURCE_VCC
   *         @arg @ref LL_PWR_PVD_SOURCE_PB7
   * @retval None
@@ -575,7 +588,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledPVDFilter(void)
 /**
   * @brief  PVD detection power supply selection
   * @rmtoll CR2          PWR_CR2_FLT_TIME          LL_PWR_SetPVDFilter
-  * @param  PVDSrcSel This parameter can be one of the following values:
+  * @param  PVDFilter This parameter can be one of the following values:
   *         @arg @ref LL_PWR_PVD_FILTER_1CLOCK
   *         @arg @ref LL_PWR_PVD_FILTER_2CLOCK
   *         @arg @ref LL_PWR_PVD_FILTER_4CLOCK
@@ -612,7 +625,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetPVDFilter(void)
   * @}
   */
 
-/** @defgroup PWR_LL_EF_FLAG_Management FLAG_Management
+/** @defgroup PWR_LL_EF_FLAG_Management FLAG Management
   * @{
   */
 /**

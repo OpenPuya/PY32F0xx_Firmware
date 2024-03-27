@@ -6,8 +6,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -50,44 +58,44 @@ static void APP_FlashBlank(void);
 static void APP_FlashVerify(void);
 
 /**
-  * @brief  应用程序入口函数.
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /* 时钟初始化,配置系统时钟为HSI*/
+  /* Initialize clock, configure system clock as HSI*/
   APP_SystemClockConfig();
   
-  /* 初始化systick */
+  /* Initialize SysTick */
   HAL_Init();
 
-  /* 初始化按键 */
+  /* Initialize button */
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
-  /* 等待按键按下，防止每次上电都擦写FLASH */
+  /* Wait for the button to be pressed, to prevent erasing FLASH on every power-up */
   while (BSP_PB_GetState(BUTTON_USER))
   {
   }
 
-  /* 初始化LED */
+  /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* 解锁FLASH */
+  /* Unlock FLASH */
   HAL_FLASH_Unlock();
 
-  /* 擦除FLASH */
+  /* Erase FLASH */
   APP_FlashErase();
 
-  /* 查空FLASH */
+  /* Check if FLASH is blank */
   APP_FlashBlank();
 
-  /* 写FLASH */
+  /* Program FLASH */
   APP_FlashProgram();
 
-  /* 锁定FLASH */
+  /* Lock FLASH */
   HAL_FLASH_Lock();
 
-  /* 校验FLASH */
+  /* Verify FLASH */
   APP_FlashVerify();
 
   BSP_LED_On(LED_GREEN);
@@ -97,23 +105,23 @@ int main(void)
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
 static void APP_SystemClockConfig(void)
 {
-  /* HSI使能及初始化 */
+  /* Enable and initialize HSI */
   LL_RCC_HSI_Enable();
   LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
   while (LL_RCC_HSI_IsReady() != 1)
   {
   }
 
-  /* 设置AHB分频*/
+  /* Set AHB prescaler*/
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置HSISYS为系统时钟及初始化 */
+  /* Configure HSISYS as system clock and initialize it */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
   while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
@@ -121,56 +129,56 @@ static void APP_SystemClockConfig(void)
 
   LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
 
-  /*设置APB1分频及初始化*/
+  /*Set APB1 prescaler and initialize it*/
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
   LL_SetSystemCoreClock(24000000);
 }
 
 /**
-  * @brief  擦除FLASH函数
-  * @param  无
-  * @retval 无
+  * @brief  FLASH erase function
+  * @param  None
+  * @retval None
   */
 static void APP_FlashErase(void)
 {
   uint32_t PAGEError = 0;
   FLASH_EraseInitTypeDef EraseInitStruct;
 
-  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGEERASE;        /* 擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦 */
-  EraseInitStruct.PageAddress = FLASH_USER_START_ADDR;            /* 擦写起始地址 */
-  EraseInitStruct.NbPages  = sizeof(DATA) / FLASH_PAGE_SIZE;      /* 需要擦写的页数量 */
-  if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)  /* 执行page擦除,PAGEError返回擦写错误的page,返回0xFFFFFFFF,表示擦写成功 */
+  EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGEERASE;        /* Erase type (FLASH_TYPEERASE_PAGES for page erase, FLASH_TYPEERASE_SECTORS for sector erase) */
+  EraseInitStruct.PageAddress = FLASH_USER_START_ADDR;            /* Erase start address */
+  EraseInitStruct.NbPages  = sizeof(DATA) / FLASH_PAGE_SIZE;      /* Number of pages to be erased */
+  if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)  /* Execute page erase, PAGEError returns the page with erase error, 0xFFFFFFFF indicates successful erase */
   {
     APP_ErrorHandler();
   }
 }
 
 /**
-  * @brief  写FLASH函数
-  * @param  无
-  * @retval 无
+  * @brief  FLASH programming function
+  * @param  None
+  * @retval None
   */
 static void APP_FlashProgram(void)
 {
-  uint32_t flash_program_start = FLASH_USER_START_ADDR ;                /* flash写起始地址 */
-  uint32_t flash_program_end = (FLASH_USER_START_ADDR + sizeof(DATA));  /* flash写结束地址 */
-  uint32_t *src = (uint32_t *)DATA;                                     /* 数组指针 */
+  uint32_t flash_program_start = FLASH_USER_START_ADDR ;                /* Start address for flash programming */
+  uint32_t flash_program_end = (FLASH_USER_START_ADDR + sizeof(DATA));  /* End address for flash programming */
+  uint32_t *src = (uint32_t *)DATA;                                     /* Array pointer */
 
   while (flash_program_start < flash_program_end)
   {
-    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_PAGE, flash_program_start, src) == HAL_OK)/* 执行Program */
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_PAGE, flash_program_start, src) == HAL_OK)/* Execute programming */
     {
-      flash_program_start += FLASH_PAGE_SIZE; /* flash起始指针指向第一个page */
-      src += FLASH_PAGE_SIZE / 4;             /* 更新数据指针 */
+      flash_program_start += FLASH_PAGE_SIZE; /* Point flash start address to the next word */
+      src += FLASH_PAGE_SIZE / 4;             /* Update data pointer */
     }
   }
 }
 
 /**
-  * @brief  查空FLASH函数
-  * @param  无
-  * @retval 无
+  * @brief  FLASH blank check function
+  * @param  None
+  * @retval None
   */
 static void APP_FlashBlank(void)
 {
@@ -187,9 +195,9 @@ static void APP_FlashBlank(void)
 }
 
 /**
-  * @brief  校准FLASH函数
-  * @param  无
-  * @retval 无
+  * @brief  FLASH verification function
+  * @param  None
+  * @retval None
   */
 static void APP_FlashVerify(void)
 {
@@ -206,9 +214,9 @@ static void APP_FlashVerify(void)
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
   */
 void APP_ErrorHandler(void)
 {
@@ -217,16 +225,17 @@ void APP_ErrorHandler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

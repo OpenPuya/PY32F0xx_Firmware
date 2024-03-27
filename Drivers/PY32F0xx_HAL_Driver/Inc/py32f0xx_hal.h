@@ -7,8 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * <h2><center>&copy; Copyright (c) 2023 Puya Semiconductor Co.
   * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by Puya under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.</center></h2>
@@ -59,9 +67,23 @@ typedef enum
 /**
   * @}
   */
+
+/**
+  * @}
+  */
+
 /* Exported types ------------------------------------------------------------*/
+
+/* Exported variables --------------------------------------------------------*/
+/** @addtogroup HAL_Exported_Variables
+  * @{
+  */
 extern uint32_t uwTickPrio;
 extern uint32_t uwTickFreq;
+/**
+  * @}
+  */
+/* SYSCFG Exported Constants -------------------------------------------------*/
 /** @defgroup SYSCFG_Exported_Constants SYSCFG Exported Constants
   * @{
   */
@@ -76,21 +98,10 @@ extern uint32_t uwTickFreq;
 /**
   * @}
   */
-/* Exported macro ------------------------------------------------------------*/
-/** @defgroup HAL_Exported_Macros HAL Exported Macros
-  * @{
-  */
 
-/** @defgroup DBGMCU_Freeze_Unfreeze Freeze Unfreeze Peripherals in Debug mode
-  * @brief   Freeze/Unfreeze Peripherals in Debug mode
-  * Note:
-  *       Debug registers DBGMCU_IDCODE and DBGMCU_CR are accessible only in
-  *       debug mode (not accessible by the user software in normal mode).
-  *       Refer to errata sheet of these devices for more details.
-  * @{
+/**
+  * @}
   */
-
-/* Peripherals on APB1 */
 
 /* Exported macros -----------------------------------------------------------*/
 /** @defgroup HAL_Exported_Macros HAL Exported Macros
@@ -172,13 +183,10 @@ extern uint32_t uwTickFreq;
   * @}
   */
 
-/** @defgroup HAL_Private_Macros HAL Private Macros
+
+/** @defgroup SYSCFG_Exported_Macros SYSCFG Exported Macros
   * @{
   */
-#define IS_TICKFREQ(FREQ) (((FREQ) == HAL_TICK_FREQ_10HZ)  || \
-                           ((FREQ) == HAL_TICK_FREQ_100HZ) || \
-                           ((FREQ) == HAL_TICK_FREQ_1KHZ))
-
 
 /** @brief  SYSCFG Break Cortex-M0+ Lockup lock.
   *         Enables and locks the connection of Cortex-M0+ LOCKUP (Hardfault) output to TIM1/15/16/17 Break input
@@ -214,7 +222,36 @@ extern uint32_t uwTickFreq;
 #if defined(SYSCFG_CFGR2_COMP2_BRK_TIM17)
 #define __HAL_SYSCFG_COMP2_BREAK_TIM17()           SET_BIT(SYSCFG->CFGR2, SYSCFG_CFGR2_COMP2_BRK_TIM17)
 #endif
+/**
+  * @}
+  */
 
+/**
+  * @}
+  */
+
+/* Private Macros -------------------------------------------------------------*/
+
+/** @defgroup HAL_Private_Macros HAL Private Macros
+  * @{
+  */
+#define IS_TICKFREQ(FREQ) (((FREQ) == HAL_TICK_FREQ_10HZ)  || \
+                           ((FREQ) == HAL_TICK_FREQ_100HZ) || \
+                           ((FREQ) == HAL_TICK_FREQ_1KHZ))
+
+/**
+  * @}
+  */
+
+/* Exported functions --------------------------------------------------------*/
+
+/** @addtogroup HAL_Exported_Functions
+  * @{
+  */
+
+/** @addtogroup HAL_Exported_Functions_Group1
+  * @{
+  */
 
 /* Initialization and de-initialization functions  ******************************/
 HAL_StatusTypeDef HAL_Init(void);
@@ -244,24 +281,37 @@ uint32_t HAL_GetDEVID(void);
 uint32_t HAL_GetUIDw0(void);
 uint32_t HAL_GetUIDw1(void);
 uint32_t HAL_GetUIDw2(void);
+/**
+  * @}
+  */
+
+/** @addtogroup HAL_Exported_Functions_Group3
+  * @{
+  */
+/* HAL Debug functions  *********************************************************/
 void HAL_DBGMCU_EnableDBGSleepMode(void);
 void HAL_DBGMCU_DisableDBGSleepMode(void);
 void HAL_DBGMCU_EnableDBGStopMode(void);
 void HAL_DBGMCU_DisableDBGStopMode(void);
+/**
+  * @}
+  */
+
 #if (defined(DMA)||defined(DMA1))
+/** @addtogroup HAL_Exported_Functions_Group4
+  * @{
+  */
+/* SYSCFG configuration functions  **********************************************/
 void HAL_SYSCFG_DMA_Req(uint32_t Requset);
+/**
+  * @}
+  */
 #endif
-/**
-  * @}
-  */
 
 /**
   * @}
   */
 
-/**
-  * @}
-  */
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /** @defgroup HAL_Private_Variables HAL Private Variables
@@ -270,6 +320,7 @@ void HAL_SYSCFG_DMA_Req(uint32_t Requset);
 /**
   * @}
   */
+
 /* Private constants ---------------------------------------------------------*/
 /** @defgroup HAL_Private_Constants HAL Private Constants
   * @{
