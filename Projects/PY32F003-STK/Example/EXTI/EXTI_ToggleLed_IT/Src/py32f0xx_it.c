@@ -98,6 +98,3 @@ void EXTI4_15_IRQHandler(void)
   BSP_LED_Toggle(LED_GREEN);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
 }
-
-
-

@@ -53,7 +53,7 @@ int main(void)
   /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
   
-  /* Enable LSE clock */
+  /* Enable LSI clock */
   APP_SystemClockConfig();
   
   /* Configure UART */
@@ -97,8 +97,8 @@ int main(void)
   */
 static void APP_RtcInit(void)
 {
-  RTC_TimeTypeDef Timeinit;
-  RCC_PeriphCLKInitTypeDef RTCLCKconfig;
+  RTC_TimeTypeDef Timeinit = {0};
+  RCC_PeriphCLKInitTypeDef RTCLCKconfig = {0};
   
   /* Enable access to the backup domain (RTC settings are stored in the backup domain) */
   HAL_PWR_EnableBkUpAccess();
@@ -115,6 +115,7 @@ static void APP_RtcInit(void)
   /* RTC initialization */
   RTCinit.Instance = RTC;                               /* Select RTC */
   RTCinit.Init.AsynchPrediv = RTC_AUTO_1_SECOND;        /* Automatic calculation of RTC's 1-second time base */
+  RTCinit.Init.OutPut = RTC_OUTPUTSOURCE_NONE;          /* No output on the TAMPER pin */
   /*2022-1-1-00:00:00*/
   RTCinit.DateToUpdate.Year = 22;                       /* Year 22 */
   RTCinit.DateToUpdate.Month = RTC_MONTH_JANUARY;       /* January  */
@@ -178,11 +179,12 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                      /* No HSI division */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                              /* Configure HSI output clock as 8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                     /* Disable HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                                 /* HSE frequency range 16M~32M */
+  /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                           /* HSE frequency range 16M~32M */
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;                                                      /* Enable LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                      /* Disable LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;                                            /* LSE default driving capability */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                     /* Disable LSE */
+  /* RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM; */                                      /* LSE default driving capability */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                                 /* Disable PLL */
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/                                      /* Select HSI as PLL source */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();

@@ -106,8 +106,5 @@ void ADC_COMP_IRQHandler(void)
 {
   HAL_ADC_IRQHandler(&AdcHandle);
 }
-/*void PPP_IRQHandler(void)
-{
-}*/
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

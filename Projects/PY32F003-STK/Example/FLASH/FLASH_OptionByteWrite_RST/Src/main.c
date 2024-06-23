@@ -85,8 +85,6 @@ int main(void)
       BSP_LED_On(LED_GREEN);
       while(1)
       {
-        BSP_LED_Toggle(LED_GREEN);
-        HAL_Delay(500);
       }
     }
   }
@@ -99,7 +97,7 @@ int main(void)
   */
 static void APP_FlashOBProgram(void)
 {
-  FLASH_OBProgramInitTypeDef OBInitCfg;
+  FLASH_OBProgramInitTypeDef OBInitCfg = {0};
   HAL_FLASH_Unlock();       /* 解锁FLASH */
   HAL_FLASH_OB_Unlock();    /* 解锁OPTION */
 

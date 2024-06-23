@@ -46,7 +46,9 @@ static __IO uint32_t transferCompleteDetected = 0; /* 传输正确，则置1 */
 /* Private function prototypes -----------------------------------------------*/
 void Error_Handler(void);
 void APP_SystemClockConfig(void);
-
+static void APP_WaitAndCheckEndOfTransfer(void);
+static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength);
+static void APP_LedBlinking(void);
 /**
   * @brief  应用程序入口函数.
   * @retval int
@@ -58,6 +60,12 @@ int main(void)
   
   /* 系统时钟配置 */
   APP_SystemClockConfig(); 
+  
+  /* 初始化 LED */
+  BSP_LED_Init(LED_GREEN);
+
+  /* 初始化按键 */
+  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
 
   /*初始化SPI配置*/
   Spi1Handle.Instance               = SPI1;                       /* SPI1 */
@@ -80,13 +88,16 @@ int main(void)
   }
   while (BSP_PB_GetState(BUTTON_KEY) == 1)
   {
-    ;
   }
   /*SPI 中断方式传输*/
   if (HAL_SPI_TransmitReceive_IT(&Spi1Handle, (uint8_t *)TxBuff, (uint8_t *)RxBuff, DATA_LENGTH) != HAL_OK)
   {
     Error_Handler();
   }
+  
+  /* 等待传输结束并检查接收到的数据 */
+  APP_WaitAndCheckEndOfTransfer();
+  
   while (1)
   {
 
@@ -109,7 +120,7 @@ void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI 1分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* 配置HSI时钟8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* 关闭LSI */
 
   /* 配置振荡器 */
@@ -127,6 +138,66 @@ void APP_SystemClockConfig(void)
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
+  }
+}
+
+/**
+  * @brief  Wait for SPI1 transfer to complete and verify data
+  * @param  None
+  * @retval None
+  */
+static void APP_WaitAndCheckEndOfTransfer(void)
+{
+  /* Wait for transfer to complete */
+  while (Spi1Handle.State != HAL_SPI_STATE_READY)
+  {}
+
+  /* Compare transmitted data with received data */
+  if(APP_Buffercmp8((uint8_t*)TxBuff, (uint8_t*)RxBuff, DATA_LENGTH))
+  {
+    /* Error handling */
+    APP_LedBlinking();
+  }
+  else
+  {
+    /* If data received successfully, turn on LED */
+    BSP_LED_On(LED_GREEN);
+  }
+}
+
+/**
+  * @brief  Compare two character buffers
+  * @param  pBuffer1：First buffer to compare
+  * @param  pBuffer2：Second buffer to compare
+  * @param  BufferLength：Number of characters to compare
+  * @retval 0: Buffers are the same; 1: Buffers are different
+  */
+static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength)
+{
+  while (BufferLength--)
+  {
+    if (*pBuffer1 != *pBuffer2)
+    {
+      return 1;
+    }
+    pBuffer1++;
+    pBuffer2++;
+  }
+
+  return 0;
+}
+
+/**
+  * @brief  LED blinking
+  * @param  None
+  * @retval None
+  */
+static void APP_LedBlinking(void)
+{
+  while (1)
+  {
+    BSP_LED_Toggle(LED_GREEN);; 
+    HAL_Delay(500);
   }
 }
 

@@ -36,71 +36,51 @@
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void APP_SystemClockConfig(void);
+void APP_ErrorHandler(void);
+void APP_EnbaleLSI(void);
 
 /**
-  * @brief   应用程序入口函数
-  * @retval  int
+  * @brief  应用程序入口函数.
+  * @retval int
   */
 int main(void)
 {
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();
+  
+  /* 初始化按键BUTTON */
+  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
 
-  /* 初始化按键 */
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  /*等待按键按下*/
+  while(BSP_PB_GetState(BUTTON_KEY) == 1);
 
-  /* 配置PA01引脚为MCO功能，输出系统时钟 */
-  HAL_RCC_MCOConfig(RCC_MCO2, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
-
-  /* SysTick中断周期默认是1ms，当系统时钟时LSE/LSI时systick中断太频繁，需要关掉 */
-  /* 关闭systick中断 */
-  HAL_SuspendTick();
-
-  /* 等待按键按下使能LSI */
-  while (BSP_PB_GetState(BUTTON_KEY) == 1)
-  {
-  }
-
-  /* 配置系统时钟为LSI */
-  APP_SystemClockConfig();
-
+  /* 系统时钟配置 */
+  APP_EnbaleLSI();
+  
+  /* 配置PA01引脚为MCO功能，输出LSI时钟 */
+  HAL_RCC_MCOConfig(RCC_MCO2, RCC_MCO1SOURCE_LSI, RCC_MCODIV_1);
+  
+  /* 无限循环 */
   while (1)
   {
   }
 }
 
 /**
-  * @brief   系统时钟配置函数
-  * @param   无
-  * @retval  无
+  * @brief  使能LSI
+  * @param  无
+  * @retval 无
   */
-static void APP_SystemClockConfig(void)
+void APP_EnbaleLSI(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* 配置时钟源HSE/HSI/LSE/LSI */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* 开启HSI */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* 不分频 */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                            /* 配置HSI输出时钟为8MHz */
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                                                    /* 开启HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                               /* HSE工作频率范围16M~32M */
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                                                    /* 开启LSI */
+  /* 振荡器配置 */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* 选择振荡器LSI */
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                          /* 打开LSI */
 
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                        /* 初始化RCC振荡器 */
-  {
-    APP_ErrorHandler();
-  }
-
-  /* 初始化CPU,AHB,APB总线时钟 */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC系统时钟类型 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_LSI;                                         /* SYSCLK的源选择为LSI */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* APH时钟不分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟不分频 */
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)                        /* 初始化RCC系统时钟(FLASH_LATENCY_0=24M以下;FLASH_LATENCY_1=48M) */
+  /* 配置振荡器 */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();
   }

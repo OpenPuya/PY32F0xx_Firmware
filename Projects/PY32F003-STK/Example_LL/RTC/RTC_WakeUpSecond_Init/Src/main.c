@@ -144,7 +144,7 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ConfigRtc(void)
 {
-  LL_RTC_InitTypeDef rtc_initstruct;
+  LL_RTC_InitTypeDef rtc_initstruct = {0};
   
   /*##-1- 启用 PWR 时钟并启用对备份域的访问 #######*/
   /* 要更改 RTC 功能（LSE、LSI）的源时钟，必须：
@@ -192,7 +192,7 @@ static void APP_ConfigRtc(void)
   }
   
   
-  LL_RTC_TimeTypeDef  rtc_time_initstruct;
+  LL_RTC_TimeTypeDef  rtc_time_initstruct = {0};
   /*## 配置日期 ##################################################*/
   /* 设定日期: 2022.08.16 */
   APP_ConfigRtcDate(16, 8, 22);
@@ -241,14 +241,22 @@ static void APP_ConfigRtcDate(uint8_t fDate , uint8_t fMonth , uint8_t fYear)
   */
 static void APP_EnterStop(void)
 {
-  /* 使能PWR时钟 */
+  /* Enable PWR clock */
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-
-  /* 清SLEEPDEEP位 */
-  LL_LPM_EnableDeepSleep();
   
-  /* 发送WFI指令 */
+  /* Low power STOP voltage 1.0V */
+  LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE2);
+
+  /* Enter low power mode */
+  LL_PWR_EnableLowPowerRunMode();
+  
+  /* Set SLEEPDEEP bit of Cortex System Control Register */
+  LL_LPM_EnableDeepSleep();
+
+  /* Request Wait For Interrupt */
   __WFI();
+  
+  LL_LPM_EnableSleep();
 }
 
 /**

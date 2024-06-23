@@ -93,7 +93,7 @@ int main(void)
   */
 static void APP_GpioPortInit(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
   /* Enable GPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   
@@ -137,7 +137,7 @@ void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                     /* Enable PLL */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                      /* Enable PLL */
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;              /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)

@@ -61,9 +61,6 @@ int main(void)
   
   /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
-
-  /* Initialize button */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
   /* Configure clock */
   APP_SystemClockConfig();

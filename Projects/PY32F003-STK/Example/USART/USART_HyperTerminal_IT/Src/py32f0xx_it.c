@@ -90,14 +90,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file.                                          */
 /******************************************************************************/
 /**
-  * @brief This function handles USART1 Interrupt .
-  */
-void USART1_IRQHandler(void)
-{
-  HAL_UART_IRQHandler(&UartHandle);
-}
-
-/**
   * @brief This function handles USART2 Interrupt .
   */
 void USART2_IRQHandler(void)

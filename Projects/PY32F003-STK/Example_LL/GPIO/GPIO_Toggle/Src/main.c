@@ -100,7 +100,7 @@ static void APP_GpioConfig(void)
   /* 使能时钟 */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
 
-  /* 将PA5引脚配置为输出 */
+  /* 将PB5引脚配置为输出 */
   LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_5, LL_GPIO_MODE_OUTPUT);
 }
 

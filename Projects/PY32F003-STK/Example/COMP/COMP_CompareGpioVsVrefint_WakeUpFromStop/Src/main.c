@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-COMP_HandleTypeDef COMPINIT;
+COMP_HandleTypeDef hcomp1;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -71,7 +71,7 @@ int main(void)
   APP_CompIt();
   
   /* COMP启动 */
-  HAL_COMP_Start(&COMPINIT);
+  HAL_COMP_Start(&hcomp1);
 
   BSP_LED_On(LED_GREEN);
 
@@ -101,8 +101,8 @@ int main(void)
   */
 static void APP_RccInit(void)
 {
-  RCC_OscInitTypeDef RCCCONF;
-  RCC_PeriphCLKInitTypeDef COMPRCC;
+  RCC_OscInitTypeDef RCCCONF       = {0};
+  RCC_PeriphCLKInitTypeDef COMPRCC = {0};
 
   RCCCONF.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* RCC使用内部LSI */
   RCCCONF.LSIState = RCC_LSI_ON;                          /* 开启LSI */
@@ -121,17 +121,19 @@ static void APP_RccInit(void)
   */
 static void APP_CompInit(void)
 {
-  __HAL_RCC_COMP1_CLK_ENABLE();                           /* 使能COMP1时钟 */
-  COMP_InitTypeDef COMPCONF = {0};
-  COMPINIT.Instance    = COMP1;                           /* COMP1 */
-  COMPCONF.Mode        = COMP_POWERMODE_MEDIUMSPEED;      /* Medium speed */
-  COMPCONF.InputPlus   = COMP_INPUT_PLUS_IO3;             /* 正极引脚为PA1 */
-  COMPCONF.InputMinus  = COMP_INPUT_MINUS_VREFINT;        /* 负极选择为VREFINT */
-  COMPCONF.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* 触发方式为下降沿中断触发 */
-  COMPCONF.Hysteresis  = COMP_HYSTERESIS_ENABLE;          /* 迟滞功能开启 */
-  COMPINIT.Init        = COMPCONF;
+  __HAL_RCC_COMP1_CLK_ENABLE();                              /* 使能COMP1时钟 */
 
-  HAL_COMP_Init(&COMPINIT);
+  hcomp1.Instance = COMP1;                                   /* COMP1 */
+
+  hcomp1.Init.InputPlus = COMP_INPUT_PLUS_IO3;               /* 正端输入: PA1 */
+  hcomp1.Init.InputMinus = COMP_INPUT_MINUS_VREFINT;         /* 负端输入: VREFINT */
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;        /* 输出不反向 */
+  hcomp1.Init.Mode = COMP_POWERMODE_MEDIUMSPEED;             /* 功耗低速 */
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_ENABLE;           /* 延迟使能 */
+  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;          /* 窗口模式关闭 */
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* 下降沿触发 */
+  hcomp1.Init.DigitalFilter = 0;                         
+  HAL_COMP_Init(&hcomp1);
 }
 
 /**

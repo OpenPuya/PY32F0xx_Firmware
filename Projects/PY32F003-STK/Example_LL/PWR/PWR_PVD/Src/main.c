@@ -106,10 +106,12 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ExtiConfig(void)
 {
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+
   /* GPIOB时钟使能 */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
 
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
   /* 选择PB07引脚 */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
   /* 选择模拟模式 */
@@ -119,7 +121,6 @@ static void APP_ExtiConfig(void)
   /* GPIOB初始化 */
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  LL_EXTI_InitTypeDef EXTI_InitStruct;
   /* 选择EXTI16 */
   EXTI_InitStruct.Line = LL_EXTI_LINE_16;
   /* 使能 */

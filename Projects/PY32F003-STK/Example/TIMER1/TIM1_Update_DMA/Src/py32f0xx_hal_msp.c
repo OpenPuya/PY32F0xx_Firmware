@@ -62,8 +62,8 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   hdma_tim.Init.Direction = DMA_MEMORY_TO_PERIPH;             /* 方向为从存储器到外设 */
   hdma_tim.Init.PeriphInc = DMA_PINC_DISABLE;                 /* 禁止外设地址增量 */
   hdma_tim.Init.MemInc = DMA_MINC_ENABLE;                     /* 使能存储器地址增量 */
-  hdma_tim.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD ;   /* 外设数据宽度为8位 */
-  hdma_tim.Init.MemDataAlignment = DMA_MDATAALIGN_WORD ;      /* 存储器数据宽度位8位 */
+  hdma_tim.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD ;   /* 外设数据宽度为32位 */
+  hdma_tim.Init.MemDataAlignment = DMA_MDATAALIGN_WORD ;      /* 存储器数据宽度位32位 */
   hdma_tim.Init.Mode = DMA_NORMAL;                            /* 禁止循环模式 */
   hdma_tim.Init.Priority = DMA_PRIORITY_VERY_HIGH;            /* 通道优先级为很高 */
   HAL_NVIC_SetPriority(TIM1_BRK_UP_TRG_COM_IRQn, 0, 0);       /* 设置中断优先级 */

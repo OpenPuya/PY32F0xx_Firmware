@@ -32,7 +32,7 @@
 #include "py32f030xx_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-#define FLASH_USER_START_ADDR     0x0800F000
+#define FLASH_USER_START_ADDR     0x08004000
 
 /* Private variables ---------------------------------------------------------*/
 const uint32_t DATA[64] =
@@ -125,7 +125,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                     /* Disable LSE */
   RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_LOW;                               /* Set the drive capability of LSE, adjust according to crystal specifications */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                 /* Disable PLL */
-  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; */                   /* No clock source for PLL */
+  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; */                    /* Select HSI as PLL source */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* Configure clocks */
   {
@@ -152,7 +152,7 @@ static void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t SECTORError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* Erase type: FLASH_TYPEERASE_PAGEERASE = erase by page, FLASH_TYPEERASE_SECTORERASE = erase by sector */
   EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* Erase start address  */

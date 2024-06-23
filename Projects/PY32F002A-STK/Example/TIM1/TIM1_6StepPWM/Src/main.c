@@ -36,9 +36,8 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef    TimHandle;
 TIM_OC_InitTypeDef sConfig1,sConfig2,sConfig3;
-TIM_BreakDeadTimeConfigTypeDef sBreakConfig;
-uint32_t temp;
 __IO uint32_t uwStep = 0;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -46,7 +45,6 @@ __IO uint32_t uwStep = 0;
 void Error_Handler(void);
 static void APP_TIM1_INIT(void);
 static void APP_TIM1_PWM(void);
-static void APP_TIM1_PWMBREAK(void);
 
 /**
   * @brief  应用程序入口函数.
@@ -63,9 +61,6 @@ int main(void)
   /* TIM1 PWM配置 */
   APP_TIM1_PWM();
 
-  /* 设置刹车和死区相关配置*/
-  APP_TIM1_PWMBREAK();
-  
   /*配置换相事件：软件方式*/
   HAL_TIMEx_ConfigCommutEvent_IT(&TimHandle, TIM_TS_NONE, TIM_COMMUTATION_SOFTWARE);
   
@@ -169,7 +164,7 @@ static void APP_TIM1_PWM(void)
 
   sConfig1.OCFastMode   = TIM_OCFAST_DISABLE;                         /* 禁用快速模式 */
 
-  /*设置通道1的占空比为 (1600/3200)=50% */
+  /*设置通道1的占空比为 (500/1000)=50% */
   sConfig1.Pulse = 500 - 1;                                              
 
   /* 通道1配置 */
@@ -179,7 +174,7 @@ static void APP_TIM1_PWM(void)
   }
 
   sConfig2 = sConfig1;
-  /* 设置通道2的占空比为 (800/3200)=25%*/
+  /* 设置通道2的占空比为 (250/1000)=25%*/
   sConfig2.Pulse = 250 - 1;                                               
 
   /* 通道2配置 */
@@ -189,7 +184,7 @@ static void APP_TIM1_PWM(void)
   }
 
   sConfig3 = sConfig1;
-  /* 设置通道1的占空比值为 (400/3200)=12.5% */
+  /* 设置通道1的占空比值为 (125/1000)=12.5% */
   sConfig3.Pulse = 125 - 1;                                              
 
   /* 通道3配置 */
@@ -198,45 +193,6 @@ static void APP_TIM1_PWM(void)
     /* Configuration Error */
     Error_Handler();
   }
-
-}
-
-/**
-  * @brief  设置刹车和死区相关配置
-  * @param  无
-  * @retval 无
-  */
-static void APP_TIM1_PWMBREAK(void)
-{
-  /*设置刹车和死区相关配置 */
-  sBreakConfig.BreakState       = TIM_BREAK_ENABLE;                   
-
-  /*设置死区时间*/
-  sBreakConfig.DeadTime         = 1;                                  
-
-  /*运行模式下关闭状态选择 OSSR=1*/
-  sBreakConfig.OffStateRunMode  = TIM_OSSR_ENABLE;                    
-
-  /*空闲状态下关闭状态选择 OSSI=1*/
-  sBreakConfig.OffStateIDLEMode = TIM_OSSI_ENABLE;                    
-
-  /*锁定关闭*/
-  sBreakConfig.LockLevel        = TIM_LOCKLEVEL_OFF;                  
-
-  /*刹车输入低电平有效*/
-  sBreakConfig.BreakPolarity    = TIM_BREAKPOLARITY_HIGH;             
-
-  /*自动输出使能*/
-  sBreakConfig.AutomaticOutput  = TIM_AUTOMATICOUTPUT_ENABLE;      
-
-  /*刹车和死区状况配置*/
-  if (HAL_TIMEx_ConfigBreakDeadTime(&TimHandle, &sBreakConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
- 
-
 
 }
 

@@ -48,9 +48,6 @@ int main(void)
   /* 配置系统时钟 */
   APP_SystemClockConfig();
 
-  /* 为了适配新的系统时钟频率，重新设置SysTick 1ms 定时 */
-  LL_Init1msTick(SystemCoreClock);
-
   /* 配置LED引脚 (PA5)*/
   BSP_LED_Init(LED_GREEN);
 
@@ -107,10 +104,10 @@ void APP_SystemClockConfig(void)
   */
 static void APP_McoConfigGpio(void)
 {
-  /* MCO Clock Enable */
+  /* MCO 引脚时钟使能 */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
-  /* Configure the MCO pin in alternate function mode */
+  /* 配置MCO引脚为MCO复用功能 */
   LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_1, LL_GPIO_MODE_ALTERNATE);
   LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_1, LL_GPIO_OUTPUT_PUSHPULL);
   LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_1, LL_GPIO_SPEED_FREQ_VERY_HIGH);

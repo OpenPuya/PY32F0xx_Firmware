@@ -98,9 +98,9 @@ void SysTick_Handler(void)
 void EXTI4_15_IRQHandler(void)
 {
   if(LL_EXTI_ReadFlag(LL_EXTI_LINE_6) == LL_EXTI_LINE_6)
-    {
-        LL_EXTI_ClearFlag(LL_EXTI_LINE_6);
-    }
+  {
+    LL_EXTI_ClearFlag(LL_EXTI_LINE_6);
+  }
 }
 
 

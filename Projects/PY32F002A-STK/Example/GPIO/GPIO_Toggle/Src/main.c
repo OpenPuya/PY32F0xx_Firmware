@@ -65,14 +65,14 @@ int main(void)
   */
 void APP_LED_Init(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
 
   __HAL_RCC_GPIOA_CLK_ENABLE();                          /* GPIOA时钟使能 */
 
   /* 初始化GPIOA5 */
   GPIO_InitStruct.Pin = GPIO_PIN_5;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;            /* 推挽输出 */
-  GPIO_InitStruct.Pull = GPIO_NOPULL;                    /* 使能上拉 */
+  GPIO_InitStruct.Pull = GPIO_NOPULL;                    /* 无上下拉 */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;          /* GPIO速度 */
 
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);                /* GPIO初始化 */

@@ -66,7 +66,7 @@
           <memory name="IROM1" access="rx" start="0x08000000" size="0x00005000" startup="1" default="1"/>
           <memory name="IRAM1" access="rw" start="0x20000000" size="0x00000C00" init   ="0" default="1"/>
           <algorithm name="CMSIS/Flash/PY32F0xx_20.FLM" start="0x08000000" size="0x00005000" default="1"/>
-          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF3080" size="0x00000010" default="0"/>
+          <algorithm name="CMSIS/Flash/PY32F0xx_OPT.FLM" start="0x1FFF0E80" size="0x00000010" default="0"/>
           <debug svd="CMSIS/SVD/PY32F002Axx.svd"/>
         </device>
       </subFamily>
@@ -2146,7 +2146,47 @@
         <file category="source" condition="PY32F072Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072x9.s" attr="config" version="1.0.0"/>
         <file category="source" condition="PY32F072CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/arm/startup_py32f072xB.s" attr="config" version="1.0.0"/>
 
-        <file category="source" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Ax5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Bx5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f002b.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx2 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f002b.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f002b.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F002Xx5 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f002b.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F003x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F030x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x4 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x7 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F031x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F040CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F071CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072x9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072xB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx6 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx8 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072Cx9 ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
+        <file category="source" condition="PY32F072CxB ARMCC" name="Drivers/CMSIS/Device/Puya/PY32F0xx/Source/Templates/system_py32f0xx.c" attr="config" version="1.0.0"/>
       </files>
     </component>
   </components>

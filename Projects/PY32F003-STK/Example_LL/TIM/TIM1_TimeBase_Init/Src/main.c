@@ -47,7 +47,7 @@ static void APP_ConfigTIM1Count(void);
 int main(void)
 {
   /* 使能TIM1时钟 */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
 
   /* 配置系统时钟 */
   APP_SystemClockConfig();

@@ -100,14 +100,12 @@ int main(void)
 
   /*校验FLASH*/
   APP_FlashVerify();
+  
+  BSP_LED_On(LED_GREEN);
 
   while (1)
   {
-    /*程序执行成功，LED灯翻转*/
-    BSP_LED_Toggle(LED_GREEN);
 
-    /*延时500ms*/
-    HAL_Delay(500);
   }
 }
 
@@ -127,7 +125,7 @@ void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                       /* HSI 1分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                               /* 配置HSI时钟8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                      /* 关闭HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                      /* 关闭LSI */
                          
   /* 配置振荡器 */
@@ -156,7 +154,7 @@ void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t PAGEError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGEERASE;                                     /* 擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦 */
   EraseInitStruct.PageAddress = FLASH_USER_START_ADDR;                                         /* 擦写起始地址 */

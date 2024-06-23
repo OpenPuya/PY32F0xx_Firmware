@@ -33,7 +33,7 @@
 #include "py32f030xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-#define FLASH_USER_START_ADDR     0x0800F000
+#define FLASH_USER_START_ADDR     0x08004000
 
 /* Private variables ---------------------------------------------------------*/
 const uint32_t DATA[64] =
@@ -144,7 +144,7 @@ static void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t SECTORError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* Erase type (FLASH_TYPEERASE_PAGES for page erase, FLASH_TYPEERASE_SECTORS for sector erase) */
   EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* Erase start address */

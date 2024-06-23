@@ -37,8 +37,8 @@
   * @{
   */
 
-#ifndef __PY32F0XX_H
-#define __PY32F0XX_H
+#ifndef __PY32F0xx_H
+#define __PY32F0xx_H
 
 #ifdef __cplusplus
 extern "C" {

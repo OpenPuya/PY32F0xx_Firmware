@@ -53,21 +53,21 @@ void HAL_MspInit(void)
   */
 void HAL_COMP_MspInit(COMP_HandleTypeDef *hcomp)
 {
-  GPIO_InitTypeDef COMPINPUT;
+  GPIO_InitTypeDef GPIO_InitStruct={0};
 
-  COMPINPUT.Pin = GPIO_PIN_1;
-  COMPINPUT.Mode = GPIO_MODE_ANALOG;
-  COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);
+  HAL_GPIO_Init(GPIOA,  &GPIO_InitStruct);
 
-  COMPINPUT.Pin = GPIO_PIN_6;
-  COMPINPUT.Mode = GPIO_MODE_AF_PP;
-  COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;
-  COMPINPUT.Alternate = GPIO_AF7_COMP1;
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Alternate = GPIO_AF7_COMP1;
 
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);
+  HAL_GPIO_Init(GPIOA,  &GPIO_InitStruct);
 }
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

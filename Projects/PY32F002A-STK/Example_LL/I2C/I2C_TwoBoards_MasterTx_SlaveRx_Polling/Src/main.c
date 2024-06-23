@@ -66,6 +66,7 @@ int main(void)
 {
   /* 配置系统时钟 */
   APP_SystemClockConfig();
+  
 /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
 
@@ -211,7 +212,7 @@ static void APP_ActivateI2cSlave(void)
   */
 static void APP_ConfigI2cMaster(void)
 {
-  LL_RCC_ClocksTypeDef rcc_clocks;
+  LL_RCC_ClocksTypeDef rcc_clocks = {0};
 
   /* (1) 启用 GPIO 时钟 ************************/
 

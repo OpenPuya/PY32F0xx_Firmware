@@ -54,11 +54,6 @@
  */
 #define PLL_TIMEOUT_VALUE        100U /* 100 ms (minimum Tick + 1)  */
 
-#if defined(RCC_BDCR_LSCOEN)
-#define LSCO_CLK_ENABLE()     __HAL_RCC_GPIOA_CLK_ENABLE()
-#define LSCO_GPIO_PORT        GPIOA
-#define LSCO_PIN              (GPIO_PIN_9 |GPIO_PIN_10)
-#endif
 /**
   * @}
   */
@@ -366,12 +361,12 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
 #if defined(RCC_LSE_SUPPORT)
       else if ((HAL_IS_BIT_SET(RCC->CSR, RCC_CSR_LSIRDY)) && (HAL_IS_BIT_CLR(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_PVDCLKSOURCE_LSC))
+               && (srcclk == RCC_PVDCLKSOURCE_LSC))
       {
         frequency = LSI_VALUE;
       }
       else if ((HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSERDY)) && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_PVDCLKSOURCE_LSC))
+               && (srcclk == RCC_PVDCLKSOURCE_LSC))
       {
         frequency = LSE_VALUE;
       }
@@ -400,12 +395,12 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
 #if defined(RCC_LSE_SUPPORT)
       else if ((HAL_IS_BIT_SET(RCC->CSR, RCC_CSR_LSIRDY)) && (HAL_IS_BIT_CLR(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_COMP1CLKSOURCE_LSC))
+               && (srcclk == RCC_COMP1CLKSOURCE_LSC))
       {
         frequency = LSI_VALUE;
       }
       else if ((HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSERDY)) && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_COMP1CLKSOURCE_LSC))
+               && (srcclk == RCC_COMP1CLKSOURCE_LSC))
       {
         frequency = LSE_VALUE;
       }
@@ -434,12 +429,12 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       }
 #if defined(RCC_LSE_SUPPORT)
       else if ((HAL_IS_BIT_SET(RCC->CSR, RCC_CSR_LSIRDY)) && (HAL_IS_BIT_CLR(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_COMP2CLKSOURCE_LSC))
+               && (srcclk == RCC_COMP2CLKSOURCE_LSC))
       {
         frequency = LSI_VALUE;
       }
       else if ((HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSERDY)) && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOSEL)) \
-               && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSCOEN)) && (srcclk == RCC_COMP2CLKSOURCE_LSC))
+               && (srcclk == RCC_COMP2CLKSOURCE_LSC))
       {
         frequency = LSE_VALUE;
       }
@@ -512,10 +507,9 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
   * @{
   */
 
-#if defined(RCC_BDCR_LSCOEN)
 /**
-  * @brief  Select the Low Speed clock source to output on LSCO pin (PA2).
-  * @param  LSCOSource  specifies the Low Speed clock source to output.
+  * @brief  Select the Low Speed clock source.
+  * @param  LSCOSource  specifies the Low Speed clock source.
   *          This parameter can be one of the following values:
   *            @arg @ref RCC_LSCOSOURCE_LSI  LSI clock selected as LSCO source
   *            @arg @ref RCC_LSCOSOURCE_LSE  LSE clock selected as LSCO source
@@ -525,25 +519,10 @@ void HAL_RCCEx_EnableLSCO(uint32_t LSCOSource)
 {
   FlagStatus       pwrclkchanged = RESET;
   FlagStatus       backupchanged = RESET;
-#if defined(RCC_LSE_SUPPORT)
-  GPIO_InitTypeDef GPIO_InitStruct;
 
   /* Check the parameters */
   assert_param(IS_RCC_LSCOSOURCE(LSCOSource));
 
-  if (LSCOSource == RCC_LSCOSOURCE_LSE)
-  {
-    /* LSCO Pin Clock Enable */
-    LSCO_CLK_ENABLE();
-
-    /* Configue the LSCO pin in analog mode */
-    GPIO_InitStruct.Pin = LSCO_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(LSCO_GPIO_PORT, &GPIO_InitStruct);
-  }
-#endif
   /* Update LSCOSEL clock source in Backup Domain control register */
   if (__HAL_RCC_PWR_IS_CLK_DISABLED())
   {
@@ -552,16 +531,14 @@ void HAL_RCCEx_EnableLSCO(uint32_t LSCOSource)
   }
   if (HAL_IS_BIT_CLR(PWR->CR1, PWR_CR1_DBP))
   {
-
     HAL_PWR_EnableBkUpAccess();
     backupchanged = SET;
   }
 
-#if defined(RCC_LSE_SUPPORT)
-  MODIFY_REG(RCC->BDCR, RCC_BDCR_LSCOSEL | RCC_BDCR_LSCOEN, LSCOSource | RCC_BDCR_LSCOEN);
-#else
-  MODIFY_REG(RCC->BDCR, RCC_BDCR_LSCOEN, RCC_BDCR_LSCOEN);
+#if defined(RCC_BDCR_LSCOSEL)
+  MODIFY_REG(RCC->BDCR, RCC_BDCR_LSCOSEL, LSCOSource);
 #endif
+
   if (backupchanged == SET)
   {
     HAL_PWR_DisableBkUpAccess();
@@ -571,43 +548,6 @@ void HAL_RCCEx_EnableLSCO(uint32_t LSCOSource)
     __HAL_RCC_PWR_CLK_DISABLE();
   }
 }
-
-/**
-  * @brief  Disable the Low Speed clock output.
-  * @retval None
-  */
-void HAL_RCCEx_DisableLSCO(void)
-{
-  FlagStatus       pwrclkchanged = RESET;
-  FlagStatus       backupchanged = RESET;
-
-  /* Update LSCOEN bit in Backup Domain control register */
-  if (__HAL_RCC_PWR_IS_CLK_DISABLED())
-  {
-    __HAL_RCC_PWR_CLK_ENABLE();
-    pwrclkchanged = SET;
-  }
-  if (HAL_IS_BIT_CLR(PWR->CR1, PWR_CR1_DBP))
-  {
-    /* Enable access to the backup domain */
-    HAL_PWR_EnableBkUpAccess();
-    backupchanged = SET;
-  }
-
-  CLEAR_BIT(RCC->BDCR, RCC_BDCR_LSCOEN);
-
-  /* Restore previous configuration */
-  if (backupchanged == SET)
-  {
-    /* Disable access to the backup domain */
-    HAL_PWR_DisableBkUpAccess();
-  }
-  if (pwrclkchanged == SET)
-  {
-    __HAL_RCC_PWR_CLK_DISABLE();
-  }
-}
-#endif
 /**
   * @}
   */

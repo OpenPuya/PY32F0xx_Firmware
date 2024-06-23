@@ -37,7 +37,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern TIM_HandleTypeDef    TimHandle, htim3;
+extern TIM_HandleTypeDef    TimHandle1;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
@@ -97,15 +97,7 @@ void SysTick_Handler(void)
   */
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&TimHandle);
-}
-
-/**
-  * @brief This function handles TIM3 Interrupt .
-  */
-void TIM3_IRQHandler(void)
-{
-  HAL_TIM_IRQHandler(&TimHandle);
+  HAL_TIM_IRQHandler(&TimHandle1);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

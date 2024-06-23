@@ -35,7 +35,7 @@
 #define DATA_LENGTH       15                /* 数据长度 */
 #define I2C_ADDRESS        0xA0             /* 本机地址0xA0 */
 #define I2C_SPEEDCLOCK   100000             /* 通讯速度100K */
-#define I2C_DUTYCYCLE    I2C_DUTYCYCLE_2    /* 占空比 */
+#define I2C_DUTYCYCLE    I2C_DUTYCYCLE_16_9 /* 占空比 */
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef I2cHandle;
@@ -62,9 +62,6 @@ int main(void)
   
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
-
-  /* 初始化按键BUTTON */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
   /* 配置时钟 */
   APP_SystemClockConfig();
@@ -136,7 +133,7 @@ static void APP_SystemClockConfig(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                    /* SYSCLK的源选择为PLL */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                          /* APH时钟不分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                            /* APB时钟不分频 */
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     APP_ErrorHandler();
   }

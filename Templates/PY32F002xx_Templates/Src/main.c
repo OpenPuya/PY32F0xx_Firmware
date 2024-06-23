@@ -72,7 +72,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* Configure HSI clock as 8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
 
   /* Configure oscillators */

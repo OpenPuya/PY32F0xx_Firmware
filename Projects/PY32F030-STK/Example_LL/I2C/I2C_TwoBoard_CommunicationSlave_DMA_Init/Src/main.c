@@ -176,7 +176,7 @@ static void APP_ConfigI2cSlave(void)
   LL_SYSCFG_SetDMARemap_CH2(LL_SYSCFG_DMA_MAP_I2C_RX);
   
   /* Initialize DMA channel 1 */
-  LL_DMA_InitTypeDef DMA_InitStruct;
+  LL_DMA_InitTypeDef DMA_InitStruct = {0};
   DMA_InitStruct.PeriphOrM2MSrcAddress  = 0x00000000U;
   DMA_InitStruct.MemoryOrM2MDstAddress  = 0x00000000U;
   DMA_InitStruct.Direction              = LL_DMA_DIRECTION_MEMORY_TO_PERIPH;
@@ -210,7 +210,7 @@ static void APP_ConfigI2cSlave(void)
   NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
   
   /* Initialize I2C */
-  LL_I2C_InitTypeDef I2C_InitStruct;
+  LL_I2C_InitTypeDef I2C_InitStruct = {0};
   I2C_InitStruct.ClockSpeed      = I2C_SPEEDCLOCK;
   I2C_InitStruct.DutyCycle       = LL_I2C_DUTYCYCLE_16_9;
   I2C_InitStruct.OwnAddress1     = I2C_ADDRESS;

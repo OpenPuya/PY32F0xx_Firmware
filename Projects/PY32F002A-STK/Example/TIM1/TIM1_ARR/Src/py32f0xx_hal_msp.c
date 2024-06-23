@@ -38,7 +38,6 @@
 void HAL_MspInit(void)
 {
   BSP_LED_Init(LED_GREEN);
-
 }
 
 /**

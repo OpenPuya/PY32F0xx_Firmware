@@ -46,7 +46,6 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 /* Exported variables prototypes ---------------------------------------------*/
-extern uint8_t DmaOnFlag,DmaTxRxFlag;
 extern SPI_HandleTypeDef Spi1Handle;
 
 /* Exported functions prototypes ---------------------------------------------*/

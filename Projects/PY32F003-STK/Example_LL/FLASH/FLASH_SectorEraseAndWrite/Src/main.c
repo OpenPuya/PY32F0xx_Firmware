@@ -144,7 +144,7 @@ static void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t SECTORError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* 擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦 */
   EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* 擦写起始地址 */

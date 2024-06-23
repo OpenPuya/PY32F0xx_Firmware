@@ -69,9 +69,6 @@ int main(void)
 
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
-
-  /* 初始化按键BUTTON */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
   /* 配置SPI */
   APP_ConfigSpi();
@@ -173,7 +170,7 @@ static void APP_ConfigSpi(void)
   LL_SYSCFG_SetDMARemap_CH2(LL_SYSCFG_DMA_MAP_SPI1_RX);
   
   /* DMA通道1初始化 */
-  LL_DMA_InitTypeDef DMA_InitStruct;
+  LL_DMA_InitTypeDef DMA_InitStruct = {0};
   DMA_InitStruct.PeriphOrM2MSrcAddress  = 0x00000000U;
   DMA_InitStruct.MemoryOrM2MDstAddress  = 0x00000000U;
   DMA_InitStruct.Direction              = LL_DMA_DIRECTION_MEMORY_TO_PERIPH;
@@ -215,6 +212,7 @@ static void APP_ConfigSpi(void)
   SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
   SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV128;
   SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
+  SPI_InitStruct.SlaveSpeedMode = LL_SPI_SLAVE_SPEED_NORMAL;
   LL_SPI_Init(SPI1, &SPI_InitStruct);
 }
 

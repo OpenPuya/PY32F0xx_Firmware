@@ -90,7 +90,7 @@ int main(void)
   */
 static void APP_GpioInit()
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
 
   __HAL_RCC_GPIOA_CLK_ENABLE();                          /* Enable GPIOA clock */
 
@@ -114,7 +114,7 @@ static void APP_SystemClockConfig(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /* Configure clock source HSE/HSI/LSE/LSI */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* Enable HSI */
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* No HSI division */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz; */                      /* Configure HSI output clock as 4MHz */
@@ -122,7 +122,7 @@ static void APP_SystemClockConfig(void)
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz; */                     /* Configure HSI output clock as 16MHz */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_22p12MHz; */                  /* Configure HSI output clock as 22.12MHz */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;                           /* Configure HSI output clock as 24MHz */
-
+  RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                        /* Initialize RCC oscillators */
   {
     APP_ErrorHandler();

@@ -123,10 +123,13 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ExtiConfig(void)
 {
+   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+   LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
    /* GPIOA时钟使能 */
    LL_IOP_GRP1_EnableClock (LL_IOP_GRP1_PERIPH_GPIOA);
   
-   LL_GPIO_InitTypeDef GPIO_InitStruct;
+
    /* 选择PA06引脚 */
    GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
    /* 选择输入模式 */
@@ -139,7 +142,6 @@ static void APP_ExtiConfig(void)
    /* 选择EXTI6做外部中断输入 */
    LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTA,LL_EXTI_CONFIG_LINE6);
 
-   LL_EXTI_InitTypeDef EXTI_InitStruct;
    /* 选择EXTI6 */
    EXTI_InitStruct.Line = LL_EXTI_LINE_6;
    /* 使能 */
@@ -150,11 +152,6 @@ static void APP_ExtiConfig(void)
    EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
    /* 外部中断初始化 */
    LL_EXTI_Init(&EXTI_InitStruct);
-   
-   /* 设置中断优先级 */
-   NVIC_SetPriority(EXTI4_15_IRQn,1);
-   /* 使能中断 */
-   NVIC_EnableIRQ(EXTI4_15_IRQn);
 }
 
 /**

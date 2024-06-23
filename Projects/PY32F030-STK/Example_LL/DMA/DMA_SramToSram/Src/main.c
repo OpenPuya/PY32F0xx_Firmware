@@ -110,7 +110,7 @@ int main(void)
   */
 static void APP_DmaConfig(void)
 {
-  LL_DMA_InitTypeDef dma_initstruct;
+  LL_DMA_InitTypeDef dma_initstruct = {0};
 
   /* Enable DMA clock */
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);

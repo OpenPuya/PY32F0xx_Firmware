@@ -34,10 +34,9 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef             AdcHandle;
 ADC_ChannelConfTypeDef        sConfig;
-uint32_t   aADCxConvertedData = 1;
-TIM_HandleTypeDef    TimHandle;
-TIM_OC_InitTypeDef       OCConfig;
-TIM_MasterConfigTypeDef sMasterConfig;
+uint32_t                      aADCxConvertedData = 0;
+TIM_HandleTypeDef             TimHandle;
+TIM_MasterConfigTypeDef       sMasterConfig;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -98,18 +97,18 @@ static void APP_AdcConfig(void)
   }
   
   AdcHandle.Instance                   = ADC1;                                    /* ADC1 */
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* Set ADC clock */
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* Set ADC clock */
   AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 12-bit resolution for converted data */
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* Right-alignment for converted data */
   AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_BACKWARD;             /* Scan sequence direction: backward */
   AdcHandle.Init.LowPowerAutoWait      = ENABLE;                                  /* Enable wait for conversion mode */
   AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* Single conversion mode */
-  AdcHandle.Init.DiscontinuousConvMode = ENABLE;                                  /* Enable discontinuous mode */
+  AdcHandle.Init.DiscontinuousConvMode = DISABLE;                                 /* Disable discontinuous mode */
   AdcHandle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_TRGO;            /* Set the external trigger for conversion start event to TIM1_TRGO */
-  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;  /* Trigger on both rising and falling edges */
+  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;         /* Trigger on rising edges */
   AdcHandle.Init.DMAContinuousRequests = ENABLE;                                  /* DMA continuous mode selection */
   AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* When an overload occurs, overwrite the previous value */
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_28CYCLES_5;               /* The channel sampling time is 28.5 ADC clock cycles */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* The channel sampling time is 239.5 ADC clock cycles */
   /* ADC initialization */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)
   {

@@ -30,6 +30,7 @@
   
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "py32f003xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -51,14 +52,22 @@ int main(void)
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-  /* 时钟初始化,配置系统时钟为LSI */
+  /* 时钟初始化,配置系统时钟为HSI */
   APP_SystemClockConfig();
 
+  /* 初始化用户按键 */
+  BSP_PB_Init(BUTTON_USER,BUTTON_MODE_GPIO);
+  
   /* 引脚输出初始化 */
   APP_GPIOConfig();
   
   /* MCO输出时钟及分频初始化 */
   LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_SYSCLK,LL_RCC_MCO1_DIV_1);
+  
+  /* 等待用户按键按下 */
+  while(BSP_PB_GetState(BUTTON_USER) != 0)
+  {
+  }
   
   /* 更换系统时钟为HSE */
   APP_SetSysclock();
@@ -77,14 +86,8 @@ void APP_SystemClockConfig(void)
 {
   /* HSI使能及初始化 */
   LL_RCC_HSI_Enable();
-  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
+  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_16MHz);
   while(LL_RCC_HSI_IsReady() != 1)
-  {
-  }
-  
-  /* LSI使能及初始化 */
-  LL_RCC_LSI_Enable();
-  while(LL_RCC_LSI_IsReady() != 1)
   {
   }
   
@@ -98,18 +101,18 @@ void APP_SystemClockConfig(void)
   /* 设置AHB分频 */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置LSI为系统时钟及初始化 */
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_LSI);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_LSI)
+  /* 配置HSI为系统时钟及初始化 */
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
   /* 设置APB1分频及初始化 */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(LSI_VALUE);
+  LL_Init1msTick(16000000);
   
   /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(LSI_VALUE);
+  LL_SetSystemCoreClock(16000000);
 }
 
 /**
@@ -142,7 +145,7 @@ static void APP_GPIOConfig(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
   
   /* 配置PA01为复用模式，并复用为MCO输出引脚 */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;  
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* 选择1号引脚 */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_1; 
   /* 配置为复用模式 */

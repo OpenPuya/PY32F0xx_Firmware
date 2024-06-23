@@ -103,16 +103,16 @@ static void APP_GetMcuInfo(void)
 {
   register uint32_t size_string = 0, read_info = 0, read_info2 = 0;
 
-  /* Display Device ID in string format */
+  /* 以字符串格式显示 Device ID */
   sprintf((char *)aShowDeviceID, "Device ID = 0x%03X", LL_DBGMCU_GetDeviceID());
 
-  /* Display Revision ID in string format */
+  /* 以字符串格式显示 Revision ID */
   sprintf((char *)aShowRevisionID, "Revision ID = 0x%04X", LL_DBGMCU_GetRevisionID());
 
-  /* Display  X and Y coordinates on the wafer expressed in BCD format */
+  /* 以BCD格式显示  X 和 Y 坐标 */
   sprintf((char *)aShowCoordinate, "X and Y coordinates = 0x%08X", LL_GetUID_Word2());
 
-  /* Display Waver number and lot number in string format */
+  /* 以字符串格式显示 Waver number 和 lot number */
   read_info = LL_GetUID_Word1();
   read_info2 = LL_GetUID_Word0();
   sprintf((char *)aShowWaferNumber, "Wafer NB = 0x%08X", (uint8_t)read_info);

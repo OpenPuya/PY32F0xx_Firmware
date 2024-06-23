@@ -91,22 +91,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file.                                          */
 /******************************************************************************/
 /**
-  * @brief This function handles DMA1 channel1 Interrupt .
-  */
-void DMA1_Channel1_IRQHandler(void)
-{
-  HAL_DMA_IRQHandler(I2cHandle.hdmatx);
-}
-
-/**
-  * @brief This function handles DMA1 channel2 、channel3 Interrupt .
-  */
-void DMA1_Channel2_3_IRQHandler(void)
-{
-  HAL_DMA_IRQHandler(I2cHandle.hdmarx);
-}
-
-/**
   * @brief This function handles I2C1 Interrupt .
   */
 void I2C1_IRQHandler(void)

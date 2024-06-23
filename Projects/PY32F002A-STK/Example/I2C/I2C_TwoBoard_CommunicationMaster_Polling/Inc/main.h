@@ -43,7 +43,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+void APP_Error_Handler(void);
 
 #define COUNTOF(__BUFFER__)   (sizeof(__BUFFER__) / sizeof(*(__BUFFER__)))
 /* Exported functions prototypes ---------------------------------------------*/

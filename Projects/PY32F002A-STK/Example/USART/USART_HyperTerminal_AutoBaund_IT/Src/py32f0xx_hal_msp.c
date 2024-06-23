@@ -45,7 +45,7 @@ void HAL_MspInit(void)
   */
  void HAL_UART_MspInit(UART_HandleTypeDef *huart)
  {
-   GPIO_InitTypeDef  GPIO_InitStruct;
+   GPIO_InitTypeDef  GPIO_InitStruct = {0};
    
     /*USART1时钟使能*/
     __HAL_RCC_GPIOA_CLK_ENABLE();

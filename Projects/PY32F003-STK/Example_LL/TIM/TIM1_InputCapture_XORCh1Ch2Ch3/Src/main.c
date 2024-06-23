@@ -47,7 +47,7 @@ static void APP_ConfigTIM1XOR(void);
 int main(void)
 {
   /* 使能TIM1时钟 */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
 
   /* 配置系统时钟 */
   APP_SystemClockConfig();
@@ -101,11 +101,13 @@ static void APP_ConfigTIM1XOR(void)
   LL_TIM_IC_SetActiveInput(TIM1,LL_TIM_CHANNEL_CH2,LL_TIM_ACTIVEINPUT_DIRECTTI);
   LL_TIM_IC_SetActiveInput(TIM1,LL_TIM_CHANNEL_CH3,LL_TIM_ACTIVEINPUT_DIRECTTI);
   
-  /* 映射CH1、CH2、CH3到AP3、AP13、PA0 */
+  /* 映射CH1、CH2、CH3到PA3、PA13、PA0 */
   TIM1ChannelInit.Pin       = LL_GPIO_PIN_3 | LL_GPIO_PIN_13 | LL_GPIO_PIN_0;
   TIM1ChannelInit.Pull      = LL_GPIO_PULL_UP;
   TIM1ChannelInit.Mode      = LL_GPIO_MODE_ALTERNATE;
   TIM1ChannelInit.Alternate = LL_GPIO_AF_13;
+  TIM1ChannelInit.Speed     = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1ChannelInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOA,&TIM1ChannelInit);
   
   /* 使能CH1、CH2、CH3 */

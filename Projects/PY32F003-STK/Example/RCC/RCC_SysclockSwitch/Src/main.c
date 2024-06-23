@@ -48,10 +48,7 @@ int main(void)
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();
 
-  /* 关闭SysTick中断 */
-  HAL_SuspendTick();
-
-  /* 配置系统时钟为默认HSI 8MHz，之后切换为LSI时钟 */
+  /* 配置系统时钟为HSI 16MHz */
   APP_SystemClockConfig();
 
   /* 初始化按键 */
@@ -87,10 +84,10 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* 开启HSI */
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* 不分频 */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                            /* 配置HSI输出时钟为8MHz */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz;                           /* 配置HSI输出时钟为16MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;                                                    /* 开启HSE */
   RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                               /* HSE工作频率范围16M~32M */
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                                                    /* 开启LSI */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                   /* 关闭LSI */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                        /* 初始化RCC振荡器 */
   {
@@ -99,7 +96,7 @@ static void APP_SystemClockConfig(void)
 
   /* 初始化CPU,AHB,APB总线时钟 */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC系统时钟类型 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_LSI;                                         /* SYSCLK的源选择为LSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                         /* SYSCLK的源选择为HSI */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* APH时钟不分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟不分频 */
 
@@ -113,10 +110,8 @@ static void APP_SystemClockConfig(void)
   * @brief   设置系统时钟
   * @param   SYSCLKSource：系统时钟源
   *            @arg RCC_SYSCLKSOURCE_LSI: LSI作为系统时钟源
-  *            @arg RCC_SYSCLKSOURCE_LSE: LSE作为系统时钟源
   *            @arg RCC_SYSCLKSOURCE_HSE: HSE作为系统时钟源
   *            @arg RCC_SYSCLKSOURCE_HSI: HSI作为系统时钟源
-  *            @arg RCC_SYSCLKSOURCE_PLLCLK: PLL作为系统时钟源
   * @retval  无
   */
 static void APP_SetSysClock(uint32_t SYSCLKSource)

@@ -35,7 +35,7 @@
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-
+static void APP_SystemClockConfig(void);
 
 /**
   * @brief  Main program.
@@ -43,17 +43,19 @@
   */
 int main(void)
 {
-  IWDG_HandleTypeDef   IwdgHandle;
+  IWDG_HandleTypeDef   IwdgHandle = {0};
 
   /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
 
+  APP_SystemClockConfig();
+  
   /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
   IwdgHandle.Instance = IWDG;                     /* Select IWDG */
   IwdgHandle.Init.Prescaler = IWDG_PRESCALER_32;  /* Configure prescaler to 32 */
-  IwdgHandle.Init.Reload = (1000);                /* Set IWDG counter reload value to 1000, 1s */
+  IwdgHandle.Init.Reload = (1024);                /* Set IWDG counter reload value to 1024, 1s */
   /* Initialize IWDG */
   if (HAL_IWDG_Init(&IwdgHandle) != HAL_OK)       
   {
@@ -74,6 +76,27 @@ int main(void)
       APP_ErrorHandler();
     }
   }
+}
+
+/**
+  * @brief  System clock configuration
+  * @param  None
+  * @retval None
+  */
+static void APP_SystemClockConfig(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+
+  /* System clock configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI ; /* Select configure LSI */
+  RCC_OscInitStruct.LSIState       = RCC_LSI_ON;              /* Enable LSI */
+  RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_NONE;
+  /* Config LSI */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    APP_ErrorHandler();
+  }
+
 }
 
 /**

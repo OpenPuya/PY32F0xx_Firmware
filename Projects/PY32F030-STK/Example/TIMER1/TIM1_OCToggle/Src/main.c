@@ -141,7 +141,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                     /* Enable PLL */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                      /* Enable PLL */
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;              /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)

@@ -50,6 +50,10 @@ void APP_SystemClockConfig(void);
 static void APP_ConfigI2cSlave(void);
 static void APP_SlaveTransmit_IT(uint8_t *pData, uint16_t Size);
 static void APP_SlaveReceive_IT(uint8_t *pData, uint16_t Size);
+static void APP_CheckEndOfTransfer(void);
+static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength);
+static void APP_LedBlinking(void);
+
 /**
   * @brief  应用程序入口函数.
   * @param  无
@@ -60,6 +64,9 @@ int main(void)
   /* 配置系统时钟 */
   APP_SystemClockConfig();
 
+  /* Initialize LED */
+  BSP_LED_Init(LED_GREEN);
+  
  /* 配置I2C */
   APP_ConfigI2cSlave();
   
@@ -74,6 +81,9 @@ int main(void)
   
   /* 等待从机发送数据完成 */
   while (State != I2C_STATE_READY);
+  
+  /* Check the received data */
+  APP_CheckEndOfTransfer();
   
   while (1)
   {
@@ -153,7 +163,7 @@ static void APP_ConfigI2cSlave(void)
   NVIC_EnableIRQ(I2C1_IRQn);
   
   /* I2C初始化 */
-  LL_I2C_InitTypeDef I2C_InitStruct;
+  LL_I2C_InitTypeDef I2C_InitStruct = {0};
   I2C_InitStruct.ClockSpeed      = I2C_SPEEDCLOCK;
   I2C_InitStruct.DutyCycle       = LL_I2C_DUTYCYCLE_16_9;
   I2C_InitStruct.OwnAddress1     = I2C_ADDRESS;
@@ -340,6 +350,62 @@ void APP_SlaveIRQCallback_NACK(void)
       
       State = I2C_STATE_READY;
     }
+  }
+}
+
+/**
+  * @brief  Check data function
+  * @param  None
+  * @retval None
+  */
+static void APP_CheckEndOfTransfer(void)
+{
+  /* Compare the transmitted data with the received data */
+  if(APP_Buffercmp8((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, sizeof(aRxBuffer)))
+  {
+    /* Error handling */
+    APP_LedBlinking();
+  }
+  else
+  {
+    /* If data received, turn on the LED */
+    BSP_LED_On(LED_GREEN);
+  }
+}
+
+/**
+  * @brief  Character comparison function
+  * @param  pBuffer1：pointer to the buffer 1 to be compared
+  * @param  pBuffer2：pointer to the buffer 2 to be compared
+  * @param  BufferLength：number of characters to be compared
+  * @retval 0: comparison value is the same; 1: comparison value is different
+  */
+static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength)
+{
+  while (BufferLength--)
+  {
+    if (*pBuffer1 != *pBuffer2)
+    {
+      return 1;
+    }
+    pBuffer1++;
+    pBuffer2++;
+  }
+
+  return 0;
+}
+
+/**
+  * @brief  LED blinking
+  * @param  None
+  * @retval None
+  */
+static void APP_LedBlinking(void)
+{
+  while (1)
+  {
+    BSP_LED_Toggle(LED_GREEN);
+    LL_mDelay(500);
   }
 }
 

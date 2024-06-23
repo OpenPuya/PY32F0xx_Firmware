@@ -50,19 +50,23 @@ int main(void)
 
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
+  
+  /* 初始化按键 */  
+  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
 
   /* 配置EXTI */
   APP_ConfigureEXTI();
+  
+  BSP_LED_On(LED_GREEN);
+  
+  while (BSP_PB_GetState(BUTTON_KEY) == 1)
+  {
+  }
+  
+  BSP_LED_Off(LED_GREEN);
 
-  /* 禁止SysTick中断 */
-  LL_SYSTICK_DisableIT();
-
-  /* 进入Stop模式，等待PB2引脚下降沿触发，事件唤醒 */
+  /* 进入Stop模式 */
   APP_PwrEnterStopMode();
-
-  /* 使能SysTick中断 */
-  LL_SYSTICK_EnableIT();
-
 
   while (1)
   {
@@ -110,26 +114,23 @@ void APP_SystemClockConfig(void)
   */
 static void APP_ConfigureEXTI(void)
 {
-  /* 使能GPIOB */
-  LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
 
-  /* 配置PB2输入模式 */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+  LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* 配置EXTI为事件、下降沿触发 */
-  LL_EXTI_InitTypeDef EXTI_InitStruct;
-  EXTI_InitStruct.Line = LL_EXTI_LINE_2;
+  EXTI_InitStruct.Line = LL_EXTI_LINE_6;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_EVENT;
   EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
   LL_EXTI_Init(&EXTI_InitStruct);
   
-  /*EXTI2选择PB2触发*/
-  LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTB,LL_EXTI_CONFIG_LINE2);
+  LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTA,LL_EXTI_CONFIG_LINE6);
 }
 
 /**
@@ -139,6 +140,8 @@ static void APP_ConfigureEXTI(void)
   */
 static void APP_PwrEnterStopMode(void)
 {
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+
   /* 在低功耗模式时运行在STOP模式 */
   LL_PWR_EnableLowPowerRunMode();
 

@@ -131,7 +131,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
         
     /* GPIOA configuration */
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /* Select pin 2 */
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /* Select alternate function mode */
@@ -167,7 +167,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
     
     /* GPIOA configuration */
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /* Select pin 2 */
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /* Select alternate function mode */
@@ -200,7 +200,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
   APP_ConfigDma(USARTx);
 
   /* USART configuration */
-  LL_USART_InitTypeDef USART_InitStruct;
+  LL_USART_InitTypeDef USART_InitStruct = {0};
   /* Set baud rate */
   USART_InitStruct.BaudRate = 9600;
   /* Set data width */
@@ -257,12 +257,14 @@ static void APP_ConfigDma(USART_TypeDef *USARTx)
   if (USARTx ==  USART1)
   {
     /* USART1_TX maps to channel LL_DMA_CHANNEL_1, USART1_RX maps to channel LL_DMA_CHANNEL_2 */
-    SET_BIT(SYSCFG->CFGR3, 0x0605);
+    LL_SYSCFG_SetDMARemap_CH1(LL_SYSCFG_DMA_MAP_USART1_TX);
+    LL_SYSCFG_SetDMARemap_CH2(LL_SYSCFG_DMA_MAP_USART1_RX);
   }
   else
   {
     /* USART2_TX maps to channel LL_DMA_CHANNEL_1, USART2_RX maps to channel LL_DMA_CHANNEL_2 */
-    SET_BIT(SYSCFG->CFGR3, 0x0807); 
+    LL_SYSCFG_SetDMARemap_CH1(LL_SYSCFG_DMA_MAP_USART2_TX);
+    LL_SYSCFG_SetDMARemap_CH2(LL_SYSCFG_DMA_MAP_USART2_RX);
   }
   
   /*Set interrupt priority*/
@@ -348,13 +350,13 @@ void APP_UsartIRQCallback(USART_TypeDef *USARTx)
   * @param  None
   * @retval None
   */
-void APP_DmaChannel1IRQCallback(void)
+void APP_DmaChannel1IRQCallback(USART_TypeDef *USARTx)
 {
   if(LL_DMA_IsActiveFlag_TC1(DMA1) == 1)
   {
     LL_DMA_ClearFlag_GI1(DMA1);
-    LL_USART_DisableDMAReq_TX(USART1);
-    LL_USART_EnableIT_TC(USART1);
+    LL_USART_DisableDMAReq_TX(USARTx);
+    LL_USART_EnableIT_TC(USARTx);
   }
 }
 
@@ -363,12 +365,12 @@ void APP_DmaChannel1IRQCallback(void)
   * @param  None
   * @retval None
   */
-void APP_DmaChannel2_3_IRQCallback(void)
+void APP_DmaChannel2_3_IRQCallback(USART_TypeDef *USARTx)
 {
   if(LL_DMA_IsActiveFlag_TC2(DMA1) == 1)
   {
     LL_DMA_ClearFlag_GI2(DMA1);
-    LL_USART_DisableDMAReq_RX(USART1);
+    LL_USART_DisableDMAReq_RX(USARTx);
     UartReady = SET;
   }
 }

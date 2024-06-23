@@ -31,14 +31,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t DmaOnFlag, DmaTxRxFlag;
 static DMA_HandleTypeDef HdmaCh1;
 static DMA_HandleTypeDef HdmaCh2;
-static DMA_HandleTypeDef HdmaCh3;
 
 /* Private function prototypes -----------------------------------------------*/
 /* External functions --------------------------------------------------------*/
@@ -57,7 +56,7 @@ void HAL_MspInit(void)
   */
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
   /* SPI1 初始化 */
   __HAL_RCC_GPIOB_CLK_ENABLE();                   /* GPIOB时钟使能 */
   __HAL_RCC_GPIOA_CLK_ENABLE();                   /* GPIOA时钟使能 */
@@ -83,14 +82,14 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
     GPIO_InitStruct.Pull = GPIO_PULLUP;
   }
   GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF10_SPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* SPI NSS*/
   GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -99,7 +98,8 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
   /*GPIO配置为SPI：MISO/MOSI*/
   GPIO_InitStruct.Pin       = GPIO_PIN_0 | GPIO_PIN_1;
   GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull      = GPIO_NOPULL;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF10_SPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   /*中断配置*/

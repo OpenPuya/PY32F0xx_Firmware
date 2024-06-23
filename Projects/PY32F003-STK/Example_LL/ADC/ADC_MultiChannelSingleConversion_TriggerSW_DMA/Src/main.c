@@ -124,7 +124,7 @@ void APP_AdcConfig(void)
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
 
   /* 设置ADC时钟 */
-  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
+  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV4);
 
   /* 设置12位分辨率 */
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
@@ -237,7 +237,7 @@ void APP_DmaConfig()
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
 
   /* ADC对应通道LL_DMA_CHANNEL_1 */
-  SET_BIT(SYSCFG->CFGR3, 0x0);
+  LL_SYSCFG_SetDMARemap_CH1(LL_SYSCFG_DMA_MAP_ADC);
 
   /* 配置DMA传输方向为外设到存储器 */
   LL_DMA_SetDataTransferDirection(DMA1, LL_DMA_CHANNEL_1, LL_DMA_DIRECTION_PERIPH_TO_MEMORY);

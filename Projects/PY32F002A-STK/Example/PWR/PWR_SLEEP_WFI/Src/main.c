@@ -34,7 +34,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-EXTI_HandleTypeDef exti_handle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -50,17 +49,38 @@ int main(void)
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();
   
-  APP_EXTIConfigure();                             /* 配置外部中断 */
-  BSP_USART_Config();                              /* UART配置 */
-  __HAL_RCC_PWR_CLK_ENABLE();                      /* PWR时钟使能 */
+  /* 配置外部中断 */  
+  APP_EXTIConfigure();                            
+
+  /* UART配置 */  
+  BSP_USART_Config();                              
+ 
+  /* LED ON */
+  BSP_LED_On(LED_GREEN);
+
+  /* 等待按键 */
+  while (BSP_PB_GetState(BUTTON_USER))
+  {
+  }
+  
+   /* LED OFF */
+  BSP_LED_Off(LED_GREEN);
+  
   printf("SLEEP MODE!\n\n");
-  HAL_SuspendTick();                               /* systick中断关闭 */
+  
+  HAL_SuspendTick();    
+  
   /*进入SLEEP模式*/
   HAL_PWR_EnterSLEEPMode(PWR_SLEEPENTRY_WFI);
+  
+  /* systick中断打开 */  
+  HAL_ResumeTick(); 
+  
   printf("WAKEUP OK!\n\n");
   while (1)
   {
-
+    BSP_LED_Toggle(LED_GREEN);
+    HAL_Delay(200);
   }
 }
 
@@ -71,16 +91,18 @@ int main(void)
   */
 void APP_EXTIConfigure(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  __HAL_RCC_GPIOA_CLK_ENABLE();                   /* 使能GPIOA时钟 */
-  GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;   /* GPIO模式为下降沿中断 */
-  GPIO_InitStruct.Pull  = GPIO_PULLUP;            /* 上拉 */
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;   /* 速度为高速 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
 
-  HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);               /* 使能EXTI中断 */
-  HAL_NVIC_SetPriority(EXTI2_3_IRQn, 0, 0);       /* 配置中断优先级 */
+  __HAL_RCC_GPIOA_CLK_ENABLE();                   /* 使能GPIOA时钟 */
+
+  GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;   /* 配置为下降沿 */
+  GPIO_InitStruct.Pull  = GPIO_PULLUP;            /* 上拉 */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;   /* 高速 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);              
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);      
 }
 
 /**

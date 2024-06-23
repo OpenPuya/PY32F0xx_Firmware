@@ -42,8 +42,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef             AdcHandle;
 ADC_ChannelConfTypeDef        sConfig;
-volatile int16_t   aADCxConvertedData;
-int16_t   aTEMPERATURE;
+volatile int16_t              aADCxConvertedData;
+int16_t                       aTEMPERATURE;
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -59,20 +59,13 @@ int main(void)
 {
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();
-  
-  APP_ADCConfig();
-
-  /* 系统时钟配置 */
-  BSP_USART_Config();
-
-  /* 初始化LED */
-  BSP_LED_Init(LED_GREEN);
 
   /* 初始化调试串口(printf使用) */
   BSP_USART_Config();
 
-  /* 打印调试信息 */
-  printf("print test");
+  /* ADC配置 */  
+  APP_ADCConfig();
+
   /* 无限循环 */
   while (1)
   {
@@ -85,7 +78,7 @@ int main(void)
 }
 
 /**
-  * @brief  系统时钟配置函数
+  * @brief  ADC配置函数
   * @param  无
   * @retval 无
   */
@@ -101,7 +94,7 @@ void APP_ADCConfig(void)
     Error_Handler();
   }
   AdcHandle.Instance                   = ADC1;                                    /* ADC*/
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* 模拟ADC时钟源为PCLK*/
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* 模拟ADC时钟源为PCLK 4分频*/
   AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit*/
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;              /* 扫描序列方向：向上(从通道0到通道11)*/
@@ -112,13 +105,13 @@ void APP_ADCConfig(void)
   AdcHandle.Init.ExternalTrigConv      = ADC_SOFTWARE_START;                      /* 软件触发 */
   AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;           /* 触发边沿无 */
   AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* 当过载发生时，覆盖上一个值*/
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_41CYCLES_5;               /* 通道采样时间为41.5ADC时钟周期 */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                         /* ADC初始化*/
   {
     Error_Handler();
   }
 
-  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* 设置是否排行, 想设置单通道采样,需配置ADC_RANK_NONE */
+  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* 设置是否采样 */
   sConfig.Channel      = ADC_CHANNEL_TEMPSENSOR;                                  /* 设置采样通道 */
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)                      /* 配置ADC通道 */
   {
@@ -134,9 +127,9 @@ void APP_ADCConfig(void)
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-  aADCxConvertedData = hadc->Instance->DR;
+  aADCxConvertedData = HAL_ADC_GetValue(hadc);
   aTEMPERATURE =(int16_t)(Temp_k * aADCxConvertedData - Temp_k * TScal1 + TStem1);
-  printf(" TEMPERAUTE=%d \r\n", aTEMPERATURE);
+  printf("Temperature = %d \r\n", aTEMPERATURE);
 
 }
 

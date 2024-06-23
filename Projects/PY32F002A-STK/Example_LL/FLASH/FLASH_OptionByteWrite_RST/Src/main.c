@@ -27,140 +27,164 @@
   *
   ******************************************************************************
   */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "py32f002xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
+#define RSTPIN_MODE_GPIO
+/* #define RSTPIN_MODE_RST */
+
 /* Private variables ---------------------------------------------------------*/
+/* Private user code ---------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void APP_SystemClockConfig(void);
-static void APP_ProgramFlashOB(void);
+static void APP_SystemClockConfig(void);
+static void APP_FlashOBProgram(void);
 
 /**
-  * @brief  应用程序入口函数.
-  * @param  无
+  * @brief  Main program.
   * @retval int
   */
 int main(void)
 {
-  /*初始化systick*/
+  /* Initialize clock, configure system clock as HSI */
+  APP_SystemClockConfig();
+  
+  /* Initialize SysTick */
   HAL_Init();
 
-  /*初始化按键PB2*/
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+  /* Initialize LED */  
+  BSP_LED_Init(LED_GREEN);
+  
+  /* Initialize button */
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  
+  /* Wait for button press */
+  while (BSP_PB_GetState(BUTTON_USER))
+  {
+  }
 
-  /*等待按键按下，防止每次上电都擦写OPTION*/
-  while (BSP_PB_GetState(BUTTON_USER));
-
-  /*时钟初始化,配置系统时钟为HSI*/
-  APP_SystemClockConfig();
-
-  /*写OPTION*/
-  APP_ProgramFlashOB();
+  /* Check RST pin configuration */
+#if defined(RSTPIN_MODE_GPIO)
+  if( READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE) == OB_RESET_MODE_RESET)
+#else
+  if( READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE) == OB_RESET_MODE_GPIO)
+#endif
+  {
+    /* Program OPTION bytes */
+    APP_FlashOBProgram();
+  }
 
   while (1)
   {
-
-  }
-}
-/**
-  * @brief  写OPTION
-  * @param  无
-  * @retval 无
-  */
-static void APP_ProgramFlashOB(void)
-{
-  FLASH_OBProgramInitTypeDef OBInitCfg;
-  /*获取OPTION值*/
-  HAL_FLASH_OBGetConfig(&OBInitCfg);
-  /*判断OPTION是否已经配置完成*/
-  if((OBInitCfg.USERConfig & OB_RESET_MODE_GPIO) != OB_RESET_MODE_GPIO)
-  {
-  
-    HAL_FLASH_Unlock();/*解锁FLASH*/
-    HAL_FLASH_OB_Unlock();/*解锁OPTION*/
-
-    /*配置OPTION选项*/
-    OBInitCfg.OptionType = OPTIONBYTE_USER;
-    OBInitCfg.USERType = OB_USER_BOR_EN | OB_USER_BOR_LEV | OB_USER_IWDG_SW | OB_USER_NRST_MODE | OB_USER_nBOOT1;
-
-    /*BOR不使能/BOR上升3.2,下降3.1/软件模式看门狗/RST改为GPIO/System memory作为启动区*/
-    OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_RESET_MODE_GPIO | OB_BOOT1_SYSTEM;
-
-    /*BOR不使能/BOR上升3.2,下降3.1/软件模式看门狗/仅复位输入/System memory作为启动区*/
-    /*OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_WWDG_SW | OB_RESET_MODE_RESET | OB_BOOT1_SYSTEM;*/ /*恢复OPTION*/
-
-    /* 启动option byte编程 */
-    HAL_FLASH_OBProgram(&OBInitCfg);
-
-    HAL_FLASH_Lock();/*锁定FLASH*/
-    HAL_FLASH_OB_Lock();/*锁定OPTION*/
-
-    /*产生一个复位，option byte装载*/
-    HAL_FLASH_OB_Launch();
+#if defined(RSTPIN_MODE_GPIO)
+    if(READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE)== OB_RESET_MODE_GPIO )
+#else
+    if(READ_BIT(FLASH->OPTR, FLASH_OPTR_NRST_MODE)== OB_RESET_MODE_RESET )
+#endif
+    {
+      BSP_LED_On(LED_GREEN);
+      while(1)
+      {
+      }
+    }
   }
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
+  * @brief  System clock configuration function
+  * @param  None
+  * @retval None
   */
-void APP_SystemClockConfig(void)
+static void APP_SystemClockConfig(void)
 {
-  /* 使能HSI */
+  /* Enable and initialize HSI */
   LL_RCC_HSI_Enable();
-  while(LL_RCC_HSI_IsReady() != 1)
+  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
+  while (LL_RCC_HSI_IsReady() != 1)
   {
   }
 
-  /* 设置 AHB 分频*/
+  /* Set AHB prescaler*/
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* 配置HSISYS作为系统时钟源 */
+  /* Configure HSISYS as system clock and initialize it */
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
+  while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
-  /* 设置 APB1 分频*/
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(8000000);
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
 
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
-  LL_SetSystemCoreClock(8000000);
+  /* Set APB1 prescaler and initialize it */
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
+  LL_SetSystemCoreClock(24000000);
 }
 
 /**
-  * @brief  错误执行函数
-  * @param  无
-  * @retval 无
+  * @brief  Program OPTION bytes
+  * @param  None
+  * @retval None
   */
-void Error_Handler(void)
+static void APP_FlashOBProgram(void)
 {
-  /* 无限循环 */
-  while (1)
-  {
-  }
+  FLASH_OBProgramInitTypeDef OBInitCfg = {0};
+
+  HAL_FLASH_Unlock();         /* Unlock FLASH */
+  HAL_FLASH_OB_Unlock();      /* Unlock OPTION bytes */
+
+  /* Configure OPTION bytes */
+  OBInitCfg.OptionType = OPTIONBYTE_USER;
+  OBInitCfg.USERType = OB_USER_BOR_EN | OB_USER_BOR_LEV | OB_USER_IWDG_SW | OB_USER_NRST_MODE | OB_USER_nBOOT1;
+
+#if defined(RSTPIN_MODE_GPIO)
+  /* BOR disabled / BOR rising threshold 3.2V, falling threshold 3.1V / Software watchdog enabled / GPIO function / System memory as boot area */
+  OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_RESET_MODE_GPIO | OB_BOOT1_SYSTEM;
+#else
+  /* BOR disabled / BOR rising threshold 3.2V, falling threshold 3.1V / Software watchdog enabled / Reset pin function / System memory as boot area */
+  OBInitCfg.USERConfig = OB_BOR_DISABLE | OB_BOR_LEVEL_3p1_3p2 | OB_IWDG_SW | OB_RESET_MODE_RESET | OB_BOOT1_SYSTEM;
+#endif
+
+  /* Start OPTION byte programming */
+  HAL_FLASH_OBProgram(&OBInitCfg);
+
+  HAL_FLASH_Lock();          /* Lock FLASH */
+  HAL_FLASH_OB_Lock();       /* Lock OPTION bytes */
+
+  /* Generate a reset to load the option bytes */
+  HAL_FLASH_OB_Launch();
+}
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @param  None
+  * @retval None
+  */
+void APP_ErrorHandler(void)
+{
+  while (1);
 }
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  输出产生断言错误的源文件名及行号
-  * @param  file：源文件名指针
-  * @param  line：发生断言错误的行号
-  * @retval 无
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* 用户可以根据需要添加自己的打印信息,
-     例如: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* 无限循环 */
+  /* User can add his own implementation to report the file name and line number,
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT Puya *****END OF FILE****/
+/************************ (C) COPYRIGHT Puya *****END OF FILE******************/

@@ -51,10 +51,10 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   /* Enable TIM1 clock */
   __HAL_RCC_TIM1_CLK_ENABLE();
-  /* GPIOA/GPIOB */
+  /* Enable GPIOA/GPIOB Clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -83,9 +83,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   /* TIM1_CH4 */
   GPIO_InitStruct.Pin = GPIO_PIN_11;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  /* TIM1_BKIN */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* Enable TIM1 interrupt */

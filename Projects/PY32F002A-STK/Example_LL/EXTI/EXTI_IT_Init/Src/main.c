@@ -89,6 +89,7 @@ void APP_SystemClockConfig(void)
   /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
   LL_SetSystemCoreClock(8000000);
 }
+
 /**
   * @brief  EXTI配置函数
   * @param  无
@@ -96,18 +97,19 @@ void APP_SystemClockConfig(void)
   */
 static void APP_ConfigureEXTI(void)
 {
-  /* 使能GPIOB */
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+
+  /* 使能GPIOB时钟 */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
 
   /* 配置PB2输入模式 */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
   GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* 配置EXTI为中断、下降沿触发 */
-  LL_EXTI_InitTypeDef EXTI_InitStruct;
   EXTI_InitStruct.Line = LL_EXTI_LINE_2;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
@@ -121,20 +123,7 @@ static void APP_ConfigureEXTI(void)
   NVIC_SetPriority(EXTI2_3_IRQn, 0);
   NVIC_EnableIRQ(EXTI2_3_IRQn);
 }
-/**
-  * @brief  中断入口函数，每产生一次下降沿,LED翻转一次
-  * @param  无
-  * @retval 无
-  */
-void EXTI2_3_IRQHandler(void)
-{
-  /* 处理EXTI中断请求 */
-  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_2))
-  {
-    BSP_LED_Toggle(LED_GREEN);
-    LL_EXTI_ClearFlag(LL_EXTI_LINE_2);
-  }
-}
+
 
 /**
   * @brief  错误执行函数

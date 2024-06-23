@@ -42,13 +42,15 @@ extern "C" {
   *  application.
   */
 
-#if !defined (PY32F002Ax5) && !defined (PY32F002Bx5) && !defined (PY32F002Xx5) && !defined (PY32F002Xx4) && !defined (PY32F002Xx2) && \
+#if !defined (PY32F001x4) && \
+    !defined (PY32F002Ax5) && !defined (PY32F002Bx5) && !defined (PY32F002Xx5) && !defined (PY32F002Xx4) && !defined (PY32F002Xx2) && \
     !defined (PY32F003x4) && !defined (PY32F003x6) && !defined (PY32F003x8) && \
     !defined (PY32F030x3) && !defined (PY32F030x4) && !defined (PY32F030x6) && !defined (PY32F030x7) && !defined (PY32F030x8) && !defined (PY32F030xx) && \
     !defined (PY32F031x4) && !defined (PY32F031x6) && !defined (PY32F031x7) && !defined (PY32F031x8) && \
     !defined (PY32F040x6) && !defined (PY32F040x8) && !defined (PY32F040x9) && !defined (PY32F040xB) && \
     !defined (PY32F071x6) && !defined (PY32F071x8) && !defined (PY32F071x9) && !defined (PY32F071xB) && \
     !defined (PY32F072x6) && !defined (PY32F072x8) && !defined (PY32F072x9) && !defined (PY32F072xB)
+/* #define PY32F001x4  */  /*!< PY32F001x4  Devices (PY32F001x4  microcontrollers where the Flash memory is 16  Kbytes) */
 /* #define PY32F002Ax5 */  /*!< PY32F002Ax5 Devices (PY32F002Ax5 microcontrollers where the Flash memory is 20  Kbytes) */
 /* #define PY32F002Bx5 */  /*!< PY32F002Bx5 Devices (PY32F002Bx5 microcontrollers where the Flash memory is 24  Kbytes) */
 /* #define PY32F002Xx5 */  /*!< PY32F002Xx5 Devices (PY32F002Xx5 microcontrollers where the Flash memory is 24  Kbytes) */
@@ -82,7 +84,9 @@ extern "C" {
 /**  Tip: To avoid modifying this file each time you need to switch between these
   *       devices, you can define the device in your toolchain compiler preprocessor.
   */
-#if (defined(PY32F002Ax5))
+#if (defined(PY32F001x4))
+#define PY32F001APRE
+#elif (defined(PY32F002Ax5))
 #define PY32F002APRE
 #elif (defined(PY32F002Bx5))
 #define PY32F002BPRE
@@ -117,7 +121,9 @@ extern "C" {
 /**
   * @brief Device_Included
   */
-#if defined(PY32F002Ax5)
+#if defined(PY32F001x4)
+#include "py32f001x4.h"
+#elif defined(PY32F002Ax5)
 #include "py32f002ax5.h"
 #elif defined(PY32F002Bx5)
 #include "py32f002bx5.h"

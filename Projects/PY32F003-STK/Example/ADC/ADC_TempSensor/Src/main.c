@@ -95,7 +95,7 @@ static void APP_AdcConfig(void)
   {
     APP_ErrorHandler();
   }                                                                           
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* 设置ADC时钟 */
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* 设置ADC时钟 */
   AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit */
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;              /* 扫描序列方向：向上(从通道0到通道11) */
@@ -107,7 +107,7 @@ static void APP_AdcConfig(void)
   AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;           /* 触发边沿无 */
   AdcHandle.Init.DMAContinuousRequests = DISABLE;                                 /* DMA不使能 */
   AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* 当过载发生时，覆盖上一个值 */
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_41CYCLES_5;               /* 通道采样时间为41.5ADC时钟周期 */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
   /* 初始化ADC */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                         
   {
@@ -128,11 +128,11 @@ static void APP_AdcConfig(void)
   * @param  hadc：ADC句柄
   * @retval 无
   */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *adchandle)
 {
-  aADCxConvertedData = hadc->Instance->DR;
+  aADCxConvertedData = HAL_ADC_GetValue(adchandle);
   aTEMPERATURE =(int16_t) (Temp_k * aADCxConvertedData - Temp_k * TScal1 + TStem1);
-  printf(" TEMPERATURE = %d \r\n", aTEMPERATURE);
+  printf("Temperature = %d \r\n", aTEMPERATURE);
 
 }
 

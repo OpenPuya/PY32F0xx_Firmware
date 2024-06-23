@@ -37,7 +37,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 DMA_HandleTypeDef HdmaCh1;
-extern uint32_t   aADCxConvertedData;
 
 /* Private function prototypes -----------------------------------------------*/
 /* External functions --------------------------------------------------------*/
@@ -54,7 +53,8 @@ void HAL_MspInit(void)
   */
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
-  GPIO_InitTypeDef          GPIO_InitStruct;
+  GPIO_InitTypeDef          GPIO_InitStruct = {0};
+
   __HAL_RCC_SYSCFG_CLK_ENABLE();                              /* SYSCFG时钟使能 */
   __HAL_RCC_DMA_CLK_ENABLE();                                 /* DMA时钟使能 */
   __HAL_RCC_GPIOA_CLK_ENABLE();                               /* 使能GPIOA时钟 */
@@ -70,9 +70,9 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
   HdmaCh1.Instance                 = DMA1_Channel1;           /* 选择DMA通道1 */
   HdmaCh1.Init.Direction           = DMA_PERIPH_TO_MEMORY;    /* 方向为从外设到存储器 */
   HdmaCh1.Init.PeriphInc           = DMA_PINC_DISABLE;        /* 禁止外设地址增量 */
-  HdmaCh1.Init.MemInc              = DMA_MINC_DISABLE;        /* 使能存储器地址增量 */
-  HdmaCh1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD; /* 外设数据宽度为16位 */
-  HdmaCh1.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD; /* 存储器数据宽度位16位 */
+  HdmaCh1.Init.MemInc              = DMA_MINC_DISABLE;        /* 禁止存储器增量 */
+  HdmaCh1.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;     /* 外设数据宽度为32位 */
+  HdmaCh1.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;     /* 存储器数据宽度位32位 */
   HdmaCh1.Init.Mode                = DMA_CIRCULAR;            /* 循环模式 */
   HdmaCh1.Init.Priority            = DMA_PRIORITY_VERY_HIGH;  /* 通道优先级为很高 */
 

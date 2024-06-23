@@ -33,8 +33,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
-TIM_OnePulse_InitTypeDef sConfig;
+TIM_HandleTypeDef         TimHandle;
+TIM_OnePulse_InitTypeDef  sConfig;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/

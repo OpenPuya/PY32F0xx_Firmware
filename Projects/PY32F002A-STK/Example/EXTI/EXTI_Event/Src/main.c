@@ -34,7 +34,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-EXTI_HandleTypeDef exti_handle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -51,10 +50,34 @@ int main(void)
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();
   
-  Configure_EXTI();                             /* 配置外部中断 */
+  /* LED 初始化 */
+  BSP_LED_Init(LED_GREEN);
+
+  /* 按键初始化 */
+  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
+  
+  /* 配置外部中断 */  
+  Configure_EXTI();                             
+  
+  /* LED ON */
+  BSP_LED_On(LED_GREEN);
+  
+  /* 关闭SYSTICK中断 */
   HAL_SuspendTick();
+  
+  while (BSP_PB_GetState(BUTTON_KEY) == 1)
+  {
+  }
+
+  /* LED OFF */
+  BSP_LED_Off(LED_GREEN);
+  
+  /* 进入STOP模式 */
   HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFE);
+
+  /* 打开SYSTICK中断 */  
   HAL_ResumeTick();
+  
   while (1)
   {
     BSP_LED_Toggle(LED_GREEN);
@@ -69,14 +92,15 @@ int main(void)
   */
 void Configure_EXTI(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  __HAL_RCC_GPIOB_CLK_ENABLE();                   /* 使能GPIOA时钟 */
-  GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING;  /* GPIO模式为下降沿中断 */
-  GPIO_InitStruct.Pull  = GPIO_PULLUP;            /* 上拉 */
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;   /* 速度为高速 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
 
+  __HAL_RCC_GPIOA_CLK_ENABLE();                  
+
+  GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING; 
+  GPIO_InitStruct.Pull  = GPIO_PULLUP;           
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 /**

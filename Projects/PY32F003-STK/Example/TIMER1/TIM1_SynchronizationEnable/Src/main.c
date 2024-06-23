@@ -33,10 +33,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle, htim3;
+TIM_HandleTypeDef        TimHandle1, TimHandle3;
 TIM_SlaveConfigTypeDef   sSlaveConfig;
-TIM_MasterConfigTypeDef sMasterConfig;
-TIM_OC_InitTypeDef sConfig;
+TIM_MasterConfigTypeDef  sMasterConfig;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -54,44 +53,44 @@ int main(void)
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
 
-  TimHandle.Instance = TIM1;                                           /* 选择TIM1 */
-  TimHandle.Init.Period            = 8000 - 1;                         /* 自动重装载值 */
-  TimHandle.Init.Prescaler         = 100 - 1;                          /* 预分频为1000-1 */
-  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;           /* 时钟不分频 */
-  TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;               /* 向上计数 */
-  TimHandle.Init.RepetitionCounter = 1 - 1;                            /* 不重复计数 */
-  TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;   /* 自动重装载寄存器没有缓冲 */
-  if (HAL_TIM_Base_Init(&TimHandle) != HAL_OK)                         /* TIM1初始化 */
+  TimHandle1.Instance = TIM1;                                           /* 选择TIM1 */
+  TimHandle1.Init.Period            = 8000 - 1;                         /* 自动重装载值 */
+  TimHandle1.Init.Prescaler         = 100 - 1;                          /* 预分频为1000-1 */
+  TimHandle1.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;           /* 时钟不分频 */
+  TimHandle1.Init.CounterMode       = TIM_COUNTERMODE_UP;               /* 向上计数 */
+  TimHandle1.Init.RepetitionCounter = 1 - 1;                            /* 不重复计数 */
+  TimHandle1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;   /* 自动重装载寄存器没有缓冲 */
+  if (HAL_TIM_Base_Init(&TimHandle1) != HAL_OK)                         /* TIM1初始化 */
   {
     APP_ErrorHandler();
   }
 
-  htim3.Instance = TIM3;                                               /* 选择TIM3 */
-  htim3.Init.Prescaler = 1000 - 1;                                     /* 预分频为1000-1 */
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;                         /* 向上计数 */
-  htim3.Init.Period = 8000 - 1;                                        /* 自动重装载值 */
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;                   /* 时钟不分频 */
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;       /* 自动重装载寄存器没有缓冲 */
-  if (HAL_TIM_OC_Init(&htim3) != HAL_OK)                               /* OC输出初始化 */
+  TimHandle3.Instance = TIM3;                                               /* 选择TIM3 */
+  TimHandle3.Init.Prescaler = 1000 - 1;                                     /* 预分频为1000-1 */
+  TimHandle3.Init.CounterMode = TIM_COUNTERMODE_UP;                         /* 向上计数 */
+  TimHandle3.Init.Period = 8000 - 1;                                        /* 自动重装载值 */
+  TimHandle3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;                   /* 时钟不分频 */
+  TimHandle3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;       /* 自动重装载寄存器没有缓冲 */
+  if (HAL_TIM_OC_Init(&TimHandle3) != HAL_OK)                               /* OC输出初始化 */
   {
     APP_ErrorHandler();
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;                 /* 主时钟更新事件产生TRGO信号 */
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;         /* 主从模式关闭 */
-  HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);       /* TIM3配置为主模式 */
+  HAL_TIMEx_MasterConfigSynchronization(&TimHandle3, &sMasterConfig);       /* TIM3配置为主模式 */
 
   sSlaveConfig.SlaveMode        = TIM_SLAVEMODE_TRIGGER;               /* 从模式选择为触发模式 */
   sSlaveConfig.InputTrigger     = TIM_TS_ITR2;                         /* TIM1的触发选择为TIM3 */
   sSlaveConfig.TriggerPolarity  = TIM_TRIGGERPOLARITY_NONINVERTED;     /* 外部触发极性不反向 */
   sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;           /* 外部触发不分频 */
   sSlaveConfig.TriggerFilter    = 0;                                   /* 不滤波 */
-  if (HAL_TIM_SlaveConfigSynchro(&TimHandle, &sSlaveConfig) != HAL_OK) /* TIM1配置为从模式 */
+  if (HAL_TIM_SlaveConfigSynchro(&TimHandle1, &sSlaveConfig) != HAL_OK) /* TIM1配置为从模式 */
   {
     APP_ErrorHandler();
   }
-  __HAL_TIM_ENABLE_IT(&TimHandle, TIM_IT_UPDATE);                      /* 使能TIM1更新中断 */
-  if (HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1) != HAL_OK)               /* TIM3的OC输出启动 */
+  __HAL_TIM_ENABLE_IT(&TimHandle1, TIM_IT_UPDATE);                      /* 使能TIM1更新中断 */
+  if (HAL_TIM_OC_Start(&TimHandle3, TIM_CHANNEL_1) != HAL_OK)               /* TIM3的OC输出启动 */
   {
     APP_ErrorHandler();
   }

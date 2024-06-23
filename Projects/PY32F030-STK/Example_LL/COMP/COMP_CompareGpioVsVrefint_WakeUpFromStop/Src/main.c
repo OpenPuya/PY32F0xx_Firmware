@@ -175,11 +175,8 @@ static void APP_CompRccInit()
   /* Enable access to backup domain */
   LL_PWR_EnableBkUpAccess();
 
-  /* Set LSI as the low-speed cloc */
+  /* Set LSI as the low-speed clock */
   LL_RCC_LSCO_SetSource(LL_RCC_LSCO_CLKSOURCE_LSI);
-
-  /* Enable the low-speed clock */
-  LL_RCC_LSCO_Enable();
 
   /* Set COMP clock source as LSC */
   LL_RCC_SetCOMPClockSource(LL_RCC_COMP1_CLKSOURCE_LSC);

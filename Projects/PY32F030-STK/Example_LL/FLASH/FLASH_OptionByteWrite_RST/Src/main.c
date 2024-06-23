@@ -131,7 +131,7 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_FlashOBProgram(void)
 {
-  FLASH_OBProgramInitTypeDef OBInitCfg;
+  FLASH_OBProgramInitTypeDef OBInitCfg = {0};
 
   HAL_FLASH_Unlock();         /* Unlock FLASH */
   HAL_FLASH_OB_Unlock();      /* Unlock OPTION bytes */

@@ -136,7 +136,7 @@ void APP_SystemClockConfig(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                            /* 设置AHB预分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                             /* 设置APB1预分频 */
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)       /* 配置总线 */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)       /* 配置总线 */
   {
     APP_ErrorHandler();
   }
@@ -150,7 +150,7 @@ void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t SECTORError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_SECTORERASE;      /* 擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦 */
   EraseInitStruct.SectorAddress = FLASH_USER_START_ADDR;          /* 擦写起始地址 */

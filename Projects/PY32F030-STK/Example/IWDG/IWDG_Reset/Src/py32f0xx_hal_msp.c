@@ -44,11 +44,7 @@
   */
 void HAL_MspInit(void)
 {
-  /* Enable LSI clock */
-  __HAL_RCC_LSI_ENABLE();
 
-  /* Wait until LSI READY bit is set */
-  while (READ_BIT(RCC->CSR, RCC_CSR_LSIRDY) == 0U);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

@@ -55,29 +55,12 @@ void HAL_MspInit(void)
   */
 void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 {
-  RCC_OscInitTypeDef        RCC_OscInitStruct;
-  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+  RCC_OscInitTypeDef        RCC_OscInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct = {0};
 
-  /* 配置LSE/LSI为RTC时钟源 */
-#ifdef RTC_CLOCK_SOURCE_LSE
-  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-  }
-
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-  {
-  }
-#elif defined (RTC_CLOCK_SOURCE_LSI)
+  /* 配置LSI为RTC时钟源 */
   RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI;
-
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
   }
@@ -87,8 +70,6 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
   }
-#else
-#endif /*RTC_CLOCK_SOURCE_LSE*/
 
   /* 使能RTC外设时钟 */
   __HAL_RCC_RTCAPB_CLK_ENABLE();
@@ -100,7 +81,6 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   NVIC_EnableIRQ(RTC_IRQn);
 
   __HAL_RTC_OVERFLOW_ENABLE_IT(hrtc, RTC_IT_OW);
-  __HAL_RTC_ALARM_ENABLE_IT(hrtc, RTC_IT_ALRA);
   __HAL_RTC_SECOND_ENABLE_IT(hrtc, RTC_IT_SEC);
 }
 

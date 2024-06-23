@@ -82,12 +82,18 @@ static void APP_Config6StepPWMChannel(void)
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_7|LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* Configure PB0/PB1 as TIM1_CH2N/TIM1_CH3N */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_0|LL_GPIO_PIN_1;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOB,&TIM1CH1MapInit);
   
   /* Configure PWM channels */

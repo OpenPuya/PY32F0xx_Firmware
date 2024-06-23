@@ -61,6 +61,7 @@ int main(void)
   /* RTC初始化 */
   RtcHandle.Instance = RTC;                         /* 选择RTC */
   RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND;  /* RTC一秒时基自动计算 */
+  RtcHandle.Init.OutPut = RTC_OUTPUTSOURCE_NONE;   /* TAMPER引脚无输出 */
   if (HAL_RTC_Init(&RtcHandle) != HAL_OK)
   {
   }
@@ -99,32 +100,33 @@ int main(void)
   */
 static void APP_SystemClockConfig(void)
 {
-  RCC_ClkInitTypeDef clkinitstruct = {0};
-  RCC_OscInitTypeDef oscinitstruct = {0};
-  
-  /* RCC振荡器初始化 */
-  oscinitstruct.OscillatorType  = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
-  oscinitstruct.HSIState        = RCC_HSI_ON;                                               /* 开启HSI */
-  oscinitstruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                              /* 配置HSI输出时钟为8MHz */
-  oscinitstruct.HSEState        = RCC_HSE_OFF;                                              /* 关闭HSE */
-  oscinitstruct.LSIState        = RCC_LSI_ON;                                               /* 关闭LSE */
-  if (HAL_RCC_OscConfig(&oscinitstruct) != HAL_OK)
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /* Oscillator configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI; /* Select oscillators HSE,HSI,LSI */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* Enable HSI */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* Configure HSI clock as 8MHz */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
+
+  /* Configure oscillators */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    while (1)
-    {
-    }
+    APP_ErrorHandler();
   }
 
-  /* 初始化CPU,AHB,APB总线时钟 */
-  clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1); /* RCC系统时钟类型 */
-  clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                           /* SYSCLK的源选择为HSI */
-  clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                               /* APH时钟不分频 */
-  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;                                                /* APB时钟不分频 */
-  if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_1) != HAL_OK)
+  /* Clock source configuration */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* Select clock types HCLK, SYSCLK, PCLK1 */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* Select HSI as system clock */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB  clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB  clock not divided */
+  /* Configure clock source */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
-    while (1)
-    {
-    }
+    APP_ErrorHandler();
   }
 }
 

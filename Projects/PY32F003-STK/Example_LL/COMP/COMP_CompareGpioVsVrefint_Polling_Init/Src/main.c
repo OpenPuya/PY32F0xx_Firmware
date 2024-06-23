@@ -103,12 +103,11 @@ static void APP_CompInit(void)
   COMP_InitStruct.InputMinus = LL_COMP_INPUT_MINUS_VREFINT;
   COMP_InitStruct.InputHysteresis = LL_COMP_HYSTERESIS_DISABLE;
   COMP_InitStruct.OutputPolarity = LL_COMP_OUTPUTPOL_NONINVERTED;
+  COMP_InitStruct.PowerMode = LL_COMP_POWERMODE_HIGHSPEED;
+  COMP_InitStruct.DigitalFilter = 0;
   
   /* 初始化比较器1               */
   LL_COMP_Init(COMP1, &COMP_InitStruct);
-
-  /* 功耗模式快速                */
-  LL_COMP_SetPowerMode(COMP1, LL_COMP_POWERMODE_HIGHSPEED);
  
   /* 窗口模式不使能              */
   LL_COMP_SetCommonWindowMode(__LL_COMP_COMMON_INSTANCE(COMP1), LL_COMP_WINDOWMODE_DISABLE);

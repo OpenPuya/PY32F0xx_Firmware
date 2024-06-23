@@ -31,7 +31,7 @@
 #include "main.h"  
   
 /* Private variables ---------------------------------------------------------*/
-COMP_HandleTypeDef COMPINIT;
+COMP_HandleTypeDef hcomp1;
 
 /* Private define ------------------------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
@@ -70,7 +70,7 @@ int main(void)
   APP_CompIt();
  
   /* Start COMP */
-  HAL_COMP_Start(&COMPINIT);
+  HAL_COMP_Start(&hcomp1);
   
   BSP_LED_On(LED_GREEN);
 
@@ -100,12 +100,13 @@ int main(void)
   */
 static void APP_RccInit(void)
 {                    
-  RCC_OscInitTypeDef RCCCONF;
-  RCC_PeriphCLKInitTypeDef COMPRCC;
+  RCC_OscInitTypeDef RCCCONF       = {0};
+  RCC_PeriphCLKInitTypeDef COMPRCC = {0} ;
   
   RCCCONF.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* RCC uses internal LSI */
   RCCCONF.LSIState = RCC_LSI_ON;                          /* Enable LSI */
-  
+  RCCCONF.PLL.PLLState = RCC_PLL_NONE;
+
   COMPRCC.PeriphClockSelection = RCC_PERIPHCLK_COMP1;     /* Peripheral selection: COMP1 */
   COMPRCC.Comp1ClockSelection = RCC_COMP1CLKSOURCE_LSC;   /* Independent clock source for COMP1: LSC */
 
@@ -119,18 +120,21 @@ static void APP_RccInit(void)
   * @retval None
   */
 static void APP_CompInit(void)
-{
+{ 
   __HAL_RCC_COMP1_CLK_ENABLE();                           /* Enable COMP1 clock */
-  COMP_InitTypeDef COMPCONF={0};
-  COMPINIT.Instance = COMP1;                              /* COMP1 */
-  COMPCONF.Mode = COMP_POWERMODE_MEDIUMSPEED;             /* COMP1 power mode: Medium speed */
-  COMPCONF.InputPlus = COMP_INPUT_PLUS_IO3;               /* Positive input: PA1 */
-  COMPCONF.InputMinus = COMP_INPUT_MINUS_VREFINT;         /* Negative input: VREFINT */
-  COMPCONF.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* Trigger mode: Falling edge interrupt */
-  COMPCONF.Hysteresis = COMP_HYSTERESIS_ENABLE;           /* Hysteresis function enabled */
-  COMPINIT.Init = COMPCONF;                           
-  
-  HAL_COMP_Init(&COMPINIT);
+
+  hcomp1.Instance = COMP1;                              /* COMP1 */
+
+  hcomp1.Init.InputPlus = COMP_INPUT_PLUS_IO3;               /* Positive input: PA1 */
+  hcomp1.Init.InputMinus = COMP_INPUT_MINUS_VREFINT;         /* Negative input: VREFINT */
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;        /* COMP1 polarity is non-inverted */
+  hcomp1.Init.Mode = COMP_POWERMODE_MEDIUMSPEED;             /* COMP1 power mode: Medium speed */
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_ENABLE;           /* Hysteresis function enabled */
+  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;          /* Window function disable */
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* Trigger mode: Falling edge interrupt */
+  hcomp1.Init.DigitalFilter = 0;
+                           
+  HAL_COMP_Init(&hcomp1);
 }
 
 /**

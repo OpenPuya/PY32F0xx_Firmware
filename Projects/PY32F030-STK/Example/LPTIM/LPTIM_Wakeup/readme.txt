@@ -38,7 +38,7 @@ Example execution steps:
 注意事项：
 1，演示此样例功能时需要断开swd连接线并重新上电，因为默认情况下，仿真器会把
 DBGMCU_CR.DBG_STOP置位。
-2,每次唤醒后再次进入Stop模式前,必须增加延时75us(至少2个LSI时钟),用于LSI和APB时钟同步。
+2,每次唤醒后再次进入Stop模式前,必须增加延时120us(至少3个LSI时钟),用于LSI和APB时钟同步。
 
 Notes:
 1.When demonstrating this sample, disconnect the SWD connection and 

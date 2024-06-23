@@ -51,10 +51,10 @@ void HAL_MspInit(void)
   */
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
-  GPIO_InitTypeDef          GPIO_InitStruct;
+  GPIO_InitTypeDef          GPIO_InitStruct={0};
+
   __HAL_RCC_GPIOA_CLK_ENABLE();             /* 使能GPIOA时钟 */
   __HAL_RCC_ADC_CLK_ENABLE();               /* 使能ADC时钟 */
-
 
   GPIO_InitStruct.Pin = GPIO_PIN_0;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;

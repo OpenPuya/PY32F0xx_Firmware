@@ -55,6 +55,7 @@ int main(void)
   hcomp.Init.Hysteresis      = COMP_HYSTERESIS_ENABLE;                 /* Hysteresis function is enabled */
   hcomp.Init.WindowMode      = COMP_WINDOWMODE_DISABLE;                /* Window mode is disabled */
   hcomp.Init.TriggerMode     = COMP_TRIGGERMODE_NONE;                  /* External trigger for COMP2 is disabled */
+  hcomp.Init.DigitalFilter   = 0;
 
   /* Initialize COMP2 */
   if (HAL_COMP_Init(&hcomp) != HAL_OK)                                 

@@ -44,11 +44,7 @@
   */
 void HAL_MspInit(void)
 {
-  /* 使能LSI时钟 */
-  __HAL_RCC_LSI_ENABLE();
 
-  /* 等待直到LSI READY置位 */
-  while (READ_BIT(RCC->CSR, RCC_CSR_LSIRDY) == 0U);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

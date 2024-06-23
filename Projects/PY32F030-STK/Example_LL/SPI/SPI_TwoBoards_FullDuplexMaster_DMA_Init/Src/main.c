@@ -175,7 +175,7 @@ static void APP_ConfigSPI(void)
   LL_SYSCFG_SetDMARemap_CH2(LL_SYSCFG_DMA_MAP_SPI1_RX);
   
   /* Initialize DMA channel 1 */
-  LL_DMA_InitTypeDef DMA_InitStruct;
+  LL_DMA_InitTypeDef DMA_InitStruct = {0};
   DMA_InitStruct.PeriphOrM2MSrcAddress  = 0x00000000U;
   DMA_InitStruct.MemoryOrM2MDstAddress  = 0x00000000U;
   DMA_InitStruct.Direction              = LL_DMA_DIRECTION_MEMORY_TO_PERIPH;

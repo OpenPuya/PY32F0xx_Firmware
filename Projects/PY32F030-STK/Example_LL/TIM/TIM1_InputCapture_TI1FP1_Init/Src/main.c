@@ -48,7 +48,7 @@ static void APP_ConfigInputCapture(void);
 int main(void)
 {
   /* Enable TIM1 clock */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
   /* Configure system clock */
@@ -76,7 +76,7 @@ int main(void)
   */
 static void APP_ConfigInputCapture(void)
 {
-  LL_TIM_IC_InitTypeDef InputCaptureInit ={0};
+  LL_TIM_IC_InitTypeDef InputCaptureInit = {0};
   LL_GPIO_InitTypeDef TIM1CH1MapInit= {0};
   
   /* Configure PA3 as capture input pin */
@@ -84,7 +84,8 @@ static void APP_ConfigInputCapture(void)
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Pull       = LL_GPIO_PULL_DOWN;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_13;
-  
+  TIM1CH1MapInit.Speed      = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;  
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* Configure capture channel */

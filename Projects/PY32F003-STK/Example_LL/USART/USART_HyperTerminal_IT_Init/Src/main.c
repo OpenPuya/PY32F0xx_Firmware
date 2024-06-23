@@ -139,7 +139,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
     
     /*GPIOA配置*/
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /*选择2号引脚*/
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /*选择复用模式*/
@@ -175,7 +175,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
     
     /*GPIOA配置*/
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /*选择2号引脚*/
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /*选择复用模式*/
@@ -205,7 +205,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
   }
   
   /*配置USART功能*/
-  LL_USART_InitTypeDef USART_InitStruct;
+  LL_USART_InitTypeDef USART_InitStruct = {0};
   /*设置波特率*/
   USART_InitStruct.BaudRate = 9600;
   /*设置数据长度*/

@@ -23,14 +23,11 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载程序到MCU，并运行；
-2. 进入仿真模式；
-3. 运行，可由示波器观察到PA08输出PLL波形（48MHz）。
+2. 可由示波器观察到PA08输出PLL波形（48MHz）。
 
 Example execution steps:
 1.Compile and download the program to the MCU and run it;
-2.Enter simulation mode
-3.Run, and observe the PLL waveform (48MHz) output on PA08 using 
-an oscilloscope.
+2.The PLL waveform (48MHz) output from PA08 can be observed by the oscilloscope.
 ================================================================================
 注意事项：
 

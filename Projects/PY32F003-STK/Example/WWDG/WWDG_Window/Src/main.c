@@ -52,7 +52,7 @@ static uint32_t APP_TimeoutCalculation(uint32_t timevalue);
   */
 int main(void)
 {
-  uint32_t delay;
+  uint32_t delay = 0;
 
   /* 初始化所有外设，Flash接口，SysTick */
   HAL_Init();

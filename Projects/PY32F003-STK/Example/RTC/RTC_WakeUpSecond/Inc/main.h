@@ -44,7 +44,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
-#define RTC_CLOCK_SOURCE_LSI
 
 /* Exported variables prototypes ---------------------------------------------*/
 extern RTC_HandleTypeDef RtcHandle;

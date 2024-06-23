@@ -33,10 +33,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
-TIM_OC_InitTypeDef   sConfig1,sConfig2,sConfig3;
-TIM_BreakDeadTimeConfigTypeDef sBreakConfig;
-uint32_t temp;
+TIM_HandleTypeDef                 TimHandle;
+TIM_OC_InitTypeDef                sConfig1,sConfig2,sConfig3;
 __IO uint32_t uwStep = 0;
 
 /* Private user code ---------------------------------------------------------*/
@@ -74,7 +72,7 @@ int main(void)
   sConfig1.OCMode       = TIM_OCMODE_TIMING;                          /* Channel mode: Frozen */
   sConfig1.OCPolarity   = TIM_OCPOLARITY_HIGH;                        /* Channel active polarity: High level */
   sConfig1.OCNPolarity  = TIM_OCNPOLARITY_HIGH;                       /* Complementary channel active polarity: High level */
-  sConfig1.OCIdleState  = TIM_OCNIDLESTATE_RESET;                     /* Channel idle state: Low level */
+  sConfig1.OCIdleState  = TIM_OCIDLESTATE_RESET;                      /* Channel idle state: Low level */
   sConfig1.OCNIdleState = TIM_OCNIDLESTATE_RESET;                     /* Complementary channel idle state: Low level */
   sConfig1.OCFastMode   = TIM_OCFAST_DISABLE;                         /* Disable fast mode */
   /* Configure channel 1 comparison value: 500*/
@@ -103,19 +101,6 @@ int main(void)
     APP_ErrorHandler();
   }
 
-  /* Brake and deadtime configuration */
-  sBreakConfig.BreakState       = TIM_BREAK_ENABLE;                      /* Enable brake */
-  sBreakConfig.DeadTime         = 1;                                     /* Deadtime */
-  sBreakConfig.OffStateRunMode  = TIM_OSSR_ENABLE;                       /* Off-state in run mode: Enable output */
-  sBreakConfig.OffStateIDLEMode = TIM_OSSI_ENABLE;                       /* Off-state in idle mode: Enable output */
-  sBreakConfig.LockLevel        = TIM_LOCKLEVEL_OFF;                     /* Disable lock */
-  sBreakConfig.BreakPolarity    = TIM_BREAKPOLARITY_HIGH;                /* Brake active polarity: High level */
-  sBreakConfig.AutomaticOutput  = TIM_AUTOMATICOUTPUT_ENABLE;            /* Enable automatic output */
-  /* Configure brake and deadtime */
-  if (HAL_TIMEx_ConfigBreakDeadTime(&TimHandle, &sBreakConfig) != HAL_OK)
-  {
-    APP_ErrorHandler();
-  }
   /* Configure commutation event: software-based */
   HAL_TIMEx_ConfigCommutEvent_IT(&TimHandle, TIM_TS_NONE, TIM_COMMUTATION_SOFTWARE);
   
@@ -311,7 +296,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                            /* Disable LSE */
   /* RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM; */                             /* Default LSE drive capability */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                        /* Disable PLL */
-  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; */                          /* PLL has no clock source */
+  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; */                           /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {

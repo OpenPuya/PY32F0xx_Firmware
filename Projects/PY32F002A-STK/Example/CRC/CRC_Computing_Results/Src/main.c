@@ -42,7 +42,7 @@
 /* CRC handler declaration */
 CRC_HandleTypeDef   CrcHandle;
 
-/* Used for storing CRC Value */
+/* 保存CRC结果 */
 __IO uint32_t uwCRCValue = 0;
 
 static const uint32_t aDataBuffer[BUFFER_SIZE] =
@@ -68,7 +68,7 @@ static const uint32_t aDataBuffer[BUFFER_SIZE] =
   0xdf7caf9b, 0xbfba8fd9, 0x9ff86e17, 0x7e364e55, 0x2e933eb2, 0x0ed11ef0
 };
 
-/* Expected CRC Value */
+/* 期望CRC计算得到的结果 */
 uint32_t uwExpectedCRCValue = 0x379E9F06;
 void Error_Handler(void);
 
@@ -85,7 +85,7 @@ int main(void)
   CrcHandle.Instance = CRC;
   if (HAL_CRC_Init(&CrcHandle) != HAL_OK)
   {
-    while (1);
+    Error_Handler();
   }
 
   uwCRCValue = HAL_CRC_Accumulate(&CrcHandle, (uint32_t *)aDataBuffer, BUFFER_SIZE);  /* 计算aDataBuffer的CRC */

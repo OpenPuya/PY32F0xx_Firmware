@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
+TIM_HandleTypeDef      TimHandle;
 TIM_ClockConfigTypeDef sClockSourceConfig;
 
 /* Private user code ---------------------------------------------------------*/
@@ -69,7 +69,7 @@ int main(void)
   }
 
   sClockSourceConfig.ClockFilter = 0;                                  /* No filter */
-  sClockSourceConfig.ClockPolarity = TIM_CLOCKPOLARITY_NONINVERTED;    /* ETR is not inverted, high level or rising edge is valid */
+  sClockSourceConfig.ClockPolarity = TIM_CLOCKPOLARITY_BOTHEDGE;       /* Clock trigger on both edges */
   sClockSourceConfig.ClockPrescaler = TIM_ETRPRESCALER_DIV1;           /* Prescaler is disabled */
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_TI1ED;              /* TI1 edge detector */
   HAL_TIM_ConfigClockSource(&TimHandle, &sClockSourceConfig);          /* Clock configuration */
@@ -117,7 +117,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                            /* Disable LSE */
   /* RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM; */                             /* Default LSE drive capability */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                        /* Disable PLL */
-  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; */                          /* PLL has no clock source */
+  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; */                           /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {

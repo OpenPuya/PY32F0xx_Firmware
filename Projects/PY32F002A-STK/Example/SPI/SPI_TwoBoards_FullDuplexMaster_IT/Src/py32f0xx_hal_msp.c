@@ -37,7 +37,6 @@
   */
 void HAL_MspInit(void)
 {
- BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
 
 /**
@@ -45,24 +44,15 @@ void HAL_MspInit(void)
   */
  void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
  {
-   GPIO_InitTypeDef  GPIO_InitStruct;
+   GPIO_InitTypeDef  GPIO_InitStruct = {0};
  
     __HAL_RCC_GPIOB_CLK_ENABLE();                   /* GPIOB时钟使能 */
     __HAL_RCC_GPIOA_CLK_ENABLE();                   /* GPIOA时钟使能 */
-    __HAL_RCC_SYSCFG_CLK_ENABLE();                  /* 使能SYSCFG时钟 */
     __HAL_RCC_SPI1_CLK_ENABLE();                    /* SPI1时钟使能 */
 
     /*SCK*/
     GPIO_InitStruct.Pin       = GPIO_PIN_3;
     GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull =      GPIO_PULLDOWN;
-    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    /*SPI NSS*/
-    GPIO_InitStruct.Pin = GPIO_PIN_4;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     if (hspi->Init.CLKPolarity == SPI_POLARITY_LOW)
     {
       GPIO_InitStruct.Pull = GPIO_PULLDOWN;
@@ -71,6 +61,14 @@ void HAL_MspInit(void)
     {
       GPIO_InitStruct.Pull = GPIO_PULLUP;
     }
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /*SPI NSS*/
+    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -79,8 +77,8 @@ void HAL_MspInit(void)
     /*GPIO配置为SPI：MISO/MOSI*/
     GPIO_InitStruct.Pin       = GPIO_PIN_6 | GPIO_PIN_7;
     GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.Pull      = GPIO_NOPULL;
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     /*中断配置*/
@@ -99,14 +97,11 @@ void HAL_MspInit(void)
 
     /*##-2- Disable peripherals and GPIO Clocks ################################*/
     /* Deconfigure SPI SCK */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4 | GPIO_PIN_3 | GPIO_PIN_6 | GPIO_PIN_7 );
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4 | GPIO_PIN_6 | GPIO_PIN_7 );
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3);
 
     HAL_NVIC_DisableIRQ(SPI1_IRQn);
-
-
   }
 }
- 
- 
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

@@ -40,6 +40,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* External variables --------------------------------------------------------*/
+extern COMP_HandleTypeDef hcomp1;
 
 /******************************************************************************/
 /*          Cortex-M0+ Processor Interruption and Exception Handlers          */
@@ -94,6 +95,6 @@ void SysTick_Handler(void)
   */
 void ADC_COMP_IRQHandler(void)
 {
-  HAL_COMP_IRQHandler(&COMPINIT);
+  HAL_COMP_IRQHandler(&hcomp1);
 }
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

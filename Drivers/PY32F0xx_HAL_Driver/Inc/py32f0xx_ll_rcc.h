@@ -409,7 +409,6 @@ typedef struct
 /** @defgroup RCC_LL_EC_PLLSOURCE  PLL entry clock source
   * @{
   */
-#define LL_RCC_PLLSOURCE_NONE              0x00000000U             /*!< No clock */
 #define LL_RCC_PLLSOURCE_HSI               RCC_PLLCFGR_PLLSRC_HSI  /*!< HSI clock selected as PLL entry clock source */
 #define LL_RCC_PLLSOURCE_HSE               RCC_PLLCFGR_PLLSRC_HSE  /*!< HSE clock selected as PLL entry clock source */
 /**
@@ -446,7 +445,7 @@ typedef struct
 #define LL_RCC_HSE_STOP                   0x00000000U
 #define LL_RCC_HSE_4_8MHz                 RCC_ECSCR_HSE_FREQ_0
 #define LL_RCC_HSE_8_16MHz                RCC_ECSCR_HSE_FREQ_1
-#if defined(PY32F002PRE)
+#if defined(PY32F002APRE)
 #define LL_RCC_HSE_16_24MHz               (RCC_ECSCR_HSE_FREQ_0 | RCC_ECSCR_HSE_FREQ_1)
 #else
 #define LL_RCC_HSE_16_32MHz               (RCC_ECSCR_HSE_FREQ_0 | RCC_ECSCR_HSE_FREQ_1)
@@ -458,7 +457,7 @@ typedef struct
 /** @defgroup RCC_HSI_EC_Calibration HSI Calibration
 * @{
 */
-#if defined(PY32F002PRE)
+#if defined(PY32F002APRE)
 #define LL_RCC_HSICALIBRATION_8MHz        ((0x1<<13) | ((*(uint32_t *)(0x1FFF0F04)) & 0x1FFF))  /*!< 8MHz HSI calibration trimming value */
 #define LL_RCC_HSICALIBRATION_24MHz       ((0x4<<13) | ((*(uint32_t *)(0x1FFF0F10)) & 0x1FFF))  /*!< 24MHz HSI calibration trimming value */
 #else
@@ -905,30 +904,13 @@ __STATIC_INLINE uint32_t LL_RCC_LSI_IsReady(void)
 /**
   * @}
   */
-#if defined(RCC_BDCR_LSCOEN)
+
 /** @defgroup RCC_LL_EF_LSCO LSCO
   * @{
   */
+#define LL_RCC_LSCO_Enable()
+#define LL_RCC_LSCO_Disable()
 
-/**
-  * @brief  Enable Low speed clock
-  * @rmtoll BDCR         LSCOEN        LL_RCC_LSCO_Enable
-  * @retval None
-  */
-__STATIC_INLINE void LL_RCC_LSCO_Enable(void)
-{
-  SET_BIT(RCC->BDCR, RCC_BDCR_LSCOEN);
-}
-
-/**
-  * @brief  Disable Low speed clock
-  * @rmtoll BDCR         LSCOEN        LL_RCC_LSCO_Disable
-  * @retval None
-  */
-__STATIC_INLINE void LL_RCC_LSCO_Disable(void)
-{
-  CLEAR_BIT(RCC->BDCR, RCC_BDCR_LSCOEN);
-}
 #if defined(RCC_BDCR_LSCOSEL)
 /**
   * @brief  Configure Low speed clock selection
@@ -958,7 +940,6 @@ __STATIC_INLINE uint32_t LL_RCC_LSCO_GetSource(void)
 /**
   * @}
   */
-#endif
 
 /** @defgroup RCC_LL_EF_System System
   * @{
@@ -1449,7 +1430,6 @@ __STATIC_INLINE void LL_RCC_PLL_SetMainSource(uint32_t PLLSource)
   * @brief  Get the oscillator used as PLL clock source.
   * @rmtoll PLLCFGR      PLLSRC        LL_RCC_PLL_GetMainSource
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_RCC_PLLSOURCE_NONE
   *         @arg @ref LL_RCC_PLLSOURCE_HSI
   *         @arg @ref LL_RCC_PLLSOURCE_HSE
   */

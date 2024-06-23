@@ -34,8 +34,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define DEF_IOMUX2
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -57,8 +55,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  __HAL_RCC_SYSCFG_CLK_ENABLE();                              /* SYSCFG时钟使能 */
-  __HAL_RCC_DMA_CLK_ENABLE();                                 /* DMA时钟使能 */
   __HAL_RCC_I2C_CLK_ENABLE();                                 /* I2C时钟使能 */
   __HAL_RCC_GPIOA_CLK_ENABLE();                               /* GPIOA时钟使能 */
 

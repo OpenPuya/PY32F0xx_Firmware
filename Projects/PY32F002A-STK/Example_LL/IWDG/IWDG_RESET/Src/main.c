@@ -114,9 +114,9 @@ static void IWDG_Config(void)
   /* 开启写权限 */
   LL_IWDG_EnableWriteAccess(IWDG);
   /* 设置IWDG分频 */
-  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32); /* T=1MS */
+  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32); 
   /* 设置喂狗事件*/
-  LL_IWDG_SetReloadCounter(IWDG, 1000); /* 1ms*1000=1s */
+  LL_IWDG_SetReloadCounter(IWDG, 1024); /* T*1024=1s */
   /* IWDG初始化*/
   while (LL_IWDG_IsReady(IWDG) == 0U) {;}
   /*喂狗*/

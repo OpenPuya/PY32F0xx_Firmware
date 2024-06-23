@@ -43,9 +43,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
-#define DMA_INSTANCE               DMA_Channel2
-#define DMA_INSTANCE_IRQ           DMA1_Channel2_3_IRQn
-#define DMA_INSTANCE_IRQHANDLER    DMA1_Channel1_IRQHandler
 #define BUFFER_SIZE                32
 
 /* Exported variables prototypes ---------------------------------------------*/

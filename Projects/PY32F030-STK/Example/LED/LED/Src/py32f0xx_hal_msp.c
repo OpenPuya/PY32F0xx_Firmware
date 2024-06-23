@@ -51,7 +51,7 @@ void HAL_MspInit(void)
   */
 void HAL_LED_MspInit(LED_HandleTypeDef *hled)
 {
-  GPIO_InitTypeDef GPIO_Initure;
+  GPIO_InitTypeDef GPIO_Initure = {0};
 
   /* Enable LED clock */
   __HAL_RCC_LED_CLK_ENABLE();

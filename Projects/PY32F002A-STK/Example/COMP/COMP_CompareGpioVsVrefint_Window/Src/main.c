@@ -99,6 +99,7 @@ static void APP_CompInit(void)
   hcomp1.Init.Hysteresis      = COMP_HYSTERESIS_DISABLE;                /* 迟滞功能关闭 */
   hcomp1.Init.WindowMode      = COMP_WINDOWMODE_COMP1_INPUT_PLUS_COMMON;/* COMP1窗口模式 */
   hcomp1.Init.TriggerMode     = COMP_TRIGGERMODE_IT_RISING_FALLING;     /* COMP1上升/下降沿中断 */
+  hcomp1.Init.DigitalFilter   = 0;
   /* COMP1初始化 */
   if(HAL_COMP_Init(&hcomp1) != HAL_OK)                                  
   {
@@ -115,6 +116,7 @@ static void APP_CompInit(void)
   hcomp2.Init.Hysteresis      = COMP_HYSTERESIS_DISABLE;                /* 迟滞功能关闭 */
   hcomp2.Init.WindowMode      = COMP_WINDOWMODE_COMP1_INPUT_PLUS_COMMON;/* COMP2窗口模式 */
   hcomp2.Init.TriggerMode     = COMP_TRIGGERMODE_IT_RISING_FALLING;     /* COMP2上升/下降沿中断 */
+  hcomp2.Init.DigitalFilter   = 0;
   /* COMP2初始化 */
   if(HAL_COMP_Init(&hcomp2) != HAL_OK)                                  
   {
@@ -174,7 +176,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI 1分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* 配置HSI时钟8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* 关闭LSI */
 
   /* 配置振荡器 */

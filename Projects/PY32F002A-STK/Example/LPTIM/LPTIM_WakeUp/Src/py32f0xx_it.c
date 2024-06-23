@@ -98,15 +98,8 @@ void SysTick_Handler(void)
 /******************************************************************************/
 void LPTIM1_IRQHandler(void)
 {
-  HAL_LPTIM_IRQHandler(&LPTIMCONF);
+  HAL_LPTIM_IRQHandler(&LPTIMConf);
 }
-/**
-  * @brief  This function handles PPP interrupt request.
-  * @param  None
-  * @retval None
-  */
-/*void PPP_IRQHandler(void)
-{
-}*/
+
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

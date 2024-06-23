@@ -27,12 +27,12 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载并运行程序；
-2. 用示波器监测PA08/PA09/PA10/PA11引脚，可观察到与程序中配置相匹配的PWM波形。
+2. 用示波器监测PA08/PA09/PA10/PA11引脚，可观察到与程序中配置相匹配的翻转波形。
 
 Example execution steps:
 1.Compile, download, and run the program.
 2.Use an oscilloscope to monitor the PA08, PA09, PA10, and PA11 pins. You 
-will observe PWM waveforms matching the configuration in the program.
+will observe OC waveforms matching the configuration in the program.
 ================================================================================
 注意事项：
 时钟主频为32M

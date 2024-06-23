@@ -65,7 +65,7 @@ int main(void)
   }
 
   sClockSourceConfig.ClockFilter = 0;                                  /* 无滤波 */
-  sClockSourceConfig.ClockPolarity = 0;                                /* ETR不进行反向，高电平或者上升沿有效 */
+  sClockSourceConfig.ClockPolarity = TIM_ETRPOLARITY_NONINVERTED;      /* ETR不进行反向，高电平或者上升沿有效 */
   sClockSourceConfig.ClockPrescaler = TIM_ETRPRESCALER_DIV1;           /* 预分频器关闭 */
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_ETRMODE1;           /* 外部触发输入(ETRF) */
   HAL_TIM_ConfigClockSource(&TimHandle, &sClockSourceConfig);          /* 时钟配置 */

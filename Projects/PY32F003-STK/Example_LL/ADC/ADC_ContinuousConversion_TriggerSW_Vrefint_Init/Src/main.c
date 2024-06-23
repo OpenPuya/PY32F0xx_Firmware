@@ -174,13 +174,12 @@ void APP_AdcCalibrate(void)
 static void APP_AdcConfig(void)
 {
   __IO uint32_t wait_loop_index = 0;
-  LL_ADC_InitTypeDef ADC_Init;
-  LL_ADC_REG_InitTypeDef LL_ADC_REG_InitType;
-  ADC_Common_TypeDef ADC_Common_Type;
+  LL_ADC_InitTypeDef ADC_Init = {0};
+  LL_ADC_REG_InitTypeDef LL_ADC_REG_InitType = {0};
 
   /*ADC通道和时钟源需在ADEN=0时配置，其余的需在ADSTART=0时配置*/
   /*ADC部分功能初始化*/
-  ADC_Init.Clock=LL_ADC_CLOCK_SYNC_PCLK_DIV64;
+  ADC_Init.Clock=LL_ADC_CLOCK_SYNC_PCLK_DIV4;
   ADC_Init.DataAlignment=LL_ADC_DATA_ALIGN_RIGHT;
   ADC_Init.LowPowerMode=LL_ADC_LP_MODE_NONE;
   ADC_Init.Resolution=LL_ADC_RESOLUTION_12B;
@@ -195,6 +194,9 @@ static void APP_AdcConfig(void)
   LL_ADC_REG_InitType.SequencerDiscont=LL_ADC_REG_SEQ_DISCONT_DISABLE;
   LL_ADC_REG_InitType.TriggerSource=LL_ADC_REG_TRIG_SOFTWARE;
   LL_ADC_REG_Init(ADC1,&LL_ADC_REG_InitType);
+
+  LL_ADC_REG_SetSequencerScanDirection(ADC1,LL_ADC_REG_SEQ_SCAN_DIR_BACKWARD);
+
   /* ADC共用参数设置 */
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1),LL_ADC_PATH_INTERNAL_VREFINT);
   /* Vrefint 等待稳定时间 */

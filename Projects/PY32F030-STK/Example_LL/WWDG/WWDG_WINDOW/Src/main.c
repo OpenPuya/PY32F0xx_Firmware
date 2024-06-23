@@ -51,7 +51,7 @@ static uint32_t APP_TimeoutCalculation(uint32_t timevalue);
   */
 int main(void)
 {
-  uint32_t delay;
+  uint32_t delay = 0;
 
   /* Enable PWR clock */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
@@ -171,7 +171,7 @@ static void APP_WwdgConfig(void)
 static uint32_t APP_TimeoutCalculation(uint32_t timevalue)
 {
   uint32_t timeoutvalue = 0;
-  LL_RCC_ClocksTypeDef RCC_Clocks;
+  LL_RCC_ClocksTypeDef RCC_Clocks = {0};
   uint32_t pclk1 = 0;
   uint32_t wdgtb = 0;
 

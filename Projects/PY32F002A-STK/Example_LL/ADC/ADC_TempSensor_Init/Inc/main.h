@@ -45,7 +45,6 @@ extern "C" {
 #include "py32f0xx_ll_cortex.h"
 #include "py32f0xx_ll_utils.h"
 #include "py32f0xx_ll_pwr.h"
-#include "py32f0xx_ll_dma.h"
 #include "py32f0xx_ll_gpio.h"
 #include "py32f0xx_ll_adc.h"
 

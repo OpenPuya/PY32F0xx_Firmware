@@ -36,9 +36,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static DMA_HandleTypeDef HdmaCh1;
-static DMA_HandleTypeDef HdmaCh2;
-
 /* Private function prototypes -----------------------------------------------*/
 /* External functions --------------------------------------------------------*/
 
@@ -54,7 +51,7 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   __HAL_RCC_TIM1_CLK_ENABLE();                         /* 使能TIM1时钟 */
   __HAL_RCC_GPIOA_CLK_ENABLE();                        /* GPIOA时钟使能 */
   /* 设置PA12为TIM1_ETR */
@@ -65,7 +62,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  HAL_NVIC_SetPriority(TIM1_BRK_UP_TRG_COM_IRQn, 0, 0);  /* 设置TIM中断优先级 */
   HAL_NVIC_EnableIRQ(TIM1_BRK_UP_TRG_COM_IRQn);
+
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

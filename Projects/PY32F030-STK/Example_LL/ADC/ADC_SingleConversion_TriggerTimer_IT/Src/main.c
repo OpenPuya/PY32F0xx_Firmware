@@ -111,7 +111,7 @@ static void APP_AdcConfig(void)
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
 
   /* Set ADC clock */
-  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
+  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV4);
 
   /* Set 12-bit resolution */
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
@@ -123,7 +123,7 @@ static void APP_AdcConfig(void)
   LL_ADC_SetLowPowerMode(ADC1, LL_ADC_LP_MODE_NONE);
 
   /* Set channel conversion time */
-  LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_41CYCLES_5);
+  LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_239CYCLES_5);
 
   /* Set the trigger source as TIM1 TRGO */
   LL_ADC_REG_SetTriggerSource(ADC1, LL_ADC_REG_TRIG_EXT_TIM1_TRGO);
@@ -145,7 +145,6 @@ static void APP_AdcConfig(void)
 
   /* Set channel 4 as conversion channel */
   LL_ADC_REG_SetSequencerChannels(ADC1, LL_ADC_CHANNEL_4);
-
 
   /* Enable EOC interrupt */
   LL_ADC_EnableIT_EOC(ADC1);

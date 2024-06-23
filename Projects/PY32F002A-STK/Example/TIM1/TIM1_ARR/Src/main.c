@@ -34,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 TIM_HandleTypeDef    TimHandle;
-uint32_t temp;
+uint32_t temp=0;
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
@@ -97,7 +97,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 /**
-  * @brief  系统时钟配置函数,使能HSI时钟，配置LPTIM时钟
+  * @brief  系统时钟配置函数,使能HSI时钟
   * @param  无
   * @retval 无
   */
@@ -117,10 +117,7 @@ void APP_SystemClockConfig(void)
   {
     Error_Handler();
   }
-  
-  __HAL_RCC_LPTIM_CLK_ENABLE();                                      /* 使能LPTIM时钟 */
-  
-  
+
   /* 时钟源配置 */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* 选择配置时钟 HCLK,SYSCLK,PCLK1 */
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;            /* 选择HSI作为系统时钟 */

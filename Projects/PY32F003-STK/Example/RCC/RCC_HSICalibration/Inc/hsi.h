@@ -37,11 +37,9 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void HSI_MeasurementInit(uint32_t HSICLKSource_set);
+void      HSI_MeasurementInit(void);
 uint32_t  HSI_FreqMeasure(void);
-
-
-uint32_t Hsi_Trimming(void);
+void      HSI_Trimming(void);
 
 #endif /* __HSI_MEASUREMENT_H */
 

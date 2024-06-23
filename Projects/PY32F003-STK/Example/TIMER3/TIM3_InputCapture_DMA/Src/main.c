@@ -68,7 +68,7 @@ int main(void)
   /* 通道1捕获配置情况 */
   sICConfig.ICPolarity  = TIM_ICPOLARITY_RISING;                                 /* 上升沿捕获 */
   sICConfig.ICSelection = TIM_ICSELECTION_DIRECTTI;                              /* CC1通道配置为输入 */
-  sICConfig.ICPrescaler = TIM_ICPSC_DIV1;                                        /* 输入不分配 */
+  sICConfig.ICPrescaler = TIM_ICPSC_DIV1;                                        /* 输入不分频 */
   sICConfig.ICFilter    = 0;                                                     /* 输入无滤波 */
   if (HAL_TIM_IC_ConfigChannel(&TimHandle, &sICConfig, TIM_CHANNEL_1) != HAL_OK) /* 通道1输入捕获配置 */
   {

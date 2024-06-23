@@ -50,7 +50,7 @@ static uint32_t APP_TimeoutCalculation(uint32_t timevalue);
   */
 int main(void)
 {
-  uint32_t delay;
+  uint32_t delay = 0;
 
   /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();  

@@ -33,22 +33,17 @@
 #include "hsi.h"
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef    TimHandle;
+uint32_t             StartCalibration = 0;
+uint32_t __IO        Capture = 0;
+uint32_t __IO        CaptureState = 0;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
-TIM_IC_InitTypeDef     sICConfig;
-
 /* Private function prototypes -----------------------------------------------*/
-void APP_ErrorHandler(void);
-void HSI_CALIBRATION(uint32_t HSICLKSource_SET);
+static void APP_HSI_Calibration(void);
+static void APP_SystemClockConfig(uint32_t HSICLKSource_set);
 
-uint32_t  StartCalibration = 0;
-
-uint32_t  __IO Capture = 0;
-uint32_t  __IO CaptureState = 0;
-
-/* HSI Optimal VALUE */
-extern uint32_t HSI_Calibration_value ;
 /**
   * @brief  Main program.
   * @retval int
@@ -74,33 +69,35 @@ int main(void)
   /* Turn on the LED */
   BSP_LED_On(LED_GREEN);
   
+  /* The system clock is configured as HSI 24MHz. */
+  APP_SystemClockConfig(RCC_HSICALIBRATION_24MHz);
+  
   /* Calibrate the HSI */
-  HSI_CALIBRATION(RCC_HSICALIBRATION_24MHz);
+  APP_HSI_Calibration();
   
   while (1)
   {
     HAL_Delay(100);
     /* Toggle LED */
     BSP_LED_Toggle(LED_GREEN);
-  };
+  }
 }
 
 /**
   * @brief   TIM capture interrupt execution function
-  * @param   HSICLKSource_SET: HSI clock source setting
+  * @param   None
   * @retval  None
   */
-void HSI_CALIBRATION(uint32_t HSICLKSource_SET)
+static void APP_HSI_Calibration(void)
 {
   /* Enable Calibration */
   StartCalibration = 1;
 
-  /* Get frequency values before calibration */
-  HSI_MeasurementInit(HSICLKSource_SET);
+  /* Initialize the GPIO and TIMx before calibration */
+  HSI_MeasurementInit();
 
-  HSI_Calibration_value = Hsi_Trimming();         /* 13 bits calibration value */
-
-  MODIFY_REG(RCC->ICSCR, RCC_ICSCR_HSI_TRIM, HSI_Calibration_value);
+  /* Calculate the optimal calibration value of the HSI by dichotomisation and calibrate the HSI */
+  HSI_Trimming();
 }
 
 /**
@@ -157,13 +154,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /**
   * @brief   Configure system clock
   * @param   HSICLKSource_SET：HSI clock frequency selection
+  *            @arg @ref RCC_HSICALIBRATION_4MHz：4Mclock
   *            @arg @ref RCC_HSICALIBRATION_8MHz：8Mclock
   *            @arg @ref RCC_HSICALIBRATION_16MHz：16Mclock
   *            @arg @ref RCC_HSICALIBRATION_22p12MHz：22.12Mclock
   *            @arg @ref RCC_HSICALIBRATION_24MHz：24Mclock
   * @retval  None
   */
-void SystemClock_Config(uint32_t HSICLKSource_SET)
+static void APP_SystemClockConfig(uint32_t HSICLKSource_SET)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -171,9 +169,10 @@ void SystemClock_Config(uint32_t HSICLKSource_SET)
   /* Configure HSI clock */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* Enable HSI */
-  RCC_OscInitStruct.HSIDiv =    RCC_HSI_DIV1;                                   /* HSI prescaler */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                      /* HSI prescaler */
   RCC_OscInitStruct.HSICalibrationValue = HSICLKSource_SET;                     /* Set HSI output clock calibration value */
-
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                 /* Disable PLL */
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/                      /* Select HSI as PLL source */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* Configure clock */
   {
     APP_ErrorHandler();
@@ -185,7 +184,7 @@ void SystemClock_Config(uint32_t HSICLKSource_SET)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                             /* Set AHB prescaler */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                              /* Set APB1 prescaler */
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)        /* Configure bus clocks */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)        /* Configure bus clocks */
   {
     APP_ErrorHandler();
   }
@@ -196,19 +195,19 @@ void SystemClock_Config(uint32_t HSICLKSource_SET)
   * @param   None
   * @retval  None
   */
-void GPIO_ConfigForCalibration(void)
+void APP_GPIO_ConfigForCalibration(void)
 {
-  GPIO_InitTypeDef gpio_init;
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIOA clock enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  gpio_init.Pin = GPIO_PIN_4;                       /* Configure PIN */
-  gpio_init.Mode = GPIO_MODE_AF_PP;                 /* Configure as alternate function */
-  gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;           /* Configure GPIO speed */
-  gpio_init.Pull  = GPIO_NOPULL;                    /* No Pull-up or Pull-down activation */
-  gpio_init.Alternate = GPIO_AF4_TIMx;              /* Select alternate function */
-  HAL_GPIO_Init(GPIOA, &gpio_init);                 /* Initialize GPIOA4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;                       /* Configure PIN */
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;                 /* Configure as alternate function */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;           /* Configure GPIO speed */
+  GPIO_InitStruct.Pull  = GPIO_NOPULL;                    /* No Pull-up or Pull-down activation */
+  GPIO_InitStruct.Alternate = GPIO_AF4_TIMx;              /* Select alternate function */
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);                 /* Initialize GPIOA4 */
 }
 
 /**

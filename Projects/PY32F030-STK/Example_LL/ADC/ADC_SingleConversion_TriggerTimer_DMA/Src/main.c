@@ -123,7 +123,7 @@ static void APP_AdcConfig(void)
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
 
   /* Set ADC clock */
-  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
+  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV4);
 
   /* Set 12-bit resolution */
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
@@ -135,7 +135,7 @@ static void APP_AdcConfig(void)
   LL_ADC_SetLowPowerMode(ADC1, LL_ADC_LP_MODE_NONE);
 
   /* Set channel conversion time */
-  LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_41CYCLES_5);
+  LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_239CYCLES_5);
 
   /* Set the trigger source as TIM1 TRGO */
   LL_ADC_REG_SetTriggerSource(ADC1, LL_ADC_REG_TRIG_EXT_TIM1_TRGO);
@@ -257,7 +257,7 @@ static void APP_DmaConfig(void)
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
 
   /* ADC corresponds to channel LL_DMA_CHANNEL_1 */
-  SET_BIT(SYSCFG->CFGR3, 0x0);
+  LL_SYSCFG_SetDMARemap_CH1(LL_SYSCFG_DMA_MAP_ADC);
 
   /* Configure DMA data transfer direction as peripheral to memory */
   LL_DMA_SetDataTransferDirection(DMA1, LL_DMA_CHANNEL_1, LL_DMA_DIRECTION_PERIPH_TO_MEMORY);

@@ -61,6 +61,7 @@ int main(void)
   /* RTC initialization */
   RtcHandle.Instance = RTC;                         /* Select RTC */
   RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND;  /* RTC asynchronous prescaler calculated automatically for one second time base */
+  RtcHandle.Init.OutPut = RTC_OUTPUTSOURCE_NONE;    /* No output on the TAMPER pin */
   if (HAL_RTC_Init(&RtcHandle) != HAL_OK)
   {
   }
@@ -99,30 +100,36 @@ int main(void)
   */
 static void APP_SystemClockConfig(void)
 {
-  RCC_ClkInitTypeDef clkinitstruct = {0};
-  RCC_OscInitTypeDef oscinitstruct = {0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* RCC Oscillator initialization */
-  oscinitstruct.OscillatorType  = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
-  oscinitstruct.HSIState        = RCC_HSI_ON;                                               /* Enable HSI */
-  oscinitstruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                              /* Configure HSI output clock as 8MHz */
-  oscinitstruct.HSEState        = RCC_HSE_OFF;                                              /* Disable HSE */
-  oscinitstruct.LSEState        = RCC_LSE_OFF;                                              /* Disable LSI */
-  oscinitstruct.LSIState        = RCC_LSI_ON;                                               /* Disable LSE */
-  oscinitstruct.PLL.PLLState    = RCC_PLL_NONE;                                             /* Keep PLL configuration unchanged */
-  if (HAL_RCC_OscConfig(&oscinitstruct) != HAL_OK)
+  /* Oscillator configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE; /* Select oscillators HSE, HSI, LSI, LSE */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* Enable HSI */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* Configure HSI clock as 8MHz */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
+  /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* Disable PLL */
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/          /* Select HSI as PLL source */
+  /* Configure oscillators */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    while (1);
+    APP_ErrorHandler();
   }
 
-  /*  Initialize CPU, AHB, APB bus clocks */
-  clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1); /* RCC system clock types */
-  clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                           /* SYSCLK source selection as HSI */
-  clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                               /* AHB clock not divided */
-  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;                                                /* APB clock not divided */
-  if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_1) != HAL_OK)
+  /* Clock source configuration */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* Select clock types HCLK, SYSCLK, PCLK1 */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* Select HSI as system clock */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB  clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB  clock not divided */
+  /* Configure clock source */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
-    while (1);
+    APP_ErrorHandler();
   }
 }
 

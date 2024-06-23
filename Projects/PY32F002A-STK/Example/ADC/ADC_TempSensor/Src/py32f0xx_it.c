@@ -98,7 +98,7 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles ADC interrupt request.
   * @param  None
   * @retval None
   */
@@ -107,8 +107,5 @@ void ADC_COMP_IRQHandler(void)
   HAL_ADC_IRQHandler(&AdcHandle);
 }
 
-/*void PPP_IRQHandler(void)
-{
-}*/
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

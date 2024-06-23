@@ -34,7 +34,7 @@
 /* Private define ------------------------------------------------------------*/
 #define DATA_LENGTH      15                 /* 数据长度 */
 #define I2C_ADDRESS      0xA0               /* 本机地址0xA0 */
-#define I2C_SPEEDCLOCK   80000             /* 通讯速度100K */
+#define I2C_SPEEDCLOCK   100000             /* 通讯速度100K */
 #define I2C_DUTYCYCLE    I2C_DUTYCYCLE_16_9 /* 占空比 */
 
 /* Private variables ---------------------------------------------------------*/

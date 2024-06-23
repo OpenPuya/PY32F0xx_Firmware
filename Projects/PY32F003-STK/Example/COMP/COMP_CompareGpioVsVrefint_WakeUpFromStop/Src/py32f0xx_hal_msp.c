@@ -52,23 +52,23 @@ void HAL_MspInit(void)
   */
 void HAL_COMP_MspInit(COMP_HandleTypeDef *hcomp)
 {
-  /* GPIO PA01配置 */
-  GPIO_InitTypeDef COMPINPUT;
+  GPIO_InitTypeDef GPIO_InitStruct={0};
 
-  COMPINPUT.Pin = GPIO_PIN_1;
-  COMPINPUT.Mode = GPIO_MODE_ANALOG;     /* 模拟模式 */
-  COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;        /* 下拉 */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);     /* GPIOA初始化 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 
-  COMPINPUT.Pin = GPIO_PIN_6;
-  COMPINPUT.Mode = GPIO_MODE_AF_PP;      /* 复用推挽输出 */
-  COMPINPUT.Speed = GPIO_SPEED_FREQ_HIGH;
-  COMPINPUT.Pull = GPIO_PULLDOWN;        /* 下拉 */
-  COMPINPUT.Alternate = GPIO_AF7_COMP1;  /* 复用COMP1输出功能 */
+  HAL_GPIO_Init(GPIOA,  &GPIO_InitStruct);
 
-  HAL_GPIO_Init(GPIOA,  &COMPINPUT);     /* GPIOA初始化 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Alternate = GPIO_AF7_COMP1;
+
+  HAL_GPIO_Init(GPIOA,  &GPIO_InitStruct);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

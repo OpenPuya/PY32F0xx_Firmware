@@ -32,7 +32,7 @@
 #include "py32f030xx_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
-#define FLASH_USER_START_ADDR     0x0800F000
+#define FLASH_USER_START_ADDR     0x08004000
 
 /* Private variables ---------------------------------------------------------*/
 const uint32_t DATA[64] =
@@ -117,15 +117,15 @@ static void APP_SystemClockConfig(void)
   /* Configure HSI, HSE, LSI, LSE, PLL clocks */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* Enable HSI */
-  RCC_OscInitStruct.HSIDiv =    RCC_HSI_DIV1;                                   /* HSI prescaler */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                   /* HSI prescaler */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;             /* Set HSI output clock as 24MHz, the library will set the calibration value */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                     /* Disable HSE */
-  RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* Set HSE frequency range, not used, can be left unconfigured */
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                     /* Disable LSI */
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                     /* Disable LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_LOW;                               /* Set the drive capability of LSE, adjust according to crystal specifications */
+  /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                 /* Disable PLL */
-  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; */                   /* No clock source for PLL */
+  /* RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; */                    /* Select HSI as PLL source */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* Configure clocks */
   {
@@ -152,7 +152,7 @@ static void APP_SystemClockConfig(void)
 static void APP_FlashErase(void)
 {
   uint32_t PAGEError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
 
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGEERASE;        /* Erase type: FLASH_TYPEERASE_PAGEERASE = Page erase, FLASH_TYPEERASE_SECTORERASE = Sector erase */
   EraseInitStruct.PageAddress = FLASH_USER_START_ADDR;            /* Starting address for erase */

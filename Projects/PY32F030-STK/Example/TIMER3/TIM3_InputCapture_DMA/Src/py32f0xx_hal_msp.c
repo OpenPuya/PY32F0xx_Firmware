@@ -46,7 +46,7 @@ static DMA_HandleTypeDef  hdma_tim;
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   /* Enable GPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   /* Enable DMA clock */

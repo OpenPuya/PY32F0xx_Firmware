@@ -3,11 +3,11 @@
                              Sample Description
 ================================================================================
 功能描述：
-此样例演示了时钟输出功能，可输出LSI波形。
+此样例演示了将系统时钟设置为LSI，并通过MCO引脚输出系统时钟。
 
 Function descriptions:
-This sample demonstrates the clock output feature, which allows you to output 
-the LSI waveform (32.768kHz) through the MCO (PA08) pin.
+This example demonstrates setting the system clock to LSI and outputting the
+system clock through the MCO pin.
 ================================================================================
 测试环境：
 测试用板：PY32F030_STK
@@ -23,14 +23,12 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载程序到MCU，并运行；
-2. 进入仿真模式；
-3. 运行，可由示波器观察到PA08输出LSI波形(32.768KHz)。
+2. 可由示波器观察到PA08输出LSI波形(32.768KHz)。
 
 Example execution steps:
 1.Compile and download the program to the MCU and run it.
-2.Enter the simulation mode.
-3.Run the program and use an oscilloscope to observe the LSI waveform 
-(32.768kHz) on the PA08 pin.
+2.The waveform of PA08 output LSI (32.768KHz) can be observed through 
+an oscilloscope.
 ================================================================================
 注意事项：
 

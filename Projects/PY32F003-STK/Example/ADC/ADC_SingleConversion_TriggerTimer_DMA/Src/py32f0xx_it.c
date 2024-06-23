@@ -90,19 +90,5 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file.                                          */
 /******************************************************************************/
-/**
-  * @brief This function handles DMA1_Channel1 Interrupt .
-  */
-void DMA1_Channel1_IRQHandler(void)
-{
-  HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
-}
-/**
-  * @brief This function handles ADC_COMP Interrupt .
-  */
-void ADC_COMP_IRQHandler(void)
-{
-  HAL_ADC_IRQHandler(&AdcHandle);
-}
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

@@ -95,7 +95,7 @@ typedef struct
 /** @defgroup RCCEx_Exported_Constants RCCEx Exported Constants
   * @{
   */
-#if defined(RCC_BDCR_LSCOSEL)
+
 /** @defgroup RCCEx_LSCO_Clock_Source Low Speed Clock Source
   * @{
   */
@@ -106,7 +106,7 @@ typedef struct
 /**
   * @}
   */
-#endif
+
 /** @defgroup RCCEx_Periph_Clock_Selection Periph Clock Selection
   * @{
   */
@@ -350,10 +350,8 @@ uint32_t          HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk);
 /** @addtogroup RCCEx_Exported_Functions_Group2
   * @{
   */
-#if defined(RCC_BDCR_LSCOEN)
 void              HAL_RCCEx_EnableLSCO(uint32_t LSCOSource);
-void              HAL_RCCEx_DisableLSCO(void);
-#endif
+#define           HAL_RCCEx_DisableLSCO()
 /**
   * @}
   */
@@ -367,13 +365,11 @@ void              HAL_RCCEx_DisableLSCO(void);
 /** @defgroup RCCEx_Private_Macros RCCEx Private Macros
   * @{
   */
-#if defined(RCC_BDCR_LSCOSEL)
 #if defined(RCC_LSE_SUPPORT)
 #define IS_RCC_LSCOSOURCE(__SOURCE__) (((__SOURCE__) == RCC_LSCOSOURCE_LSI) || \
                                        ((__SOURCE__) == RCC_LSCOSOURCE_LSE))
 #else
 #define IS_RCC_LSCOSOURCE(__SOURCE__) (((__SOURCE__) == RCC_LSCOSOURCE_LSI))
-#endif
 #endif
 
 #if defined(RCC_LSE_SUPPORT)

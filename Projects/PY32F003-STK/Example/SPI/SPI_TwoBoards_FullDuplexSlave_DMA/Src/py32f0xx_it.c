@@ -114,12 +114,4 @@ void SPI1_IRQHandler(void)
   HAL_SPI_IRQHandler(&Spi1Handle);
 }
 
-/**
-  * @brief This function handles SPI2 Interrupt .
-  */
-void SPI2_IRQHandler(void)
-{
-  HAL_SPI_IRQHandler(&Spi1Handle);
-}
-
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

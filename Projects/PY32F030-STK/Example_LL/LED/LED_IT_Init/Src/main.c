@@ -168,7 +168,7 @@ static void APP_ConfigLed(void)
   LL_LED_EnableIT(LED);
 
   /* Configure LED */
-  LL_LED_InitTypeDef LED_InitStruct;
+  LL_LED_InitTypeDef LED_InitStruct = {0};
   LED_InitStruct.ComDrive = LL_LED_COMDRIVE_LOW;
   LED_InitStruct.Prescaler = 9;
   LED_InitStruct.ComSelect = LL_LED_COMSELECT_4COM;

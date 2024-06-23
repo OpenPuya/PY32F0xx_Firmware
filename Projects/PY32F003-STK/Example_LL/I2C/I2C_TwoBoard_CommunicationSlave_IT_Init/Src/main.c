@@ -167,7 +167,7 @@ static void APP_ConfigI2cSlave(void)
   NVIC_EnableIRQ(I2C1_IRQn);
   
   /* I2C初始化 */
-  LL_I2C_InitTypeDef I2C_InitStruct;
+  LL_I2C_InitTypeDef I2C_InitStruct = {0};
   I2C_InitStruct.ClockSpeed      = I2C_SPEEDCLOCK;
   I2C_InitStruct.DutyCycle       = LL_I2C_DUTYCYCLE_16_9;
   I2C_InitStruct.OwnAddress1     = I2C_ADDRESS;

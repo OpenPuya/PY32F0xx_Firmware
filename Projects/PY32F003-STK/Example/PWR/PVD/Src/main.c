@@ -69,8 +69,9 @@ int main(void)
 static void APP_PvdConfig(void)
 {
   /* PWR时钟和GPIOB时钟使能 */
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  PWR_PVDTypeDef sConfigPVD;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
+  PWR_PVDTypeDef    sConfigPVD      = {0};
+
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   
@@ -82,11 +83,13 @@ static void APP_PvdConfig(void)
   
   sConfigPVD.Mode=PWR_PVD_MODE_IT_RISING_FALLING;       /* PVD配置为上升/下降沿中断方式 */
   sConfigPVD.PVDFilter=PWR_PVD_FILTER_NONE;             /* 滤波功能禁止 */
-  sConfigPVD.PVDLevel=PWR_PVDLEVEL_0;                   /* PB07作为检测源，此参数设置无效 */
+  sConfigPVD.PVDLevel=PWR_PVDLEVEL_0;                  
   sConfigPVD.PVDSource=PWR_PVD_SOURCE_PB07;             /* PVD检测为PB07 */
   /* PVD初始化 */
-  HAL_PWR_ConfigPVD(&sConfigPVD);                       
+  HAL_PWR_ConfigPVD(&sConfigPVD);  
+
   HAL_NVIC_EnableIRQ(PVD_IRQn);
+  HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);     /* 配置中断优先级 */
 }
 
 /**

@@ -51,7 +51,7 @@ static uint32_t APP_TimeoutCalculation(uint32_t timevalue);
   */
 int main(void)
 {
-  uint32_t delay;
+  uint32_t delay = 0;
   
   /* PWR时钟使能 */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
@@ -71,8 +71,8 @@ int main(void)
     /* 等待4s */
     LL_mDelay(4000);
 
-    /* LED 亮 */
-    BSP_LED_On(LED_GREEN);
+    /* LED 灭 */
+    BSP_LED_Off(LED_GREEN);
 
     /* 等待500ms */
     LL_mDelay(500);
@@ -165,7 +165,7 @@ void APP_WwdgConfig(void)
 static uint32_t APP_TimeoutCalculation(uint32_t timevalue)
 {
   uint32_t timeoutvalue = 0;
-  LL_RCC_ClocksTypeDef RCC_Clocks;
+  LL_RCC_ClocksTypeDef RCC_Clocks = {0};
   uint32_t pclk1 = 0;
   uint32_t wdgtb = 0;
 

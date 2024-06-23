@@ -73,9 +73,9 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* 开启HSI */
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* 不分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz;                            /* 配置HSI输出时钟为4MHz */
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;                                                    /* 开启HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                               /* HSE工作频率范围16M~32M */
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                                                    /* 开启LSI */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                   /* 关闭HSE */
+  /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                         /* HSE工作频率范围16M~32M */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                   /* 关闭LSI */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                        /* 初始化RCC振荡器 */
   {

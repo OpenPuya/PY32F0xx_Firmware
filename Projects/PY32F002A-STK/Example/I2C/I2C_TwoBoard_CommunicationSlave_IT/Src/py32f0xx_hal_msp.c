@@ -37,7 +37,8 @@
   */
 void HAL_MspInit(void)
 {
- BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  __HAL_RCC_SYSCFG_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
 }
 
 /**

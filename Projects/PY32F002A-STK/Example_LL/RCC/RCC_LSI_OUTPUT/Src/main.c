@@ -70,7 +70,7 @@ static void APP_ConfigGPIO(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
   
   /* 配置PA01为复用模式，并复用为MCO输出引脚*/
-  LL_GPIO_InitTypeDef GPIO_InitStruct;  
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* 选择1号引脚*/
   GPIO_InitStruct.Pin = LL_GPIO_PIN_1; 
   /* 配置为复用模式*/
@@ -116,7 +116,7 @@ void APP_SystemClockConfig(void)
   /*设置APB1分频及初始化*/
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   /* Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(8000000);
+  LL_SetSystemCoreClock(32768);
 }
 
 /**

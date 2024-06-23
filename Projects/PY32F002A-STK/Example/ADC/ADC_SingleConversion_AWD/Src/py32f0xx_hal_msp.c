@@ -46,22 +46,17 @@ void HAL_MspInit(void)
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if (hadc->Instance == ADC1)
-  {
-    /* Peripheral clock enable */
-    
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**ADC GPIO Configuration
-    PA0     ------> ADC_IN0
-    PA1     ------> ADC_IN1
-    PA2     ------> ADC_IN2
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  }
+  /* Peripheral clock enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  /**ADC GPIO Configuration
+  PA0     ------> ADC_IN0
+  PA1     ------> ADC_IN1
+  */
+  GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

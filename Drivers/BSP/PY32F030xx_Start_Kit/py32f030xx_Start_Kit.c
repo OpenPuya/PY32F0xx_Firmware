@@ -243,6 +243,8 @@ void BSP_USART_Config(void)
   DebugUartHandle.Init.Parity       = UART_PARITY_NONE;
   DebugUartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
   DebugUartHandle.Init.Mode         = UART_MODE_TX_RX;
+  DebugUartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+  DebugUartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
 
   HAL_UART_Init(&DebugUartHandle);
 

@@ -83,12 +83,18 @@ static void APP_ConfigBDTR(void)
   TIM1BDTRInit.AutomaticOutput  = LL_TIM_AUTOMATICOUTPUT_ENABLE;                                  /* 使能自动输出 */
   TIM1BDTRInit.BreakPolarity    = LL_TIM_BREAK_POLARITY_HIGH;                                     /* 刹车极性高电平有效 */
   TIM1BDTRInit.BreakState       = LL_TIM_BREAK_ENABLE;                                            /* 使能刹车 */
-  TIM1BDTRInit.DeadTime         = __LL_TIM_CALC_DEADTIME(24000000,LL_TIM_CLOCKDIVISION_DIV1,200); /* 死区时间：200ns */
+  TIM1BDTRInit.LockLevel        = LL_TIM_LOCKLEVEL_OFF;
+  TIM1BDTRInit.OSSIState        = LL_TIM_OSSI_ENABLE;
+  TIM1BDTRInit.OSSRState        = LL_TIM_OSSR_ENABLE;
+  TIM1BDTRInit.DeadTime         = __LL_TIM_CALC_DEADTIME(8000000,LL_TIM_CLOCKDIVISION_DIV1,250); /* 死区时间：250ns */
   
   /* 配置PA6为刹车引脚 */
   TIM1BreakMapInit.Pin        = LL_GPIO_PIN_6;
   TIM1BreakMapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1BreakMapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1BreakMapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1BreakMapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1BreakMapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1BreakMapInit);
   
   /* 初始化死区和刹车配置 */
@@ -109,12 +115,18 @@ static void APP_ConfigPWMChannel(void)
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_3;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_13; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* 配置PA7为TIM1_CH1N */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_7;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* 配置PWM通道 */
@@ -144,7 +156,7 @@ static void APP_ConfigTIM1Base(void)
  
   TIM1CountInit.ClockDivision       = LL_TIM_CLOCKDIVISION_DIV1;  /* 时钟不分频 */
   TIM1CountInit.CounterMode         = LL_TIM_COUNTERMODE_UP;      /* 向上计数 */
-  TIM1CountInit.Prescaler           = 2400-1;                     /* 预分频值：2400 */
+  TIM1CountInit.Prescaler           = 800-1;                      /* 预分频值：800 */
   TIM1CountInit.Autoreload          = 1000-1;                     /* 自动重装载值：1000 */
   TIM1CountInit.RepetitionCounter   = 0;                          /* 重复计数值：0 */
   
@@ -167,7 +179,7 @@ static void APP_SystemClockConfig(void)
 {
   /* 使能HSI */
   LL_RCC_HSI_Enable();
-  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
+  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_8MHz);
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
@@ -183,10 +195,10 @@ static void APP_SystemClockConfig(void)
 
   /* 设置 APB1 分频 */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(24000000);
+  LL_Init1msTick(8000000);
   
   /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
-  LL_SetSystemCoreClock(24000000);
+  LL_SetSystemCoreClock(8000000);
 }
 
 /**

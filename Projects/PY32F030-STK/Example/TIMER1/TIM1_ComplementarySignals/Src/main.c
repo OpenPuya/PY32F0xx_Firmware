@@ -32,15 +32,15 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define  PERIOD_VALUE       (uint32_t)(700 - 1)               /* Period Value  */
+#define  PERIOD_VALUE       (uint32_t)(800 - 1)               /* Period Value  */
 #define  PULSE1_VALUE       (uint32_t)(PERIOD_VALUE/2)        /* Capture Compare 1 Value  */
 #define  PULSE2_VALUE       (uint32_t)(PERIOD_VALUE*37.5/100) /* Capture Compare 2 Value  */
 #define  PULSE3_VALUE       (uint32_t)(PERIOD_VALUE/4)        /* Capture Compare 3 Value  */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
+TIM_HandleTypeDef               TimHandle;
 TIM_OC_InitTypeDef              sPWMConfig;
-TIM_BreakDeadTimeConfigTypeDef sBreakConfig;
+TIM_BreakDeadTimeConfigTypeDef  sBreakConfig;
 uint32_t uwPrescalerValue = 0;
 
 /* Private user code ---------------------------------------------------------*/
@@ -156,7 +156,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* Disable PLL */
-  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;*/
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/          /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {

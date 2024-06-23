@@ -37,7 +37,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static DMA_HandleTypeDef HdmaCh1;
-extern uint32_t   aADCxConvertedData;
 
 /* Private function prototypes -----------------------------------------------*/
 /* External functions --------------------------------------------------------*/
@@ -54,7 +53,8 @@ void HAL_MspInit(void)
   */
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
-  GPIO_InitTypeDef          GPIO_InitStruct;
+  GPIO_InitTypeDef          GPIO_InitStruct={0};
+
   __HAL_RCC_SYSCFG_CLK_ENABLE();                              /* Enable SYSCFG clock */
   __HAL_RCC_DMA_CLK_ENABLE();                                 /* Enable DMA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();                               /* Enable GPIOA clock */
@@ -76,8 +76,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
   HdmaCh1.Init.Direction           = DMA_PERIPH_TO_MEMORY;    /* Direction: Peripheral to memory */
   HdmaCh1.Init.PeriphInc           = DMA_PINC_DISABLE;        /* Disable peripheral address increment */
   HdmaCh1.Init.MemInc              = DMA_MINC_DISABLE;        /* Disable memory address increment */
-  HdmaCh1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD; /* Peripheral data width: 16-bit */
-  HdmaCh1.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD; /* Memory data width: 16-bit */
+  HdmaCh1.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;     /* Peripheral data width: 32-bit */
+  HdmaCh1.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;     /* Memory data width: 32-bit */
   HdmaCh1.Init.Mode                = DMA_CIRCULAR;            /* Circular mode */
   HdmaCh1.Init.Priority            = DMA_PRIORITY_VERY_HIGH;  /* Channel priority: Very high */
 

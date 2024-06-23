@@ -96,14 +96,15 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_py32f002xx.s).                   */
 /******************************************************************************/
-
 /**
-  * @brief  This function handles PPP interrupt request.
-  * @param  None
-  * @retval None
+  * @brief  中断入口函数，每产生一次下降沿,LED翻转一次
+  * @param  无
+  * @retval 无
   */
-/*void PPP_IRQHandler(void)
+void EXTI2_3_IRQHandler(void)
 {
-}*/
+  BSP_LED_Toggle(LED_GREEN);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);         /* 处理EXTI中断请求 */
+}
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

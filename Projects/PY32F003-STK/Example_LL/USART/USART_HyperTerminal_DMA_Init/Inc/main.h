@@ -58,8 +58,8 @@ extern "C" {
 /* Exported functions prototypes ---------------------------------------------*/
 void APP_ErrorHandler(void);
 void APP_UsartIRQCallback(USART_TypeDef *USARTx);
-void APP_DmaChannel1IRQCallback(void);
-void APP_DmaChannel2_3_IRQCallback(void);
+void APP_DmaChannel1IRQCallback(USART_TypeDef *USARTx);
+void APP_DmaChannel2_3_IRQCallback(USART_TypeDef *USARTx);
 
 #ifdef __cplusplus
 }

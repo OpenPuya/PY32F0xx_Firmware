@@ -124,18 +124,19 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ExtiConfig(void)
 {
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+
   /* Enable GPIOA */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
   /* Configure input mode */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
   GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* Configure EXTI as event, falling edge triggered */
-  LL_EXTI_InitTypeDef EXTI_InitStruct;
   EXTI_InitStruct.Line = LL_EXTI_LINE_6;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_EVENT;
@@ -154,6 +155,8 @@ static void APP_ExtiConfig(void)
   */
 static void APP_PwrEnterStopMode(void)
 {
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+
   /* Enter stop mode with low power regulator */
   LL_PWR_EnableLowPowerRunMode();
 

@@ -63,7 +63,7 @@ int main(void)
   /* 配置系统时钟 */
   APP_SystemClockConfig();
 
-  /* 配置LED引脚 (PA11)*/
+  /* 配置LED引脚 (PB5)*/
   APP_GpioConfig();
 
   while (1)

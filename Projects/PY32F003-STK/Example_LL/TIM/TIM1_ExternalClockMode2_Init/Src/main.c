@@ -48,7 +48,7 @@ static void APP_ConfigTIM1ExternalClock(void);
 int main(void)
 {
   /* 使能TIM1时钟 */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
 
   /* 配置系统时钟 */
   APP_SystemClockConfig();
@@ -84,7 +84,8 @@ static void APP_ConfigTIM1ExternalClock(void)
   ETRGPIOinit.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
   ETRGPIOinit.Pull       = LL_GPIO_PULL_UP;
   ETRGPIOinit.Alternate  = LL_GPIO_AF_2;
-  
+  ETRGPIOinit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+
   LL_GPIO_Init(GPIOA,&ETRGPIOinit);
   
   /* 配置TIM1外部时钟源模式2 */

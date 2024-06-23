@@ -84,8 +84,8 @@ int main(void)
     /* Enable LPTIM */
     LL_LPTIM_Enable(LPTIM1);
     
-    /* Delay for 75us */
-    APP_uDelay(75);
+    /* Delay for 120us */
+    APP_uDelay(120);
 
     /* Start LPTIM in one-shot mode */
     LL_LPTIM_StartCounter(LPTIM1,LL_LPTIM_OPERATING_MODE_ONESHOT);

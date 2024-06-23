@@ -51,13 +51,13 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   /* TIM1时钟使能 */
   __HAL_RCC_TIM1_CLK_ENABLE();
   /* GPIOA时钟使能 */
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /*初始化PA0/PA7为TIM1_CH1N/TIM1_CH1*/
+  /*初始化PA0/PA3为TIM1_CH1N/TIM1_CH1*/
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -68,7 +68,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 
   GPIO_InitStruct.Alternate = GPIO_AF13_TIM1;
   GPIO_InitStruct.Pin = GPIO_PIN_3;
-  /* A7-TIM1_CH1 */
+  /* A3-TIM1_CH1 */
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_6;

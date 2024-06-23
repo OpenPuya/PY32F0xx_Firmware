@@ -51,7 +51,7 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_IC_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   /* Enable TIM3 clock */
   __HAL_RCC_TIM3_CLK_ENABLE();
   /* Enable GPIOA clock */

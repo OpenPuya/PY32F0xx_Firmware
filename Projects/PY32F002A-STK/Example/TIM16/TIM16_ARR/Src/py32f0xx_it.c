@@ -99,7 +99,7 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles TIM16 interrupt request.
   * @param  None
   * @retval None
   */
@@ -107,8 +107,5 @@ void TIM16_IRQHandler(void)
 {
   HAL_TIM_IRQHandler(&TimHandle);
 }
-/*void PPP_IRQHandler(void)
-{
-}*/
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

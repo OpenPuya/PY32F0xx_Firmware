@@ -217,7 +217,7 @@ static void APP_ActivateI2cSlave(void)
   */
 static void APP_ConfigI2cMaster(void)
 {
-  LL_RCC_ClocksTypeDef rcc_clocks;
+  LL_RCC_ClocksTypeDef rcc_clocks = {0};
 
   /* (1) Enable GPIO clock ************************/
 

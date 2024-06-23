@@ -62,10 +62,7 @@ int main(void)
   uint32_t u32Low  = 0x00200000;
   
   /* 初始化所有外设，Flash接口，SysTick */
-  HAL_Init();      
-  
-  /* 初始化LED */
-  BSP_LED_Init(LED_GREEN);
+  HAL_Init();  
   
   /* 初始化GPIO */
   APP_GpioInit();                                 
@@ -96,7 +93,7 @@ int main(void)
   */
 static void APP_GpioInit()
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
 
   __HAL_RCC_GPIOB_CLK_ENABLE();                          /* GPIOB时钟使能 */
 
@@ -137,7 +134,7 @@ static void APP_SystemClockConfig(void)
   /* 初始化CPU,AHB,APB总线时钟 */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;  /* RCC系统时钟类型 */
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                          /* SYSCLK的源选择为HSI */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                              /* APH时钟不分频 */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                              /* AHB时钟不分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                               /* APB时钟不分频 */
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)                         /* 初始化RCC系统时钟(FLASH_LATENCY_0=24M以下;FLASH_LATENCY_1=48M) */

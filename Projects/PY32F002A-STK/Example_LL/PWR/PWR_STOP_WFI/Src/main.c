@@ -49,18 +49,25 @@ int main(void)
 {
   /* 配置系统时钟 */
   APP_SystemClockConfig();
+  
+  /* 使能PWR时钟 */
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-   /* 初始化LED */
+  /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
-  /* 关闭LED */
-  BSP_LED_Off(LED_GREEN);
+  
+  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+   
   /* 外部中断初始化 */
   APP_ConfigEXTI();
-  
-  /* LED亮 */
+   
   BSP_LED_On(LED_GREEN);
-  /* 延时200ms */
-  LL_mDelay(200);
+  
+  /* Wait for button press */
+  while (BSP_PB_GetState(BUTTON_USER))
+  {
+  }
+  
   /* LED灭 */
   BSP_LED_Off(LED_GREEN);;
   
@@ -108,29 +115,31 @@ void APP_SystemClockConfig(void)
 }
 
 /**
-  * @brief  错误执行函数
+  * @brief  配置EXTI
   * @param  无
   * @retval 无
   */
 void APP_ConfigEXTI(void)
 {
+   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 
+   LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+
    /* GPIOA时钟使能 */
    LL_IOP_GRP1_EnableClock (LL_IOP_GRP1_PERIPH_GPIOA);
   
-   LL_GPIO_InitTypeDef GPIO_InitStruct;
    /* 选择PA06引脚 */
    GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
    /* 选择输入模式 */
    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-   /* 选择下拉 */
-   GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+  /* 选择上拉 */
+   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
    /* GPIOA初始化 */
    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
    /* 选择EXTI6做外部中断输入 */
    LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTA,LL_EXTI_CONFIG_LINE6);
 
-   LL_EXTI_InitTypeDef EXTI_InitStruct;
    /* 选择EXTI6 */
    EXTI_InitStruct.Line = LL_EXTI_LINE_6;
    /* 使能 */

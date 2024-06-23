@@ -50,7 +50,7 @@ static void APP_ConfigDMATIM1Reload(void);
 int main(void)
 {
   /* Enable TIM1, DMA, SYSCFG clocks */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
   
@@ -112,7 +112,7 @@ static void APP_ConfigTIM1Count(void)
 static void APP_ConfigDMATIM1Reload(void)
 {
   
-  LL_DMA_InitTypeDef DMA_TIM1Reload ={0};
+  LL_DMA_InitTypeDef DMA_TIM1Reload = {0};
   
   /* Configure DMA channel 1 */
   DMA_TIM1Reload.PeriphOrM2MSrcAddress  = (uint32_t)&(TIM1->ARR);

@@ -51,7 +51,7 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   /* Enable TIM1 clock */
   __HAL_RCC_TIM1_CLK_ENABLE();
   /* Enable GPIOA clock */
@@ -66,6 +66,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
   /* Initialize GPIO */
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* Enable TIM1 interrupt */
+  /* Enable TIM interrupt */
+  HAL_NVIC_SetPriority(TIM1_BRK_UP_TRG_COM_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(TIM1_BRK_UP_TRG_COM_IRQn);
 }

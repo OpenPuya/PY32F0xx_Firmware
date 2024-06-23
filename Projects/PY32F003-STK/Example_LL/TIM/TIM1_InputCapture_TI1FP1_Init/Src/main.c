@@ -48,7 +48,7 @@ static void APP_ConfigInputCapture(void);
 int main(void)
 {
   /* 使能TIM1时钟 */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
   /* 配置系统时钟 */
@@ -75,14 +75,16 @@ int main(void)
   */
 static void APP_ConfigInputCapture(void)
 {
-  LL_TIM_IC_InitTypeDef InputCaptureInit ={0};
+  LL_TIM_IC_InitTypeDef InputCaptureInit = {0};
   LL_GPIO_InitTypeDef TIM1CH1MapInit= {0};
   
   /* 配置PA3为捕获输入引脚 */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_3;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_13;
-  
+  TIM1CH1MapInit.Speed      = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;  
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* 配置捕获通道 */

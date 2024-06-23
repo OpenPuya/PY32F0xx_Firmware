@@ -39,20 +39,23 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 void Error_Handler(void);
-
+static void APP_SystemClockConfig(void);
 /**
   * @brief  应用程序入口函数.
   * @retval int
   */
 int main(void)
 {
-  IWDG_HandleTypeDef   IwdgHandle;
+  IWDG_HandleTypeDef   IwdgHandle = {0};
 
   HAL_Init();
-
+  
+  /* 使能 LSI */
+  APP_SystemClockConfig();
+  
   IwdgHandle.Instance = IWDG;                     /* 选择IWDG */
   IwdgHandle.Init.Prescaler = IWDG_PRESCALER_32;  /* 配置32分频 */
-  IwdgHandle.Init.Reload = (1000);                /* IWDG计数器重装载值为1000，1s */
+  IwdgHandle.Init.Reload = (1024);                /* IWDG计数器重装载值为1024，1s */
 
   if (HAL_IWDG_Init(&IwdgHandle) != HAL_OK)        /* 初始化IWDG */
   {
@@ -73,6 +76,26 @@ int main(void)
       Error_Handler();
     }
   }
+}
+
+/**
+  * @brief  系统时钟配置
+  * @param  无
+  * @retval 无
+  */
+static void APP_SystemClockConfig(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+
+  /* 时钟源配置 */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI ; /* 选择 LSI */
+  RCC_OscInitStruct.LSIState       = RCC_LSI_ON;              /* 使能 LSI */
+  /* 配置时钟源 */
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
 }
 
 /**

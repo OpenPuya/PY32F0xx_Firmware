@@ -76,20 +76,6 @@ static void APP_SystemClockConfig(void)
   }
   
   LL_PLL_ConfigSystemClock_HSI(&UTILS_ClkInitStruct);
-  
-  /* Set AHB prescaler */
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-
-  /* Configure HSISYS as system clock and initialize it */
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
-  {
-  }
-
-  /* Set APB1 prescaler and initialize it */
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(48000000);
 }
 
 /**
@@ -103,7 +89,7 @@ static void APP_GPIOConfig(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
   
   /* Configure PA08 as alternate function and set it as MCO output pin */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;  
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* Select pin 8 */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_8; 
   /* Set mode as alternate function */

@@ -83,12 +83,18 @@ static void APP_ConfigBDTR(void)
   TIM1BDTRInit.AutomaticOutput  = LL_TIM_AUTOMATICOUTPUT_ENABLE;                                 /* Enable automatic output */
   TIM1BDTRInit.BreakPolarity    = LL_TIM_BREAK_POLARITY_HIGH;                                    /* Break polarity: high level active */
   TIM1BDTRInit.BreakState       = LL_TIM_BREAK_ENABLE;                                           /* Enable break */
-  TIM1BDTRInit.DeadTime         = __LL_TIM_CALC_DEADTIME(24000000,LL_TIM_CLOCKDIVISION_DIV1,200);/* Dead time: 200ns */
+  TIM1BDTRInit.LockLevel        = LL_TIM_LOCKLEVEL_OFF;
+  TIM1BDTRInit.OSSIState        = LL_TIM_OSSI_ENABLE;
+  TIM1BDTRInit.OSSRState        = LL_TIM_OSSR_ENABLE;
+  TIM1BDTRInit.DeadTime         = __LL_TIM_CALC_DEADTIME(8000000,LL_TIM_CLOCKDIVISION_DIV1,250);/* Dead time: 250ns */
   
   /* Configure PA6 as break pin */
   TIM1BreakMapInit.Pin        = LL_GPIO_PIN_6;
   TIM1BreakMapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1BreakMapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1BreakMapInit.Pull       = LL_GPIO_PULL_NO;
+  TIM1BreakMapInit.Speed      = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1BreakMapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOA,&TIM1BreakMapInit);
   
   /* Initialize dead time and brake configuration */
@@ -109,12 +115,18 @@ static void APP_ConfigPWMChannel(void)
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_7|LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   /* Configure PB0/PB1 as TIM1_CH2N/TIM1_CH3N */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_0|LL_GPIO_PIN_1;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOB,&TIM1CH1MapInit);
   
   /* Configure PWM channels */
@@ -151,7 +163,7 @@ static void APP_ConfigTIM1Base(void)
  
   TIM1CountInit.ClockDivision       = LL_TIM_CLOCKDIVISION_DIV1;  /* No clock division */
   TIM1CountInit.CounterMode         = LL_TIM_COUNTERMODE_UP;      /* Up counting mode */
-  TIM1CountInit.Prescaler           = 2400-1;                     /* Prescaler value: 2400 */
+  TIM1CountInit.Prescaler           = 800-1;                      /* Prescaler value: 800 */
   TIM1CountInit.Autoreload          = 1000-1;                     /* Autoreload value: 1000 */
   TIM1CountInit.RepetitionCounter   = 0;                          /* Repetition counter value: 0 */
   
@@ -174,7 +186,7 @@ static void APP_SystemClockConfig(void)
 {
   /* Enable HSI */
   LL_RCC_HSI_Enable();
-  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
+  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_8MHz);
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
@@ -190,10 +202,10 @@ static void APP_SystemClockConfig(void)
 
   /* Set APB1 prescaler */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(24000000);
+  LL_Init1msTick(8000000);
   
   /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(24000000);
+  LL_SetSystemCoreClock(8000000);
 }
 
 /**

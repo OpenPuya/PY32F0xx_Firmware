@@ -35,7 +35,7 @@
 #define BUFFER_SIZE    114
 
 /* Private variables ---------------------------------------------------------*/
-/* CRC handler declaration */
+/* CRC 句柄 */
 CRC_HandleTypeDef   CrcHandle;
 
 /* 用于存放计算到的CRC值 */

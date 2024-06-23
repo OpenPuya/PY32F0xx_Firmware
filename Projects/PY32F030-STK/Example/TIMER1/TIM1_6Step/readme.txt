@@ -25,21 +25,15 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译并下载程序；
-2. 刹车输入（PA06）接低电平；
-3. 用示波器或逻辑分析仪接CH1(PA08)、CH1N(PA07)、CH2(PA09)、CH2N(PB00)、CH3(PA10)、
+2. 用示波器或逻辑分析仪接CH1(PA08)、CH1N(PA07)、CH2(PA09)、CH2N(PB00)、CH3(PA10)、
 CH3N(PB01)，可监测到注意事项中的PWM波形；
-4. 刹车输入（PA06）接高电平，触发刹车，可观测到6个通道波形都没有了，并输出空闲电平
-（空闲电平有寄存器配置决定）。
+
 
 Example execution steps:
 1.Compile and download the program.
-2.Connect the brake input (PA06) to a low level.
-3. Use an oscilloscope or logic analyzer to connect CH1 (PA08), CH1N (PA07), 
+2. Use an oscilloscope or logic analyzer to connect CH1 (PA08), CH1N (PA07), 
 CH2 (PA09), CH2N (PB00), CH3 (PA10), CH3N (PB01), and can monitor the PWM 
 waveform in the notes;
-4. Brake input (PA06) is connected to high level to trigger the brake, which 
-can be observed that all 6 channel waveforms are gone and output idle level 
-(idle level is determined by register configuration).
 ================================================================================
 注意事项：
 下表是换向步骤，比如第一步中的CH1和CH2N为1，即设置打开这两个通道的PWM输出。

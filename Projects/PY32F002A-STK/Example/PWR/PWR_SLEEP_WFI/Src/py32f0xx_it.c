@@ -102,13 +102,10 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
-void EXTI2_3_IRQHandler(void)
+void EXTI4_15_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);/* 处理EXTI中断请求 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);/* 处理EXTI中断请求 */
   BSP_LED_Toggle(LED_GREEN);
 }
-/*void PPP_IRQHandler(void)
-{
-}*/
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

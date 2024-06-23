@@ -160,8 +160,8 @@ static void APP_LPTIMStart(void)
   /* 加载重载值 */
   __HAL_LPTIM_AUTORELOAD_SET(&LPTIMConf, 51);
 
-  /* 延时75us */
-  APP_delay_us(75);
+  /* 延时120us */
+  APP_delay_us(120);
   
   /* 开启单次计数模式 */
   __HAL_LPTIM_START_SINGLE(&LPTIMConf);

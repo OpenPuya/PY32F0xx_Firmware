@@ -1089,6 +1089,9 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Src\py32f0xx_ll_gpio.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Src\py32f0xx_ll_rcc.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Src\py32f0xx_ll_utils.c</name>
             </file>
         </group>

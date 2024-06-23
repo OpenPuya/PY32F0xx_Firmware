@@ -65,12 +65,6 @@ int main(void)
   /* Configure system clock */
   APP_SystemClockConfig();
 
-  /* Initialize LED */
-  BSP_LED_Init(LED_GREEN);
-
-  /* Initialize button */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
-
   /* Configure USART */
   APP_ConfigUsart(USART1);
   
@@ -135,7 +129,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
     
     /* GPIOA configuration */
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /* Select pin 2 */
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /* Select alternate function mode */
@@ -171,7 +165,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
     
     /* GPIOA configuration */
-    LL_GPIO_InitTypeDef GPIO_InitStruct;
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     /* Select pin 2 */
     GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
     /* Select alternate function mode */
@@ -201,7 +195,7 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
   }
   
   /* USART configuration */
-  LL_USART_InitTypeDef USART_InitStruct;
+  LL_USART_InitTypeDef USART_InitStruct = {0};
   /* Set baud rate */
   USART_InitStruct.BaudRate = 9600;
   /* Set data width */

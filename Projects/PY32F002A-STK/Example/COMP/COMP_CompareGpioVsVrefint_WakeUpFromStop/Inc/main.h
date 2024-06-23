@@ -44,7 +44,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 /* Exported variables prototypes ---------------------------------------------*/
-extern COMP_HandleTypeDef COMPINIT;
+
 
 /* Exported functions prototypes ---------------------------------------------*/
 void APP_ErrorHandler(void);

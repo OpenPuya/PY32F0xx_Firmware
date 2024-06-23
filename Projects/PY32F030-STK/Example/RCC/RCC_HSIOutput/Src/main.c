@@ -46,9 +46,6 @@ int main(void)
 {
   /* Reset of all peripherals, Initializes the Systick */
   HAL_Init();
-
-  /* Initialize button */
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
   
   /* Configure PA08 pin as MCO function to output system clock */
   HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
@@ -77,9 +74,12 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz;                               /* Configure HSI output clock as 4MHz */
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                       /* HSI not divided */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                      /* Disable HSE */
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                      /* Disable LSI */
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                      /* Disable LSE */
+  /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                                  /* Disable PLL */
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/                                       /* Select HSI as PLL source */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                           /* Initialize RCC oscillators */
   {

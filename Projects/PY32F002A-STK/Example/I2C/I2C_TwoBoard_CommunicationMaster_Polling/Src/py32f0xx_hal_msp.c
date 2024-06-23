@@ -37,7 +37,8 @@
   */
 void HAL_MspInit(void)
 {
- BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+  __HAL_RCC_SYSCFG_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
 }
 
 /**
@@ -64,10 +65,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
   /*复位I2C*/
   __HAL_RCC_I2C_FORCE_RESET();
   __HAL_RCC_I2C_RELEASE_RESET();
-
-  /* I2C1 interrupt Init */
-  HAL_NVIC_SetPriority(I2C1_IRQn, 0, 0);                     /*中断优先级设置*/
-  HAL_NVIC_EnableIRQ(I2C1_IRQn);                              /*使能I2C中断*/
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

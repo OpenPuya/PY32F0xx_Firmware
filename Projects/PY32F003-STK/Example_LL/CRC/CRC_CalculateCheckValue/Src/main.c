@@ -90,9 +90,8 @@ int main(void)
   {
     if (CRCValue != ExpectedCRCValue)
     {
-      /*CRC值错误，LED翻转*/
-      BSP_LED_Toggle(LED_GREEN);
-      LL_mDelay(200);
+      /*CRC值错误，LED熄灭*/
+      BSP_LED_Off(LED_GREEN);
     }
     else
     {

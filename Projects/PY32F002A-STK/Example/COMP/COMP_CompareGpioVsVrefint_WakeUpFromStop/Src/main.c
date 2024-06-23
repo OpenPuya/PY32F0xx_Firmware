@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-COMP_HandleTypeDef COMPINIT;
+COMP_HandleTypeDef hcomp1;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -75,7 +75,7 @@ int main(void)
   APP_CompIt();
  
   /* 启动COMP */
-  HAL_COMP_Start(&COMPINIT);
+  HAL_COMP_Start(&hcomp1);
   
   BSP_LED_On(LED_GREEN);
 
@@ -114,7 +114,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI 1分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* 配置HSI时钟8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* 关闭LSI */
 
   /* 配置振荡器 */
@@ -142,8 +142,8 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_RccInit(void)
 {                    
-  RCC_OscInitTypeDef RCCCONF;
-  RCC_PeriphCLKInitTypeDef COMPRCC;
+  RCC_OscInitTypeDef RCCCONF = {0};
+  RCC_PeriphCLKInitTypeDef COMPRCC = {0};
   
   RCCCONF.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* RCC使用内部LSI */
   RCCCONF.LSIState = RCC_LSI_ON;                          /* 开启LSI */
@@ -162,17 +162,18 @@ static void APP_RccInit(void)
   */
 static void APP_CompInit(void)
 {
-  __HAL_RCC_COMP1_CLK_ENABLE();                           /* 使能COMP1时钟 */
-  COMP_InitTypeDef COMPCONF={0};
-  COMPINIT.Instance = COMP1;                              /* COMP1 */
-  COMPCONF.Mode = COMP_POWERMODE_MEDIUMSPEED;             /* COMP1功耗选择为Medium speed */
-  COMPCONF.InputPlus = COMP_INPUT_PLUS_IO3;               /* 正极引脚为PA1 */
-  COMPCONF.InputMinus = COMP_INPUT_MINUS_VREFINT;         /* 负极选择为VREFINT */
-  COMPCONF.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* 触发方式为下降沿中断触发 */
-  COMPCONF.Hysteresis = COMP_HYSTERESIS_ENABLE;           /* 迟滞功能开启 */
-  COMPINIT.Init = COMPCONF;                           
+  __HAL_RCC_COMP1_CLK_ENABLE();                              /* 使能COMP1时钟 */
+  hcomp1.Instance = COMP1;                                   /* COMP1 */
+  hcomp1.Init.InputPlus = COMP_INPUT_PLUS_IO3;               /* 正极引脚为PA1 */
+  hcomp1.Init.InputMinus = COMP_INPUT_MINUS_VREFINT;         /* 负极选择为VREFINT */
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED; 
+  hcomp1.Init.Mode = COMP_POWERMODE_MEDIUMSPEED;             /* COMP1功耗选择为Medium speed */
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_ENABLE;           /* 迟滞功能开启 */
+  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_FALLING;     /* 触发方式为下降沿中断触发 */
+  hcomp1.Init.DigitalFilter = 0;                          
   
-  HAL_COMP_Init(&COMPINIT);
+  HAL_COMP_Init(&hcomp1);
 }
 
 /**

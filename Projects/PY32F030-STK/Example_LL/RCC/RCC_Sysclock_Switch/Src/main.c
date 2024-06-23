@@ -51,7 +51,7 @@ int main(void)
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-  /* Initialize clock, configure system clock as LSI */
+  /* Initialize clock, configure system clock as HSI 16MHz*/
   APP_SystemClockConfig();
   
   /* Initialize button */
@@ -85,14 +85,8 @@ static void APP_SystemClockConfig(void)
 {
   /* Enable and initialize HSI */
   LL_RCC_HSI_Enable();
-  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_24MHz);
+  LL_RCC_HSI_SetCalibFreq(LL_RCC_HSICALIBRATION_16MHz);
   while(LL_RCC_HSI_IsReady() != 1)
-  {
-  }
-  
-  /* Enable and initialize LSI */
-  LL_RCC_LSI_Enable();
-  while(LL_RCC_LSI_IsReady() != 1)
   {
   }
   
@@ -106,17 +100,17 @@ static void APP_SystemClockConfig(void)
   /* Set AHB prescaler */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  /* Configure LSI as system clock and initialize */
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_LSI);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_LSI)
+  /* Configure HSI as system clock and initialize */
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
   {
   }
 
   /*Set APB1 prescaler and initialize it */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(LSI_VALUE);
+  LL_Init1msTick(16000000);
   /* Update system clock global variable SystemCoreClock (can also be updated by calling SystemCoreClockUpdate function) */
-  LL_SetSystemCoreClock(LSI_VALUE);
+  LL_SetSystemCoreClock(16000000);
 }
 
 /**
@@ -147,7 +141,7 @@ static void APP_GPIOConfig(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
   
   /* Configure PA08 as alternate function and set it as MCO output pin */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;  
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* Select pin 8 */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_8; 
   /* Set mode as alternate function */

@@ -33,12 +33,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-EXTI_HandleTypeDef exti_handle;
-
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void App_ExtiConfig(void);
+static void APP_EventConfig(void);
 
 /**
   * @brief  应用程序入口函数.
@@ -56,8 +54,8 @@ int main(void)
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);  
  
-  /* 配置外部中断 */
-  App_ExtiConfig();                             
+  /* 配置外部事件 */
+  APP_EventConfig();                             
 
   /* 配置USART */
   DEBUG_USART_Config();                        
@@ -97,22 +95,22 @@ int main(void)
 }
 
 /**
-  * @brief  中断配置函数
+  * @brief  事件配置函数
   * @param  无
   * @retval 无
   */
-static void App_ExtiConfig(void)
+static void APP_EventConfig(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
+
   __HAL_RCC_GPIOA_CLK_ENABLE();                  /* 使能GPIOA时钟 */
+
   GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING; /* GPIO模式为下降沿事件 */
   GPIO_InitStruct.Pull  = GPIO_PULLUP;           /* 上拉 */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  /* 速度为高速 */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   /* 初始化GPIO */
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);             /* 使能EXTI中断 */
 }
 
 /**

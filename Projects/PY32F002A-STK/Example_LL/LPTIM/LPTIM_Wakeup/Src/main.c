@@ -84,8 +84,8 @@ int main(void)
     /* 使能LPTIM */
     LL_LPTIM_Enable(LPTIM1);
     
-    /* 延时75us */
-    APP_uDelay(75);
+    /* 延时120us */
+    APP_uDelay(120);
 
     /* 开启单次模式 */
     LL_LPTIM_StartCounter(LPTIM1,LL_LPTIM_OPERATING_MODE_ONESHOT);

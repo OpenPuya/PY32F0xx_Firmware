@@ -112,7 +112,7 @@ static void APP_AdcConfig(void)
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_PATH_INTERNAL_NONE);
 
   /* 设置ADC时钟 */
-  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
+  LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV4);
 
   /* 设置12位分辨率 */
   LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);

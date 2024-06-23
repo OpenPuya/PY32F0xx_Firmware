@@ -94,6 +94,8 @@ static void APP_CompInit(void)
   hcomp1.Init.Hysteresis      = COMP_HYSTERESIS_DISABLE;                /* Hysteresis function is disabled */
   hcomp1.Init.WindowMode      = COMP_WINDOWMODE_COMP1_INPUT_PLUS_COMMON;/* COMP1 window mode */
   hcomp1.Init.TriggerMode     = COMP_TRIGGERMODE_IT_RISING_FALLING;     /* COMP1 interrupt on rising/falling edge */
+  hcomp1.Init.DigitalFilter   = 0;
+
   /* Initialize COMP1 */
   if(HAL_COMP_Init(&hcomp1) != HAL_OK)                                  
   {
@@ -110,6 +112,8 @@ static void APP_CompInit(void)
   hcomp2.Init.Hysteresis      = COMP_HYSTERESIS_DISABLE;                /* Hysteresis function disabled */
   hcomp2.Init.WindowMode      = COMP_WINDOWMODE_COMP1_INPUT_PLUS_COMMON;/* COMP2 window mode */
   hcomp2.Init.TriggerMode     = COMP_TRIGGERMODE_IT_RISING_FALLING;     /* COMP2 rising/falling edge interrupt */
+  hcomp2.Init.DigitalFilter   = 0;
+
   /* COMP2 initialization */
   if(HAL_COMP_Init(&hcomp2) != HAL_OK)                                  
   {

@@ -36,10 +36,10 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef             AdcHandle;
 ADC_ChannelConfTypeDef        sConfig;
-volatile uint16_t   aADCxConvertedData;
-TIM_HandleTypeDef    TimHandle;
-TIM_OC_InitTypeDef       OCConfig;
-TIM_MasterConfigTypeDef sMasterConfig;
+volatile uint16_t             aADCxConvertedData;
+TIM_HandleTypeDef             TimHandle;
+TIM_MasterConfigTypeDef       sMasterConfig;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -59,15 +59,11 @@ int main(void)
   /* 初始化调试串口(printf使用) */
   BSP_USART_Config();
 
-  /* 打印调试信息 */
-  printf("print test");
-
   /* Tim1配置*/
   APP_Tim1Config();
 
   /* ADC配置*/
   APP_ADCConfig();
-
 
   /* 无限循环 */
   while (1)
@@ -77,7 +73,7 @@ int main(void)
 }
 
 /**
-  * @brief  系统时钟配置函数
+  * @brief  ADC配置函数
   * @param  无
   * @retval 无
   */
@@ -88,7 +84,7 @@ void APP_ADCConfig(void)
   /* 先复位ADC值 */
   __HAL_RCC_ADC_FORCE_RESET();
   __HAL_RCC_ADC_RELEASE_RESET();
-  __HAL_RCC_ADC_CLK_ENABLE();                                 /* 使能ADC时钟 */
+  __HAL_RCC_ADC_CLK_ENABLE();                                                     /* 使能ADC时钟 */
 
   AdcHandle.Instance = ADC1;
   if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)                          /* ADC校准 */
@@ -97,7 +93,7 @@ void APP_ADCConfig(void)
   }
   
   AdcHandle.Instance                   = ADC1;                                    /* ADC*/
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* 模拟ADC时钟源为PCLK*/
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* 设置模拟ADC时钟源*/
   AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit*/
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_BACKWARD;             /* 扫描序列方向：向下*/
@@ -106,7 +102,7 @@ void APP_ADCConfig(void)
   AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* 单次转换模式 */
   AdcHandle.Init.DiscontinuousConvMode = ENABLE;                                  /* 使能非连续模式 */
   AdcHandle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_TRGO;            /* 外部触发转换启动事件为TIM1_TRG0 */
-  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;  /* 上升沿和下降沿进行外部驱动 */
+  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;         /* 上升沿触发 */
   AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* 当过载发生时，覆盖上一个值*/
   AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                         /* ADC初始化*/
@@ -114,7 +110,7 @@ void APP_ADCConfig(void)
     Error_Handler();
   }
 
-  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* 设置是否排行, 想设置单通道采样,需配置ADC_RANK_NONE */
+  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* 设置是否采样 */
   sConfig.Channel      = ADC_CHANNEL_0;                                           /* 设置采样通道 */
   if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)                      /* 配置ADC通道 */
   {
@@ -138,7 +134,7 @@ void APP_Tim1Config(void)
   TimHandle.Instance = TIM1;                                          /*TIM1*/
   TimHandle.Init.Period            = 8000 - 1;                        /*TIM1重装载值位8000-1*/
   TimHandle.Init.Prescaler         = 100 - 1;                         /*预分频为100-1*/
-  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;          /*时钟不分配*/
+  TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;          /*时钟不分频*/
   TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;              /*向上计数*/
   TimHandle.Init.RepetitionCounter = 0;                               /*不重复*/
   TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /*自动重装载寄存器没有缓冲*/
@@ -163,8 +159,8 @@ void APP_Tim1Config(void)
   */
  void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-  aADCxConvertedData = hadc->Instance->DR;
-  printf("ADC: %03x\n\r", aADCxConvertedData);
+  aADCxConvertedData = HAL_ADC_GetValue(hadc);
+  printf("ADC: %d\r\n", aADCxConvertedData);
 
 }
 

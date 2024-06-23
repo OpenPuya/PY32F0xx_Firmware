@@ -34,7 +34,8 @@
 
 /* Private define ------------------------------------------------------------*/
 TIM_HandleTypeDef    TimHandle;
-TIM_IC_InitTypeDef sICConfig;
+TIM_IC_InitTypeDef   sICConfig;
+
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/

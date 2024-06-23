@@ -136,12 +136,12 @@ static void APP_AdcConfig(void)
 {
   __IO uint32_t wait_loop_index = 0;
 
-  LL_ADC_InitTypeDef ADC_Init;
-  LL_ADC_REG_InitTypeDef LL_ADC_REG_InitType;
+  LL_ADC_InitTypeDef       ADC_Init            = {0};
+  LL_ADC_REG_InitTypeDef   LL_ADC_REG_InitType = {0};
 
   /* ADC channel and clock source should be configured when ADEN=0, others should be configured when ADSTART=0 */
   /* Initialize ADC partial features */
-  ADC_Init.Clock=LL_ADC_CLOCK_SYNC_PCLK_DIV64;
+  ADC_Init.Clock=LL_ADC_CLOCK_SYNC_PCLK_DIV4;
   ADC_Init.DataAlignment=LL_ADC_DATA_ALIGN_RIGHT;
   ADC_Init.LowPowerMode=LL_ADC_LP_MODE_NONE;
   ADC_Init.Resolution=LL_ADC_RESOLUTION_12B;
@@ -156,6 +156,9 @@ static void APP_AdcConfig(void)
   LL_ADC_REG_InitType.SequencerDiscont=LL_ADC_REG_SEQ_DISCONT_DISABLE;
   LL_ADC_REG_InitType.TriggerSource=LL_ADC_REG_TRIG_SOFTWARE;
   LL_ADC_REG_Init(ADC1,&LL_ADC_REG_InitType);
+
+  LL_ADC_REG_SetSequencerScanDirection(ADC1,LL_ADC_REG_SEQ_SCAN_DIR_BACKWARD);
+
   /* Set common parameters for ADC */
   LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(ADC1),LL_ADC_PATH_INTERNAL_TEMPSENSOR);
   /* Wait for ADC TempSensor stability */

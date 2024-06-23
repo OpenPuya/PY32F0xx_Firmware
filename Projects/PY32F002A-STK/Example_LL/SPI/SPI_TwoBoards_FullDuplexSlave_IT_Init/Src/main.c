@@ -63,9 +63,6 @@ int main(void)
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
 
-  /* 初始化按键BUTTON */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
-
  /* 配置SPI */
   APP_ConfigSPI();
   
@@ -73,7 +70,6 @@ int main(void)
   LL_SPI_Enable(SPI1);
   
   /* 等待传输结束并检查接收到的数据 */
-  /* LED 在等待期间快速闪烁 */
   APP_WaitAndCheckEndOfTransfer();
 
   while (1)
@@ -139,6 +135,7 @@ static void APP_ConfigSPI(void)
   SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
   SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV128;
   SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
+  SPI_InitStruct.SlaveSpeedMode = LL_SPI_SLAVE_SPEED_NORMAL;
   LL_SPI_Init(SPI1, &SPI_InitStruct);
   
   /* 配置SPI1 FIFO 阈值 */

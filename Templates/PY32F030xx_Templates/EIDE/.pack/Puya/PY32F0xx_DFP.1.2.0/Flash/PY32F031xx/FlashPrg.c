@@ -434,15 +434,15 @@ int ProgramPage(unsigned long adr, unsigned long sz, unsigned char *buf)
   u32 wrpr;
   u32 bor;
 
-  optr = *((u32 *)(buf + 0x00));
-  bor = *((u32 *)(buf + 0x04));
+  optr = *((u32 *)(buf + 0x00)) & 0xFFFF;
+  bor = *((u32 *)(buf + 0x04)) & 0xF;
   optr = optr | (bor << 16);
-  sdkr = *((u32 *)(buf + 0x08));
-  wrpr = *((u32 *)(buf + 0x0C));
+  sdkr = *((u32 *)(buf + 0x08)) & 0xFFFF;
+  wrpr = *((u32 *)(buf + 0x0C)) & 0xFFFF;
 
   FLASH->SR |= FLASH_SR_EOP;                            // Reset FLASH_EOP
 
-  FLASH->OPTR = (optr & 0xFFFFFFFF);                        // Write OPTR values
+  FLASH->OPTR = (optr & 0xFFFFF);                       // Write OPTR values
   FLASH->SDKR = (sdkr & 0xFFFF);                        // Write SDKR values
   FLASH->WRPR = (wrpr & 0xFFFF);                        // Write WRPR values
 

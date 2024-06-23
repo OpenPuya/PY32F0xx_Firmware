@@ -62,6 +62,7 @@ int main(void)
   hcomp1.Init.Hysteresis      = COMP_HYSTERESIS_DISABLE;                /* 迟滞功能关闭 */
   hcomp1.Init.WindowMode      = COMP_WINDOWMODE_DISABLE;                /* WIODOW关闭 */
   hcomp1.Init.TriggerMode     = COMP_TRIGGERMODE_IT_RISING_FALLING;     /* COMP1上升/下降沿触发 */
+  hcomp1.Init.DigitalFilter   = 0;
   /* COMP1初始化 */
   if (HAL_COMP_Init(&hcomp1) != HAL_OK)                                 
   {
@@ -83,7 +84,7 @@ int main(void)
   */
 void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp)
 {
-  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+  BSP_LED_Toggle(LED3);
 }
 
 /**

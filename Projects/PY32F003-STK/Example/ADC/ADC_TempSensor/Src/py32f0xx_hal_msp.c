@@ -51,15 +51,7 @@ void HAL_MspInit(void)
   */
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
-  GPIO_InitTypeDef          GPIO_InitStruct;
-
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_ADC_CLK_ENABLE();
-
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   HAL_NVIC_SetPriority(ADC_COMP_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(ADC_COMP_IRQn);
@@ -73,7 +65,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   __HAL_RCC_ADC_FORCE_RESET();
   __HAL_RCC_ADC_RELEASE_RESET();
 
-  HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

@@ -53,12 +53,6 @@ int main(void)
   /*配置PA01引脚为MCO功能，输出系统时钟 */
   HAL_RCC_MCOConfig(RCC_MCO2, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
 
-  /* 初始化按键BUTTON */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
-
-  /*等待按键按下*/
-  while(BSP_PB_GetState(BUTTON_KEY) == 1);
-
   /* 系统时钟配置 */
   APP_SystemClockConfig();
   
@@ -84,7 +78,7 @@ void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI 1分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* 配置HSI时钟8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
-  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;*/
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* 关闭LSI */
 
   /* 配置振荡器 */

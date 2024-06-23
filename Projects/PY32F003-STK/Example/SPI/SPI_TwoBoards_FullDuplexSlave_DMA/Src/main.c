@@ -61,20 +61,17 @@ int main(void)
   
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
-
-  /* 初始化按键BUTTON */
-  BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_GPIO);
   
   /*初始化SPI配置*/
   Spi1Handle.Instance               = SPI1;                       /* SPI1 */
-  Spi1Handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;    /* 4分频 */
+  Spi1Handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;  /* 256分频 */
   Spi1Handle.Init.Direction         = SPI_DIRECTION_2LINES;       /* 全双工 */
   Spi1Handle.Init.CLKPolarity       = SPI_POLARITY_LOW;           /* 时钟极性低 */
   Spi1Handle.Init.CLKPhase          = SPI_PHASE_1EDGE ;           /* 数据采样从第一个时钟边沿开始 */
   Spi1Handle.Init.DataSize          = SPI_DATASIZE_8BIT;          /* SPI数据长度为8bit */
   Spi1Handle.Init.FirstBit          = SPI_FIRSTBIT_MSB;           /* 先发送MSB */
   Spi1Handle.Init.NSS               = SPI_NSS_HARD_INPUT;         /* NSS软件模式 */
-  Spi1Handle.Init.SlaveFastMode     = SPI_SLAVE_FAST_MODE_ENABLE; /* 使能快速模式 */
+  Spi1Handle.Init.SlaveFastMode     = SPI_SLAVE_FAST_MODE_DISABLE; /* 使能快速模式 */
   Spi1Handle.Init.Mode = SPI_MODE_SLAVE;                          /* 配置为从机 */
   if (HAL_SPI_Init(&Spi1Handle) != HAL_OK)
   {
@@ -105,25 +102,28 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /*配置时钟源HSE/HSI/LSE/LSI*/
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                      /* 开启HSI */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;                             /* 配置HSI输出时钟为24MHz */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                      /* HSI不分频 */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                      /* 关闭HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                                 /* HSE工作频率范围16M~32M */
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                      /* 关闭LSI */
+  /* Oscillator configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI; /* Select oscillators HSE,HSI,LSI */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* Enable HSI */
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;  /* Configure HSI clock as 8MHz */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
+  /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
+
+  /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  /* 初始化CPU,AHB,APB总线时钟 */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC系统时钟类型 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                        /* SYSCLK的源选择为HSI */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                            /* APH时钟不分频 */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟不分频 */
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  /* Clock source configuration */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* Select clock types HCLK, SYSCLK, PCLK1 */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* Select HSI as system clock */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB  clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB  clock not divided */
+  /* Configure clock source */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     APP_ErrorHandler();
   }

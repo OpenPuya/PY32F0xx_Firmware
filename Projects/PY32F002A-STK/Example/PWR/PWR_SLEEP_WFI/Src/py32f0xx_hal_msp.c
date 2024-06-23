@@ -37,6 +37,7 @@
   */
 void HAL_MspInit(void)
 {
+  __HAL_RCC_PWR_CLK_ENABLE();                   /*PWR时钟使能*/
   BSP_LED_Init(LED_GREEN);
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }

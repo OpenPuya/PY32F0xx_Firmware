@@ -75,10 +75,13 @@ static void APP_ConfigPWMChannel(void)
   LL_GPIO_InitTypeDef TIM1CH1MapInit= {0};
   LL_TIM_OC_InitTypeDef TIM_OC_Initstruct ={0};
 
-  /* Configure PA8/PA9/PA10 as TIM1_CH1N/TIM1_CH1/TIM1_CH2/TIM1_CH3 */
+  /* Configure PA8/PA9/PA10 as TIM1_CH1/TIM1_CH2/TIM1_CH3 */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_8|LL_GPIO_PIN_9|LL_GPIO_PIN_10;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_2; 
+  TIM1CH1MapInit.Speed      = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull       = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
   
   TIM_OC_Initstruct.OCMode        = LL_TIM_OCMODE_PWM2;     /* Mode: PWM2 */

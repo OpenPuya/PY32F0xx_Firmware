@@ -67,8 +67,9 @@ int main(void)
 static void APP_PvdConfig(void)
 {
   /* Enable PWR clock and GPIOB clock */
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  PWR_PVDTypeDef sConfigPVD;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
+  PWR_PVDTypeDef    sConfigPVD      = {0};
+  
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -85,6 +86,7 @@ static void APP_PvdConfig(void)
   HAL_PWR_ConfigPVD(&sConfigPVD);  
   /* Enable PVD interrupt */
   HAL_NVIC_EnableIRQ(PVD_IRQn);
+  HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);                 /* Set interrupt priority */
 }
 
 /**
@@ -94,7 +96,7 @@ static void APP_PvdConfig(void)
   */
 void HAL_PWR_PVD_Callback(void)
 {
-  if (__HAL_PWR_GET_FLAG(PWR_SR_PVDO))
+  if(__HAL_PWR_GET_FLAG(PWR_SR_PVDO)==1)
   {
     BSP_LED_On(LED_GREEN);
   }

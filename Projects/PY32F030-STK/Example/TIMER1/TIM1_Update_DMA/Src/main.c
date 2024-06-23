@@ -95,7 +95,7 @@ int main(void)
   */
 static void APP_GpioPortInit(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
   /* Enable GPIOA clock */
   __HAL_RCC_GPIOA_CLK_ENABLE();                   
   GPIO_InitStruct.Pin = GPIO_PIN_0;

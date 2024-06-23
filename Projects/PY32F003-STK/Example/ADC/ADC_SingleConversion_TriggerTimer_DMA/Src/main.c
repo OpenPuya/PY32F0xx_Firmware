@@ -37,7 +37,6 @@ ADC_HandleTypeDef             AdcHandle;
 ADC_ChannelConfTypeDef        sConfig;
 uint32_t                      aADCxConvertedData = 1;
 TIM_HandleTypeDef             TimHandle;
-TIM_OC_InitTypeDef            OCConfig;
 TIM_MasterConfigTypeDef       sMasterConfig;
 
 /* Private user code ---------------------------------------------------------*/
@@ -71,7 +70,7 @@ int main(void)
     {
       /* 清DMA通道1传输完成标志 */
       __HAL_DMA_CLEAR_FLAG(DMA1, DMA_IFCR_CTCIF1);       
-      printf("ADC: %d \r\n", aADCxConvertedData);
+      printf("ADC: %u \r\n", (unsigned int)aADCxConvertedData);
     }
   }
 }
@@ -94,18 +93,18 @@ static void APP_AdcConfig(void)
     APP_ErrorHandler();
   }                                                                              
   AdcHandle.Instance                   = ADC1;                                    /* ADC */
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV1;                /* 设置ADC时钟*/
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* 设置ADC时钟*/
   AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit */
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_BACKWARD;             /* 扫描序列方向：向下 */
   AdcHandle.Init.LowPowerAutoWait      = ENABLE;                                  /* 等待转换模式开启 */
   AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* 单次转换模式 */
-  AdcHandle.Init.DiscontinuousConvMode = ENABLE;                                  /* 使能非连续模式 */
+  AdcHandle.Init.DiscontinuousConvMode = DISABLE;                                 /* 不使能非连续模式 */
   AdcHandle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_TRGO;            /* 外部触发转换启动事件为TIM1_TRGO */
-  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISINGFALLING;  /* 上升沿和下降沿进行外部驱动 */
+  AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;         /* 上升沿触发 */
   AdcHandle.Init.DMAContinuousRequests = ENABLE;                                  /* DMA循环模式选择 */
   AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* 当过载发生时，覆盖上一个值 */
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_28CYCLES_5;               /* 通道采样时间为28.5ADC时钟周期 */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
   /* ADC初始化 */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)
   {

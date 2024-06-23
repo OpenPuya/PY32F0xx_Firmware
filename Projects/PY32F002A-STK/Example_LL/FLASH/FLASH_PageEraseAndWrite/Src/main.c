@@ -80,7 +80,7 @@ int main(void)
   /*擦除FLASH*/
   APP_FlashErase();
 
-  /*查空FLASH 可屏蔽*/
+  /*查空FLASH*/
   APP_FlashBlank();
 
   /*写FLASH*/
@@ -89,16 +89,14 @@ int main(void)
   /*锁定FLASH*/
   HAL_FLASH_Lock();
 
-  /*校验FLASH 可屏蔽*/
+  /*校验FLASH*/
   APP_FlashVerify();
+  
+  BSP_LED_On(LED_GREEN);
 
   while (1)
   {
-    /*程序执行成功，LED灯翻转*/
-    BSP_LED_Toggle(LED_GREEN);
 
-    /*延时500ms*/
-    LL_mDelay(500);
   }
 }
 /**
@@ -109,7 +107,7 @@ int main(void)
 static void APP_FlashErase(void)
 {
   uint32_t PAGEError = 0;
-  FLASH_EraseInitTypeDef EraseInitStruct;
+  FLASH_EraseInitTypeDef EraseInitStruct = {0};
   /*擦写类型FLASH_TYPEERASE_PAGEERASE=Page擦, FLASH_TYPEERASE_SECTORERASE=Sector擦*/
   EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGEERASE;  
   /*擦写起始地址*/

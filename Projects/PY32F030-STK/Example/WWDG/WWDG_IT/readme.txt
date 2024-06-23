@@ -26,7 +26,7 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载程序并运行；
-2. 程序在看门狗提前唤醒终端中喂狗，LED以1hz在闪烁。
+2. 程序在看门狗提前唤醒中断中喂狗，LED以1hz在闪烁。
 
 Example execution steps:
 1.Compile and download the program to the MCU.

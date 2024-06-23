@@ -118,10 +118,10 @@ void APP_IwdgConfig(void)
   LL_IWDG_EnableWriteAccess(IWDG);
  
   /* Set IWDG prescaler */
-  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32); /* T=1MS */
+  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_32);
   
   /* Set watchdog reload counter */
-  LL_IWDG_SetReloadCounter(IWDG, 1000); /* 1ms*1000=1s */
+  LL_IWDG_SetReloadCounter(IWDG, 1024); /* T*1024=1s */
  
   /* IWDG initialization */
   while (LL_IWDG_IsReady(IWDG) == 0U) {;}

@@ -93,7 +93,7 @@ void SysTick_Handler(void)
   */
 void DMA1_Channel1_IRQHandler(void)
 {
-  APP_DmaChannel1IRQCallback();
+  APP_DmaChannel1IRQCallback(USART1);
 }
 
 /**
@@ -101,7 +101,7 @@ void DMA1_Channel1_IRQHandler(void)
   */
 void DMA1_Channel2_3_IRQHandler(void)
 {
-  APP_DmaChannel2_3_IRQCallback();
+  APP_DmaChannel2_3_IRQCallback(USART1);
 }
 
 /**

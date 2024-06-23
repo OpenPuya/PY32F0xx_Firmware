@@ -47,7 +47,7 @@ static void APP_ConfigTIM1XOR(void);
 int main(void)
 {
   /* Enable TIM1 clock */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
 
   /* Configure system clock */
   APP_SystemClockConfig();
@@ -100,6 +100,8 @@ static void APP_ConfigTIM1XOR(void)
   TIM1ChannelInit.Pull      = LL_GPIO_PULL_UP;
   TIM1ChannelInit.Mode      = LL_GPIO_MODE_ALTERNATE;
   TIM1ChannelInit.Alternate = LL_GPIO_AF_2;
+  TIM1ChannelInit.Speed     = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1ChannelInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOA,&TIM1ChannelInit);
   
   /* Enable CH1, CH2, CH3 */

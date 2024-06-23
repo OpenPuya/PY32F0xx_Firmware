@@ -32,8 +32,6 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-EXTI_HandleTypeDef exti_handle;
-
 /* Private variables ---------------------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -73,7 +71,7 @@ int main(void)
   BSP_LED_Off(LED_GREEN);
   
   /* Enter STOP mode */
-  HAL_PWR_EnterSTOPMode(1, PWR_STOPENTRY_WFE);
+  HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFE);
   
   /* Resume the SysTick interrupt */
   HAL_ResumeTick();
@@ -92,8 +90,10 @@ int main(void)
   */
 static void APP_ConfigureEXTI(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
+  GPIO_InitTypeDef  GPIO_InitStruct={0};
+
   __HAL_RCC_GPIOA_CLK_ENABLE();                  /* Enable GPIOA clock */
+
   GPIO_InitStruct.Mode  = GPIO_MODE_EVT_FALLING; /* GPIO mode set to falling edge event */
   GPIO_InitStruct.Pull  = GPIO_PULLUP;           /* Pull-up */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  /* High-speed */

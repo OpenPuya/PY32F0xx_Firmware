@@ -83,9 +83,6 @@ int main(void)
 
   /* 初始化LED */
   BSP_LED_Init(LED_GREEN);
-  
-  /* 关闭小灯 */
-  BSP_LED_Off(LED_GREEN);
 
   /* 配置RTC外设 */
   APP_ConfigRtc();
@@ -137,7 +134,7 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ConfigRtc(void)
 {
-  LL_RTC_InitTypeDef rtc_initstruct;
+  LL_RTC_InitTypeDef rtc_initstruct = {0};
   
   /*##-1- 启用 PWR 时钟并启用对备份域的访问 #######*/
   /* 要更改 RTC 功能（LSE、LSI）的源时钟，必须：
@@ -192,8 +189,8 @@ static void APP_ConfigRtc(void)
   */
 static void APP_ConfigRtcAlarm(void)
 {
-  LL_RTC_TimeTypeDef  rtc_time_initstruct;
-  LL_RTC_AlarmTypeDef rtc_alarm_initstruct;
+  LL_RTC_TimeTypeDef  rtc_time_initstruct = {0};
+  LL_RTC_AlarmTypeDef rtc_alarm_initstruct = {0};
   
   /*## 配置日期 ##################################################*/
   /* 设定日期: 2022.08.16 */

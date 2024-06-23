@@ -64,30 +64,20 @@
   /* #define HSI_NUMBER_OF_LOOPS            ((uint32_t)5) */   /* 650ms */
   #define HSI_NUMBER_OF_LOOPS               ((uint32_t)3)      /* 430ms */
 
-
-  /* HSI Rough VALUE */
-  uint32_t HSI_Rough_Value ;
-  
-  /* HSI Fine VALUE */
-  uint32_t HSI_Fine_Value ;
-
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void      HSI_TIMx_ConfigForCalibration(void);
-void      HSI_RCC_AdjustCalibrationValue(uint32_t TrimmingValue);
-uint32_t  HSI_FreqMeasure(void);
-void HSI_MeasurementInit(uint32_t HSICLKSource_set);
+void  HSI_TIMx_ConfigForCalibration(void);
+void  HSI_RCC_AdjustCalibrationValue(uint32_t TrimmingValue);
 
 /* Private functions ---------------------------------------------------------*/
 
 /**
   * @brief   Iterating 12 times to obtain an accurate calibration value
   * @param   None
-  * @retval  HSI calibration value
+  * @retval  None
   */
-uint32_t Hsi_Trimming(void)
+void HSI_Trimming(void)
 {
   uint32_t trim_Dac = 1<<12;                 /* Adjustment final value, 13 bits */
   int32_t binary_Cyc=11;                     /* Define the number of loop cycles */
@@ -102,31 +92,34 @@ uint32_t Hsi_Trimming(void)
 /* Binary search algorithm */
   do
   {
-      if (StartCalibration != 0)
-      {
-        /* Set the Intern Osc trimming bits to trimmingvalue */
-        HSI_RCC_AdjustCalibrationValue(trim_Dac);
-      }
-      
-      /* Get actual frequency value */
-      measuredfrequency = HSI_FreqMeasure(); 
-      
-      if(ABS_RETURN((int32_t)(measuredfrequency-sysclockfrequency))<ABS_RETURN((int32_t)(Fine_trim_Final_freq-sysclockfrequency))) /* Select optimal DAC */
-      {
-        Fine_trim_Final_freq = measuredfrequency ;
-        Fine_trim_Final_Dac  = trim_Dac ;
-      }                              
-      if(measuredfrequency <sysclockfrequency)                                 /* Select the next DAC based on the relationship between the current DAC-measured frequency and the target frequency */
-      {
-        trim_Dac += 1<<binary_Cyc;
-      }
-      else                 
-      {
-        trim_Dac -= 1<<binary_Cyc;
-      }
-    binary_Cyc-=1;
-  }while(binary_Cyc>=0);
-  return Fine_trim_Final_Dac;
+    if (StartCalibration != 0)
+    {
+      /* Set the Intern Osc trimming bits to trimmingvalue */
+      HSI_RCC_AdjustCalibrationValue(trim_Dac);
+    }
+    
+    /* Get actual frequency value */
+    measuredfrequency = HSI_FreqMeasure(); 
+    
+    if(ABS_RETURN((int32_t)(measuredfrequency-sysclockfrequency))<ABS_RETURN((int32_t)(Fine_trim_Final_freq-sysclockfrequency))) /* Select optimal DAC */
+    {
+      Fine_trim_Final_freq = measuredfrequency ;
+      Fine_trim_Final_Dac  = trim_Dac ;
+    }
+    /* Select the next DAC based on the relationship between the current DAC-measured frequency and the target frequency */
+    if(measuredfrequency <sysclockfrequency)
+    {
+      trim_Dac += 1<<binary_Cyc;
+    }
+    else                 
+    {
+      trim_Dac -= 1<<binary_Cyc;
+    }
+    binary_Cyc -= 1;
+  }while(binary_Cyc >= -1);
+  
+  /* Set the Intern Osc trimming bits to trimmingvalue */
+  HSI_RCC_AdjustCalibrationValue(Fine_trim_Final_Dac);
 }
 
 /**
@@ -190,20 +183,13 @@ uint32_t HSI_FreqMeasure( void )
 
 /**
   * @brief   HSI测量初始化函数
-  * @param   HSICLKSource_selt
+  * @param   无
   * @retval  无
   */
-void HSI_MeasurementInit(uint32_t HSICLKSource_set)
+void HSI_MeasurementInit(void)
 {
-  SystemClock_Config(HSICLKSource_set);                                 /* 设置系统时钟 */
-    
-  /* HSI_Rough_Value default value */    
-  /* 导入缺省值 */
-  HSI_Rough_Value  =  ( READ_REG(RCC->ICSCR) & 0x00001fff ) >>9;        /* High 4 bits  高4位 */
-  HSI_Fine_Value   =  ( READ_REG(RCC->ICSCR) & 0x000001ff );            /* Low 9 bits   低4位 */
-  
   /* Configure the GPIO ports before starting calibration process */
-  GPIO_ConfigForCalibration();
+  APP_GPIO_ConfigForCalibration();
  
   /* Configure TIMx before starting calibration process */
   HSI_TIMx_ConfigForCalibration();
@@ -216,7 +202,7 @@ void HSI_MeasurementInit(uint32_t HSICLKSource_set)
   * @retval  无
   */void HSI_TIMx_ConfigForCalibration(void)
 {
-  TIM_IC_InitTypeDef      ic_config; /* Timer Input Capture Configuration Structure declaration */
+  TIM_IC_InitTypeDef      ic_config = {0}; /* Timer Input Capture Configuration Structure declaration */
 
   /* Enable TIMx clock */
   __TIMx_CLK_ENABLE();

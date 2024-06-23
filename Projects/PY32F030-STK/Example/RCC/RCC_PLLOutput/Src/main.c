@@ -82,10 +82,10 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* No HSI division */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz;                           /* Configure HSI output clock as 16MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                   /* Disable HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                               /* HSE frequency range: 16M~32M */
+  /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                         /* HSE frequency range: 16M~32M */
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                   /* Disable LSI */
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                   /* Disable LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_ECSCR_LSE_DRIVER_1;                                       /* Default LSE  drive capability */
+  /* RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM; */                                    /* Default LSE  drive capability */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                                                /* Enable PLL */
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;                                        /* PLL clock source, requires a frequency of 12MHz or higher */
   /* Initialize RCC oscillator */

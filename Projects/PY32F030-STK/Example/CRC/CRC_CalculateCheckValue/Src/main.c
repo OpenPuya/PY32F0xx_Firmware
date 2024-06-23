@@ -84,7 +84,7 @@ int main(void)
   CrcHandle.Instance = CRC;
   if (HAL_CRC_Init(&CrcHandle) != HAL_OK)
   {
-    while (1);
+    APP_ErrorHandler();
   }
 
   /* Calculate CRC of aDataBuffer */

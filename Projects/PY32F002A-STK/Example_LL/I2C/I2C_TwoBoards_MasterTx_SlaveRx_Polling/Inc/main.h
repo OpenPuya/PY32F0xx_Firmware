@@ -45,7 +45,6 @@ extern "C" {
 #include "py32f0xx_ll_cortex.h"
 #include "py32f0xx_ll_utils.h"
 #include "py32f0xx_ll_pwr.h"
-#include "py32f0xx_ll_dma.h"
 #include "py32f0xx_ll_gpio.h"
 #include "py32f0xx_ll_i2c.h"
 
@@ -62,7 +61,7 @@ extern "C" {
 #define I2C_REQUEST_READ                        0x01  /* 方向位：读 */
 
 /* 取消注释此行以将板用作从板，否则将其用作主板 */
-#define SLAVE_BOARD
+//#define SLAVE_BOARD
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);

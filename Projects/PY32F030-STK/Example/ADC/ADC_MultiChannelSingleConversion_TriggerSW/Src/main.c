@@ -90,7 +90,7 @@ static void APP_AdcInit(void)
   }
   
   AdcHandle.Instance = ADC1;
-  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;              /* Set ADC clock */
+  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;              /* Set ADC clock */
   AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;                        /* 12-bit resolution for converted data */
   AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;                        /* Right-alignment for converted data */
   AdcHandle.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;              /* Scan sequence direction: forward */
@@ -102,7 +102,7 @@ static void APP_AdcInit(void)
   AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* No external trigger edge */
   AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* Disable DMA */
   AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* When an overload occurs, overwrite the previous value */
-  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_13CYCLES_5;           /* Set sampling time */
+  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_239CYCLES_5;          /* Set sampling time */
   /* Initialize ADC */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                
   {

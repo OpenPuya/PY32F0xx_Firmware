@@ -84,13 +84,13 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* 配置HSI,HSE,LSE,LSI,PLL所有时钟 */
+  /* 配置HSI,HSE,LSI所有时钟 */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* 使能HSI */
   RCC_OscInitStruct.HSIDiv =    RCC_HSI_DIV1;                                   /* HSI预分频 */
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;              /* 设置HSI输出时钟为8MHz,库会设置校准值 */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                     /* 禁止HSE */
-  RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* 设置HSE频率范围,没用可以不设置 */
+  RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* 设置HSE频率范围 */
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                     /* 禁止LSI */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                          /* 配置时钟 */
@@ -104,7 +104,7 @@ static void APP_SystemClockConfig(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                            /* 设置AHB预分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                             /* 设置APB1预分频 */
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)       /* 配置总线 */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)       /* 配置总线 */
   {
     APP_ErrorHandler();
   }
@@ -130,7 +130,7 @@ static void APP_AdcInit(void)
   }
 
   AdcHandle.Instance = ADC1;
-  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV1;              /* 设置ADC时钟 */
+  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;              /* 设置ADC时钟 */
   AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;                        /* 转换分辨率12bit */
   AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;                        /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;              /* 扫描方向设置 */
@@ -140,9 +140,9 @@ static void APP_AdcInit(void)
   AdcHandle.Init.DiscontinuousConvMode = DISABLE;                        /* 不使能非连续模式 */
   AdcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;                  /* 软件触发 */
   AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* 触发边沿无 */
-  AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* DMA连续模式设置 */
+  AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* 关闭DMA */
   AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* 当过载发生时，覆盖上一个值  */
-  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_71CYCLES_5;           /* 设置采样周期 */
+  AdcHandle.Init.SamplingTimeCommon=ADC_SAMPLETIME_239CYCLES_5;          /* 设置采样周期 */
   /* 初始化ADC */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                
   {

@@ -98,16 +98,6 @@ static void APP_SystemClockConfig(void)
 }
 
 /**
-  * @brief  配置LED翻转
-  * @param  无
-  * @retval 无
-  */
-void APP_LedToggleCallback(void)
-{
-  LL_GPIO_TogglePin(GPIOB, LL_GPIO_PIN_5); 
-}
-
-/**
   * @brief  WWDG配置函数
   * @param  无
   * @retval 无

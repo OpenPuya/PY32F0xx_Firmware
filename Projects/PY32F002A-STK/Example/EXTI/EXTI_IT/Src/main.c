@@ -34,7 +34,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-EXTI_HandleTypeDef exti_handle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -57,16 +56,7 @@ int main(void)
   }
 }
 
-/**
-  * @brief  中断入口函数，每产生一次下降沿,LED翻转一次
-  * @param  无
-  * @retval 无
-  */
-void EXTI2_3_IRQHandler(void)
-{
-  BSP_LED_Toggle(LED_GREEN);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);         /* 处理EXTI中断请求 */
-}
+
 
 /**
   * @brief  配置外部中断引脚
@@ -75,8 +65,10 @@ void EXTI2_3_IRQHandler(void)
   */
 void Configure_EXTI(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStruct;
-  __HAL_RCC_GPIOB_CLK_ENABLE();                   /* 使能GPIOA时钟 */
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
+
+  __HAL_RCC_GPIOB_CLK_ENABLE();                   /* 使能GPIOB时钟 */
+
   GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;   /* GPIO模式为下降沿中断 */
   GPIO_InitStruct.Pull  = GPIO_PULLUP;            /* 上拉 */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;   /* 速度为高速 */

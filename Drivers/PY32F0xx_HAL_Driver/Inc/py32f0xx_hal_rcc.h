@@ -121,8 +121,7 @@ extern "C" {
 #define IS_RCC_PLL(__PLL__)               (((__PLL__) == RCC_PLL_NONE) ||((__PLL__) == RCC_PLL_OFF) || \
                                            ((__PLL__) == RCC_PLL_ON))
 
-#define IS_RCC_PLLSOURCE(__SOURCE__)      (((__SOURCE__) == RCC_PLLSOURCE_NONE) || \
-                                           ((__SOURCE__) == RCC_PLLSOURCE_HSI)  || \
+#define IS_RCC_PLLSOURCE(__SOURCE__)      (((__SOURCE__) == RCC_PLLSOURCE_HSI)  || \
                                            ((__SOURCE__) == RCC_PLLSOURCE_HSE))
 #endif
                                          
@@ -409,7 +408,6 @@ typedef struct
 /** @defgroup RCC_PLL_Clock_Source PLL Clock Source
   * @{
   */
-#define RCC_PLLSOURCE_NONE             0x00000000U             /*!< No clock selected as PLL entry clock source  */
 #define RCC_PLLSOURCE_HSI              RCC_PLLCFGR_PLLSRC_HSI  /*!< HSI clock selected as PLL entry clock source */
 #define RCC_PLLSOURCE_HSE              RCC_PLLCFGR_PLLSRC_HSE  /*!< HSE clock selected as PLL entry clock source */
 /**
@@ -1481,7 +1479,6 @@ typedef struct
   * @note   This function must be used only when the main PLL is disabled.
   * @param  __PLLSOURCE__  specifies the PLL entry clock source.
   *         This parameter can be one of the following values:
-  *            @arg @ref RCC_PLLSOURCE_NONE  No clock selected as PLL clock entry
   *            @arg @ref RCC_PLLSOURCE_HSI  HSI oscillator clock selected as PLL clock entry
   *            @arg @ref RCC_PLLSOURCE_HSE  HSE oscillator clock selected as PLL clock entry
   * @retval None
@@ -1493,7 +1490,6 @@ typedef struct
 /** @brief  Macro to get the oscillator used as PLL clock source.
   * @retval The oscillator used as PLL clock source. The returned value can be one
   *         of the following:
-  *              @arg @ref RCC_PLLSOURCE_NONE No oscillator is used as PLL clock source.
   *              @arg @ref RCC_PLLSOURCE_HSI HSI oscillator is used as PLL clock source.
   *              @arg @ref RCC_PLLSOURCE_HSE HSE oscillator is used as PLL clock source.
   */

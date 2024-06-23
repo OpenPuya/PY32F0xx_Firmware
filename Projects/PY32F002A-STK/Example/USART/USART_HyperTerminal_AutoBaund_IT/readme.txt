@@ -15,8 +15,8 @@ IAR版本： 9.20
 1. 编译并下载程序到MCU；
 2. 通过USB转TTL模块连接PC与STK板,STK板与USB转TTL模块的连线方式如下；
 STK板        USB转TTL模块
-PA2(TX) --> TX
-PA3(RX) --> RX
+PA2(TX) --> RX
+PA3(RX) --> TX
 GND      --> GND
 3. PC端打开串口调试助手，正确连接上通讯COM口，波特率设置为115200；
 4. 调试助手发送一个字符0x7F，MCU反馈字符串：Auto BaudRate Test；

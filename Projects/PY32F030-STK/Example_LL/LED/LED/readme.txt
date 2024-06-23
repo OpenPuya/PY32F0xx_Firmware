@@ -3,12 +3,13 @@
                              Sample Description
 ================================================================================
 功能描述：
-此样例演示了LED的控制数码管显示的功能，样例中同时控制4个数码管，4个数码管同时显
+此样例演示了LED的控制数码管显示的功能，样例中同时控制4个数码管，4个数码管逐步显
 示“8888”。
 
 Function descriptions:
-This sample demonstrates the control of LEDs to display on a 4-digit display. 
-The example simultaneously controls 4 digits to display "8888".
+This sample demonstrates the LED control digital tube display function, sample
+at the same time control 4 digital tubes, 4 digital tubes gradually displayed
+"8888".
 ================================================================================
 测试环境：
 测试用板：PY32F030_STK
@@ -24,11 +25,11 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载程序到MCU，并运行；
-2. 可观察到数码管同时显示：8888。
+2. 可观察到数码管逐步显示：8888。
 
 Example execution steps:
 1.Compile and download the program to the MCU and run it.
-2.Observe that the 4-digit display simultaneously shows: 8888.
+2.It can be observed that the digital tube gradually displays: 8888.
 ================================================================================
 注意事项：
 1. 此样例需要stk板外接数码管

@@ -176,9 +176,6 @@ void APP_CompRccInit()
   /* 使能DBP */
   LL_PWR_EnableBkUpAccess();
   
-  /* 使能LSC */
-  LL_RCC_LSCO_Enable();
-  
  /* 设置COMP的时钟源为LSC */
   LL_RCC_SetCOMPClockSource(LL_RCC_COMP1_CLKSOURCE_LSC);
 }

@@ -101,12 +101,13 @@ int main(void)
   */
 static void APP_RCCOscConfig(void)
 {
-  RCC_OscInitTypeDef OSCINIT;
-  RCC_PeriphCLKInitTypeDef LPTIM_RCC;
+  RCC_OscInitTypeDef OSCINIT = {0};
+  RCC_PeriphCLKInitTypeDef LPTIM_RCC = {0};
 
   /* LSI clock configuration */
   OSCINIT.OscillatorType = RCC_OSCILLATORTYPE_LSI;  /* Set the oscillator type to LSI */
   OSCINIT.LSIState = RCC_LSI_ON;                    /* Enable LSI */
+  OSCINIT.PLL.PLLState = RCC_PLL_NONE;
   /* Clock initialization */
   if (HAL_RCC_OscConfig(&OSCINIT) != HAL_OK)
   {
@@ -160,8 +161,8 @@ static void APP_LPTIMStart(void)
   /* Load autoreload value */
   __HAL_LPTIM_AUTORELOAD_SET(&LPTIMConf, 51);
 
-  /* Delay 75us */
-  APP_delay_us(75);
+  /* Delay 120us */
+  APP_delay_us(120);
   
   /* Start single count mode */
   __HAL_LPTIM_START_SINGLE(&LPTIMConf);

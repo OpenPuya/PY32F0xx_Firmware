@@ -80,13 +80,16 @@ int main(void)
   */
 static void APP_ConfigPWMChannel(void)
 {
-  LL_GPIO_InitTypeDef TIM1CH1MapInit= {0};
-  LL_TIM_OC_InitTypeDef TIM_OC_Initstruct ={0};
+  LL_GPIO_InitTypeDef TIM1CH1MapInit = {0};
+  LL_TIM_OC_InitTypeDef TIM_OC_Initstruct = {0};
 
   /* 配置PA3为TIM1_CH1 */
   TIM1CH1MapInit.Pin        = LL_GPIO_PIN_3;
   TIM1CH1MapInit.Mode       = LL_GPIO_MODE_ALTERNATE;
   TIM1CH1MapInit.Alternate  = LL_GPIO_AF_13; 
+  TIM1CH1MapInit.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1CH1MapInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1CH1MapInit.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1CH1MapInit);
 
   /* 配置PWM通道 */
@@ -109,7 +112,7 @@ static void APP_ConfigPWMChannel(void)
 static void APP_ConfigDMABurst(void)
 {
   
-  LL_DMA_InitTypeDef DMA_TIM1DMABurst ={0};
+  LL_DMA_InitTypeDef DMA_TIM1DMABurst = {0};
   
   /* 配置DMA通道1 */
   DMA_TIM1DMABurst.PeriphOrM2MSrcAddress  = (uint32_t)&(TIM1->DMAR);           /* 目标地址 */

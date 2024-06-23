@@ -94,7 +94,7 @@ void SysTick_Handler(void)
   */
 void RTC_IRQHandler(void)
 {
-  if (LL_RTC_IsEnabledIT_ALR(RTC) != 0)
+  if ((LL_RTC_IsActiveFlag_ALR(RTC) != 0)&& (LL_RTC_IsEnabledIT_ALR(RTC) != 0))
   {
     /* 打开LED灯 */
     BSP_LED_On(LED_GREEN);

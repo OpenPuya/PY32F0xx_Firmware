@@ -35,9 +35,9 @@
 #define  PULSE1_VALUE       (uint32_t)(400)/* Capture Compare 1 Value  */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef    TimHandle;
-TIM_OC_InitTypeDef              sPWMConfig;
-TIM_BreakDeadTimeConfigTypeDef sBreakConfig;
+TIM_HandleTypeDef                TimHandle;
+TIM_OC_InitTypeDef               sPWMConfig;
+TIM_BreakDeadTimeConfigTypeDef   sBreakConfig;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -134,7 +134,7 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* Disable PLL */
-  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;*/
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/          /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {

@@ -50,14 +50,14 @@ static void APP_AdcConfig(void);
 int main(void)
 {
   /* 初始化所有外设，Flash接口，SysTick */
-  HAL_Init();      
+  HAL_Init();     
+
+  /* 初始化UART */
+  DEBUG_USART_Config();  
 
   /* 初始化ADC */
   APP_AdcConfig();           
   
-  /* 初始化UART */
-  DEBUG_USART_Config();                             
-  printf("test start..\r\n");
   while (1)
   {
     /* 启动ADC */
@@ -98,7 +98,7 @@ static void APP_AdcConfig(void)
   }    
 
   AdcHandle.Instance = ADC1;
-  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;              /* 设置ADC时钟 */
+  AdcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;              /* 设置ADC时钟 */
   AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;                        /* 转换分辨率12bit */
   AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;                        /* 数据右对齐 */
   AdcHandle.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;              /* 设置ADC转换方向, 向上 */
@@ -110,7 +110,7 @@ static void APP_AdcConfig(void)
   AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;   /* 触发边沿无 */
   AdcHandle.Init.DMAContinuousRequests = DISABLE;                        /* DMA不使能 */
   AdcHandle.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;                     /* 当过载发生时，覆盖上一个值 */
-  AdcHandle.Init.SamplingTimeCommon = ADC_SAMPLETIME_41CYCLES_5;         /* 设置采样周期41.5个ADC时钟 */
+  AdcHandle.Init.SamplingTimeCommon = ADC_SAMPLETIME_239CYCLES_5;        /* 设置采样周期239.5个ADC时钟 */
   /* ADC初始化 */
   if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                
   {

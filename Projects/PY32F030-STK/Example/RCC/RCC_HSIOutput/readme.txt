@@ -23,11 +23,11 @@ GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 ================================================================================
 使用步骤：
 1. 编译下载程序到MCU，并运行；
-2. 用示波器监测PA08引脚上的频率，观察是否和配置的HSI频率一致；
+2. 用示波器监测PA08引脚上的频率，观察到和配置的HSI频率一致；
 
 Example execution steps:
 1.Compile and download the program to the MCU and run it.
-2.Use an oscilloscope to monitor the frequency on the PA08 pin and observe if 
+2.Use an oscilloscope to monitor the frequency on the PA08 pin and observes that
 it matches the configured HSI frequency.
 ================================================================================
 注意事项：

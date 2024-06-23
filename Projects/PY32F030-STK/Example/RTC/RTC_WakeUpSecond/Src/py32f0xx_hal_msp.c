@@ -54,14 +54,15 @@ void HAL_MspInit(void)
   */
 void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 {
-  RCC_OscInitTypeDef        RCC_OscInitStruct;
-  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+  RCC_OscInitTypeDef        RCC_OscInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct = {0};
 
   /* Configure LSE/LSI as RTC clock source */
 #ifdef RTC_CLOCK_SOURCE_LSE
   RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -77,6 +78,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
+  /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
   }
@@ -100,7 +102,6 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   NVIC_EnableIRQ(RTC_IRQn);
 
   __HAL_RTC_OVERFLOW_ENABLE_IT(hrtc, RTC_IT_OW);
-  __HAL_RTC_ALARM_ENABLE_IT(hrtc, RTC_IT_ALRA);
   __HAL_RTC_SECOND_ENABLE_IT(hrtc, RTC_IT_SEC);
 }
 

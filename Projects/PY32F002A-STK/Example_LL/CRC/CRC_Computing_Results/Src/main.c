@@ -81,11 +81,10 @@ int main(void)
   CRCValue=APP_CalculateCRC((uint32_t *)aDataBuffer,BUFFER_SIZE);
   while (1)
   {
-     /*CRC值错误，LED翻转*/
+     /*CRC值错误，LED熄灭*/
     if (CRCValue != ExpectedCRCValue)
     {
-      BSP_LED_Toggle(LED_GREEN);
-      LL_mDelay(200);
+      BSP_LED_Off(LED_GREEN);
     }
     /*CRC值正确，LED常亮*/
     else

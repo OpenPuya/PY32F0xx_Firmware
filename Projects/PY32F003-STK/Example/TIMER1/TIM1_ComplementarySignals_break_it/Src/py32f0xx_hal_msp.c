@@ -51,11 +51,11 @@ void HAL_MspInit(void)
   */
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 {
-  GPIO_InitTypeDef   GPIO_InitStruct;
+  GPIO_InitTypeDef   GPIO_InitStruct = {0};
   __HAL_RCC_TIM1_CLK_ENABLE();                    /* TIM1时钟使能 */
   __HAL_RCC_GPIOA_CLK_ENABLE();                   /* GPIOA时钟使能 */
 
-  /*初始化PA0/PA7为TIM1_CH1N/TIM1_CH1*/
+  /*初始化PA0/PA3为TIM1_CH1N/TIM1_CH1*/
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -65,13 +65,14 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 
   GPIO_InitStruct.Alternate = GPIO_AF13_TIM1;
   GPIO_InitStruct.Pin = GPIO_PIN_3;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);         /* A7-TIM1_CH1 */
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);         /* A3-TIM1_CH1 */
 
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Alternate = GPIO_AF2_TIM1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);         /* A6-TIM1_BKIN */
 
-  NVIC_EnableIRQ(TIM1_BRK_UP_TRG_COM_IRQn);       /* 使能TIM1_BREAK中断 */
+  HAL_NVIC_EnableIRQ(TIM1_BRK_UP_TRG_COM_IRQn);          /* 使能TIM1_BREAK中断 */
+  HAL_NVIC_SetPriority(TIM1_BRK_UP_TRG_COM_IRQn, 0, 0);  /* 设置TIM中断优先级 */
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

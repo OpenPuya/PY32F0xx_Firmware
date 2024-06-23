@@ -31,6 +31,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "py32f0xx_it.h"
+#include "py32f002xx_ll_Start_Kit.h"
 
 /* Private includes ----------------------------------------------------------*/
 
@@ -95,8 +96,19 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_py32f003xx.s).                   */
 /******************************************************************************/
-
-
-
+/**
+  * @brief  中断入口函数，每产生一次下降沿,LED翻转一次
+  * @param  无
+  * @retval 无
+  */
+void EXTI2_3_IRQHandler(void)
+{
+  /* 处理EXTI中断请求 */
+  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_2))
+  {
+    BSP_LED_Toggle(LED_GREEN);
+    LL_EXTI_ClearFlag(LL_EXTI_LINE_2);
+  }
+}
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

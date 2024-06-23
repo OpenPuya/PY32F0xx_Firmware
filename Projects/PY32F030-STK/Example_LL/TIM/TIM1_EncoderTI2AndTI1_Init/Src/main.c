@@ -47,7 +47,7 @@ static void APP_ConfigTIM1Encoder(void);
 int main(void)
 {
   /* Enable TIM1 and GPIOA clocks */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
   /* Configure system clock */
@@ -76,6 +76,8 @@ static void APP_ConfigTIM1Encoder(void)
   LL_TIM_ENCODER_InitTypeDef TIM1EncoderInit = {0};
   LL_GPIO_InitTypeDef TIM1ChannelInit = {0};
 
+  TIM1CountInit.ClockDivision       = LL_TIM_CLOCKDIVISION_DIV1; /* No clock division */
+  TIM1CountInit.CounterMode         = LL_TIM_COUNTERMODE_UP;     /* Up counting mode */
   TIM1CountInit.Prescaler           = 1-1;    /* No prescaler */
   TIM1CountInit.Autoreload          = 1000-1; /* Autoreload value: 1000 */
   TIM1CountInit.RepetitionCounter   = 0;      /* Repetition counter value: 0 */
@@ -108,6 +110,9 @@ static void APP_ConfigTIM1Encoder(void)
   TIM1ChannelInit.Pin       = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
   TIM1ChannelInit.Mode      = LL_GPIO_MODE_ALTERNATE;
   TIM1ChannelInit.Alternate = LL_GPIO_AF_2;
+  TIM1ChannelInit.Speed     = LL_GPIO_SPEED_FREQ_HIGH;
+  TIM1ChannelInit.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  TIM1ChannelInit.Pull       = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA,&TIM1ChannelInit);
   
   /* Enable TIM1 counter */

@@ -44,17 +44,6 @@
   */
 void HAL_MspInit(void)
 {
-  GPIO_InitTypeDef gpioinitstruct;
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-
-  gpioinitstruct.Pin = GPIO_PIN_15;
-  gpioinitstruct.Pull = GPIO_NOPULL;
-  gpioinitstruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
-  /* Configure Button pin as input */
-  gpioinitstruct.Mode = GPIO_MODE_OUTPUT_PP;
-
-  HAL_GPIO_Init(GPIOA, &gpioinitstruct);
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/

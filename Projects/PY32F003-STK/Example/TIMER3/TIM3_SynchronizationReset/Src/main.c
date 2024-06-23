@@ -101,7 +101,7 @@ int main(void)
   {
     APP_ErrorHandler();
   }
-  if (HAL_TIM_Base_Start(&TimHandle3) != HAL_OK)                        /* TIM3启动计数并使能产生中断 */
+  if (HAL_TIM_Base_Start(&TimHandle3) != HAL_OK)                        /* TIM3启动计数 */
   {
     APP_ErrorHandler();
   }

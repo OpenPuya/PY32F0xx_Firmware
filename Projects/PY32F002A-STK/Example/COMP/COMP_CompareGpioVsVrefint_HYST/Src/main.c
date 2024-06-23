@@ -56,6 +56,7 @@ int main(void)
   hcomp.Init.Hysteresis      = COMP_HYSTERESIS_ENABLE;                 /* 迟滞功能开启 */
   hcomp.Init.WindowMode      = COMP_WINDOWMODE_DISABLE;                /* 窗口模式关闭*/
   hcomp.Init.TriggerMode     = COMP_TRIGGERMODE_NONE;                  /* COMP2外部触发不使能 */
+  hcomp.Init.DigitalFilter   = 0;
 
   /* COMP2初始化 */
   if (HAL_COMP_Init(&hcomp) != HAL_OK)                                 

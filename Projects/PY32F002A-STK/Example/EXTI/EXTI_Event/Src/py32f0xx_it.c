@@ -97,13 +97,4 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_py32f002xx.s).                   */
 /******************************************************************************/
 
-/**
-  * @brief  This function handles PPP interrupt request.
-  * @param  None
-  * @retval None
-  */
-/*void PPP_IRQHandler(void)
-{
-}*/
-
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

@@ -106,11 +106,13 @@ static void APP_SystemClockConfig(void)
   */
 static void APP_ExtiConfig(void)
 {
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+
   /* Enable GPIOB clock */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
-
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
-  
+ 
   /* Select PB07 pin */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
   
@@ -122,8 +124,6 @@ static void APP_ExtiConfig(void)
   
   /* Initialize GPIOB */
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  LL_EXTI_InitTypeDef EXTI_InitStruct;
   
   /* Select EXTI16 */
   EXTI_InitStruct.Line = LL_EXTI_LINE_16;

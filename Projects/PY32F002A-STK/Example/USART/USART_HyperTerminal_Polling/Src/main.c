@@ -58,7 +58,7 @@ int main(void)
   APP_USARTConfig(); 
 
   /*通过中断方式接收数据*/
-  if (HAL_UART_Transmit(&UartHandle, (uint8_t *)aRxBuffer, 12,5000) != HAL_OK)
+  if (HAL_UART_Transmit(&UartHandle, (uint8_t *)aTxBuffer, 12,5000) != HAL_OK)
   {
     Error_Handler();
   }
@@ -95,6 +95,9 @@ void APP_USARTConfig(void)
   UartHandle.Init.Parity       = UART_PARITY_NONE;
   UartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
   UartHandle.Init.Mode         = UART_MODE_TX_RX;
+  UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+  UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+
   if (HAL_UART_DeInit(&UartHandle) != HAL_OK)
   {
     Error_Handler();

@@ -54,7 +54,7 @@ void HAL_MspInit(void)
   */
 void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc)
 {
-  /* CRC Peripheral clock enable */
+  /* CRC 时钟使能 */
   __HAL_RCC_CRC_CLK_ENABLE();
 }
 

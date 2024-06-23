@@ -34,18 +34,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef      TimHandle;
-TIM_IC_InitTypeDef     sICConfig;
-uint32_t  StartCalibration = 0;
-uint32_t  __IO Capture = 0;
-uint32_t  __IO CaptureState = 0;
-extern uint32_t HSI_Rough_Value ;
-extern uint32_t HSI_Fine_Value ;
+TIM_HandleTypeDef    TimHandle;
+uint32_t             StartCalibration = 0;
+uint32_t __IO        Capture = 0;
+uint32_t __IO        CaptureState = 0;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void HSI_CALIBRATION(uint32_t HSICLKSource_SET);
+static void APP_HSI_Calibration(void);
+static void APP_SystemClockConfig(uint32_t HSICLKSource_set);
 
 /**
   * @brief  应用程序入口函数.
@@ -70,8 +68,11 @@ int main(void)
   /* Turn on the LED */
   BSP_LED_On(LED_GREEN);
   
+  /* 配置系统时钟为 HSI 24MHz. */
+  APP_SystemClockConfig(RCC_HSICALIBRATION_24MHz);
+  
   /* Calibrate the HSI */
-  HSI_CALIBRATION(RCC_HSICALIBRATION_24MHz);
+  APP_HSI_Calibration();
   
   while (1)
   {
@@ -86,19 +87,16 @@ int main(void)
   * @param   无
   * @retval  无
   */
-void HSI_CALIBRATION(uint32_t HSICLKSource_SET)
+static void APP_HSI_Calibration(void)
 {
-  uint32_t HSI_Calibration_value = 0;
-
   /* Enable Calibration */
   StartCalibration = 1;
 
-  /* Get frequency values before calibration */
-  HSI_MeasurementInit(HSICLKSource_SET);
+  /* Initialize the GPIO and TIMx before calibration */
+  HSI_MeasurementInit();
 
-  HSI_Calibration_value = Hsi_Trimming();         /* 13 bits calibration value */
-
-  MODIFY_REG(RCC->ICSCR, RCC_ICSCR_HSI_TRIM, HSI_Calibration_value);
+  /* Calculate the optimal calibration value of the HSI by dichotomisation and calibrate the HSI */
+  HSI_Trimming();
 }
 
 /**
@@ -154,13 +152,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /**
   * @brief   配置系统时钟
   * @param   HSICLKSource_SET：选择HSI时钟频率
+  *            @arg @ref RCC_HSICALIBRATION_4MHz：4M时钟
   *            @arg @ref RCC_HSICALIBRATION_8MHz：8M时钟
   *            @arg @ref RCC_HSICALIBRATION_16MHz：16M时钟
   *            @arg @ref RCC_HSICALIBRATION_22p12MHz：22.12M时钟
   *            @arg @ref RCC_HSICALIBRATION_24MHz：24M时钟
   * @retval  无
   */
-void SystemClock_Config(uint32_t HSICLKSource_SET)
+static void APP_SystemClockConfig(uint32_t HSICLKSource_SET)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -182,7 +181,7 @@ void SystemClock_Config(uint32_t HSICLKSource_SET)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                            /* 设置AHB预分频 */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                             /* 设置APB1预分频 */
                                                                                 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)       /* 配置总线 */
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)       /* 配置总线 */
   {
     APP_ErrorHandler();
   }
@@ -193,19 +192,19 @@ void SystemClock_Config(uint32_t HSICLKSource_SET)
   * @param   无
   * @retval  无
   */
-void GPIO_ConfigForCalibration(void)
+void APP_GPIO_ConfigForCalibration(void)
 {
-  GPIO_InitTypeDef gpio_init;
+  GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIOA clock enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  gpio_init.Pin = GPIO_PIN_4;                        /* 配置PIN */
-  gpio_init.Mode = GPIO_MODE_AF_PP;                  /* 配置为复用功能 */
-  gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;            /* 配置GPIO速度 */
-  gpio_init.Pull  = GPIO_NOPULL;                     /* 配合GPIO上下拉 */
-  gpio_init.Alternate = GPIO_AF4_TIMx;               /* 选择复用功能 */
-  HAL_GPIO_Init(GPIOA, &gpio_init);                  /* 初始化GPIOA4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;                       /* Configure PIN */
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;                 /* Configure as alternate function */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;           /* Configure GPIO speed */
+  GPIO_InitStruct.Pull  = GPIO_NOPULL;                    /* No Pull-up or Pull-down activation */
+  GPIO_InitStruct.Alternate = GPIO_AF4_TIMx;              /* Select alternate function */
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);                 /* Initialize GPIOA4 */
 }
 
 /**

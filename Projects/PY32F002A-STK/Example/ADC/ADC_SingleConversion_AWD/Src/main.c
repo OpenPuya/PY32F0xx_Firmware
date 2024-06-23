@@ -80,7 +80,7 @@ int main(void)
 }
 
 /**
-  * @brief  系统时钟配置函数
+  * @brief  ADC配置函数
   * @param  无
   * @retval 无
   */
@@ -97,7 +97,7 @@ void APP_ADCConfig(void)
   }
 
   hadc.Instance                   = ADC1;                                    /* ADC*/
-  hadc.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV32;               /* 模拟ADC时钟源为PCLK*/
+  hadc.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* 设置ADC时钟源*/
   hadc.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 转换分辨率12bit*/
   hadc.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* 数据右对齐 */
   hadc.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;              /* 扫描序列方向：向上(从通道0到通道11)*/
@@ -108,20 +108,20 @@ void APP_ADCConfig(void)
   hadc.Init.ExternalTrigConv      = ADC_SOFTWARE_START;                      /* 软件触发 */
   hadc.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;           /* 触发边沿无 */
   hadc.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* ADC_OVR_DATA_OVERWRITTEN=过载时覆盖,ADC_OVR_DATA_PRESERVED=保留旧值*/
-  hadc.Init.SamplingTimeCommon    = ADC_SAMPLETIME_41CYCLES_5;               /* 通道采样时间为41.5ADC时钟周期 */
+  hadc.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* 通道采样时间为239.5ADC时钟周期 */
   if (HAL_ADC_Init(&hadc) != HAL_OK)                                         /* ADC初始化*/
   {
     Error_Handler();
   }
 
-  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                            /*设置是否排行, 想设置单通道采样,需配置ADC_RANK_NONE */
+  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                            /*设置是否采样 */
   sConfig.Channel      = ADC_CHANNEL_0;                                      /* 设置采样通道 */
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)                      /*  配置ADC通道 */
   {
     Error_Handler();
   }
 
-  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                            /*设置是否排行, 想设置单通道采样,需配置ADC_RANK_NONE */
+  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                            /*设置是否采样 */
   sConfig.Channel      = ADC_CHANNEL_1;                                      /* 设置采样通道 */
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)                      /*  配置ADC通道 */
   {
@@ -139,6 +139,16 @@ void APP_ADCConfig(void)
   }
   HAL_NVIC_SetPriority(ADC_COMP_IRQn, 0, 0);                                      /* 设置ADC中断优先级*/
   HAL_NVIC_EnableIRQ(ADC_COMP_IRQn);                                              /* 设置ADC内核中断*/
+}
+
+/**
+  * @brief  Analog watchdog interrupt callback function
+  * @param  AdcHandle: ADC handle
+  * @retval None
+  */
+void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* AdcHandle)
+{
+  BSP_LED_On(LED_GREEN);
 }
 
 /**

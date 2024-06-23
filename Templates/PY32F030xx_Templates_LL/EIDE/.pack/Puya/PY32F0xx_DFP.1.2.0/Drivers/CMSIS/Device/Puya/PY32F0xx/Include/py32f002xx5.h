@@ -641,9 +641,6 @@ typedef struct
 #define ADC_CHSELR_CHSEL_Pos      (0U)
 #define ADC_CHSELR_CHSEL_Msk      (0x7FFUL << ADC_CHSELR_CHSEL_Pos)             /*!< 0x00001BFF */
 #define ADC_CHSELR_CHSEL           ADC_CHSELR_CHSEL_Msk                         /*!< ADC group regular sequencer channels, available when ADC_CFGR1_CHSELRMOD is reset */
-// #define ADC_CHSELR_CHSEL10_Pos    (10U)
-// #define ADC_CHSELR_CHSEL10_Msk    (0x1UL << ADC_CHSELR_CHSEL10_Pos)             /*!< 0x00000400 */
-// #define ADC_CHSELR_CHSEL10         ADC_CHSELR_CHSEL10_Msk                       /*!< ADC group regular sequencer channel 10, available when ADC_CFGR1_CHSELRMOD is reset */
 #define ADC_CHSELR_CHSEL9_Pos     (9U)
 #define ADC_CHSELR_CHSEL9_Msk     (0x1UL << ADC_CHSELR_CHSEL9_Pos)              /*!< 0x00000200 */
 #define ADC_CHSELR_CHSEL9          ADC_CHSELR_CHSEL9_Msk                        /*!< ADC group regular sequencer channel 9, available when ADC_CFGR1_CHSELRMOD is reset */
@@ -758,10 +755,10 @@ typedef struct
 /******************************************************************************/
 /********************  Bit definition for DBG_IDCODE register  *************/
 #define DBGMCU_IDCODE_DEV_ID_Pos                          (0U)
-#define DBGMCU_IDCODE_DEV_ID_Msk                          (0x1UL << DBGMCU_IDCODE_DEV_ID_Pos)     /*!< 0x00000001 */
+#define DBGMCU_IDCODE_DEV_ID_Msk                          (0x3UL << DBGMCU_IDCODE_DEV_ID_Pos)     /*!< 0x00000003 */
 #define DBGMCU_IDCODE_DEV_ID                              DBGMCU_IDCODE_DEV_ID_Msk
 #define DBGMCU_IDCODE_REV_ID_Pos                          (16U)
-#define DBGMCU_IDCODE_REV_ID_Msk                          (0xFFFFUL << DBGMCU_IDCODE_REV_ID_Pos)  /*!< 0xFFFFFFFF */
+#define DBGMCU_IDCODE_REV_ID_Msk                          (0xFFFFUL << DBGMCU_IDCODE_REV_ID_Pos)  /*!< 0xFFFF0000 */
 #define DBGMCU_IDCODE_REV_ID                              DBGMCU_IDCODE_REV_ID_Msk
 
 /********************  Bit definition for DBGMCU_CR register  *****************/
@@ -770,12 +767,6 @@ typedef struct
 #define DBGMCU_CR_DBG_STOP                                DBGMCU_CR_DBG_STOP_Msk
 
 /********************  Bit definition for DBGMCU_APB_FZ1 register  ***********/
-#define DBGMCU_APB_FZ1_DBG_IWDG_STOP_Pos                  (12U)
-#define DBGMCU_APB_FZ1_DBG_IWDG_STOP_Msk                  (0x1UL << DBGMCU_APB_FZ1_DBG_IWDG_STOP_Pos) /*!< 0x00004000 */
-#define DBGMCU_APB_FZ1_DBG_IWDG_STOP                      DBGMCU_APB_FZ1_DBG_IWDG_STOP_Msk
-#define DBGMCU_APB_FZ1_DBG_I2C1_STOP_Pos                  (21U)
-#define DBGMCU_APB_FZ1_DBG_I2C1_STOP_Msk                  (0x1UL << DBGMCU_APB_FZ1_DBG_I2C1_STOP_Pos) /*!< 0x00200000 */
-#define DBGMCU_APB_FZ1_DBG_I2C1_STOP                      DBGMCU_APB_FZ1_DBG_I2C1_STOP_Msk
 #define DBGMCU_APB_FZ1_DBG_LPTIM_STOP_Pos                 (31U)
 #define DBGMCU_APB_FZ1_DBG_LPTIM_STOP_Msk                 (0x1UL << DBGMCU_APB_FZ1_DBG_LPTIM_STOP_Pos) /*!< 0x00001000 */
 #define DBGMCU_APB_FZ1_DBG_LPTIM_STOP                     DBGMCU_APB_FZ1_DBG_LPTIM_STOP_Msk
@@ -1144,9 +1135,6 @@ typedef struct
 #define FLASH_OPTR_NRST_MODE_Pos        (14U)
 #define FLASH_OPTR_NRST_MODE_Msk        (0x1UL << FLASH_OPTR_NRST_MODE_Pos) /*!< 0x08000000 */
 #define FLASH_OPTR_NRST_MODE            FLASH_OPTR_NRST_MODE_Msk
-#define FLASH_OPTR_IWDG_STOP_Pos        (15U)
-#define FLASH_OPTR_IWDG_STOP_Msk        (0x1UL << FLASH_OPTR_IWDG_STOP_Pos) /*!< 0x02000000 */
-#define FLASH_OPTR_IWDG_STOP            FLASH_OPTR_IWDG_STOP_Msk
 
 /*******************  Bits definition for FLASH_SDKR register  ****************/
 #define FLASH_SDKR_SDK_STRT_Pos         (0U)
@@ -2411,12 +2399,7 @@ typedef struct
 #define RCC_APBRSTR2_ADCRST_Pos          (20U)
 #define RCC_APBRSTR2_ADCRST_Msk          (0x1UL << RCC_APBRSTR2_ADCRST_Pos)     /*!< 0x00100000 */
 #define RCC_APBRSTR2_ADCRST              RCC_APBRSTR2_ADCRST_Msk
-// #define RCC_APBRSTR2_COMP1RST_Pos        (21U)
-// #define RCC_APBRSTR2_COMP1RST_Msk        (0x1UL << RCC_APBRSTR2_COMP1RST_Pos)    /*!< 0x00200000 */
-// #define RCC_APBRSTR2_COMP1RST            RCC_APBRSTR2_COMP1RST_Msk
-// #define RCC_APBRSTR2_COMP2RST_Pos        (22U)
-// #define RCC_APBRSTR2_COMP2RST_Msk        (0x1UL << RCC_APBRSTR2_COMP2RST_Pos)    /*!< 0x00400000 */
-// #define RCC_APBRSTR2_COMP2RST            RCC_APBRSTR2_COMP2RST_Msk
+
 /********************  Bit definition for RCC_IOPENR register  ****************/
 #define RCC_IOPENR_GPIOAEN_Pos           (0U)
 #define RCC_IOPENR_GPIOAEN_Msk           (0x1UL << RCC_IOPENR_GPIOAEN_Pos)      /*!< 0x00000001 */
@@ -2472,20 +2455,8 @@ typedef struct
 #define RCC_APBENR2_ADCEN_Pos            (20U)
 #define RCC_APBENR2_ADCEN_Msk            (0x1UL << RCC_APBENR2_ADCEN_Pos)       /*!< 0x00100000 */
 #define RCC_APBENR2_ADCEN                RCC_APBENR2_ADCEN_Msk
-// #define RCC_APBENR2_COMP1EN_Pos          (21U)
-// #define RCC_APBENR2_COMP1EN_Msk          (0x1UL << RCC_APBENR2_COMP1EN_Pos)       /*!< 0x00200000 */
-// #define RCC_APBENR2_COMP1EN              RCC_APBENR2_COMP1EN_Msk
-// #define RCC_APBENR2_COMP2EN_Pos          (22U)
-// #define RCC_APBENR2_COMP2EN_Msk          (0x1UL << RCC_APBENR2_COMP2EN_Pos)       /*!< 0x00400000 */
-// #define RCC_APBENR2_COMP2EN              RCC_APBENR2_COMP2EN_Msk
 
 /********************  Bit definition for RCC_CCIPR register  ******************/
-// #define RCC_CCIPR_COMP1SEL_Pos           (10U)
-// #define RCC_CCIPR_COMP1SEL_Msk           (0x1UL << RCC_CCIPR_COMP1SEL_Pos)    /*!< 0x00000400 */
-// #define RCC_CCIPR_COMP1SEL               RCC_CCIPR_COMP1SEL_Msk
-// #define RCC_CCIPR_COMP2SEL_Pos           (11U)
-// #define RCC_CCIPR_COMP2SEL_Msk           (0x1UL << RCC_CCIPR_COMP2SEL_Pos)    /*!< 0x00000800 */
-// #define RCC_CCIPR_COMP2SEL               RCC_CCIPR_COMP2SEL_Msk
 #define RCC_CCIPR_LPTIMSEL_Pos           (18U)
 #define RCC_CCIPR_LPTIMSEL_Msk           (0x3UL << RCC_CCIPR_LPTIMSEL_Pos)     /*!< 0x000C0000 */
 #define RCC_CCIPR_LPTIMSEL               RCC_CCIPR_LPTIMSEL_Msk
@@ -2658,12 +2629,6 @@ typedef struct
 #define SYSCFG_CFGR1_TIM1_IC1_SRC                 SYSCFG_CFGR1_TIM1_IC1_SRC_Msk
 #define SYSCFG_CFGR1_TIM1_IC1_SRC_0               (0x1UL << SYSCFG_CFGR1_TIM1_IC1_SRC_Pos) /*!< 0x00000004 */
 #define SYSCFG_CFGR1_TIM1_IC1_SRC_1               (0x2UL << SYSCFG_CFGR1_TIM1_IC1_SRC_Pos) /*!< 0x00000008 */
-// #define SYSCFG_CFGR1_COMP1_OCREF_CLR_TIM1_Pos     (4U)
-// #define SYSCFG_CFGR1_COMP1_OCREF_CLR_TIM1_Msk     (0x1UL << SYSCFG_CFGR1_COMP1_OCREF_CLR_TIM1_Pos) /*!< 0x00000010 */
-// #define SYSCFG_CFGR1_COMP1_OCREF_CLR_TIM1         SYSCFG_CFGR1_COMP1_OCREF_CLR_TIM1_Msk            /*!< COMP1 */
-// #define SYSCFG_CFGR1_COMP2_OCREF_CLR_TIM1_Pos     (5U)
-// #define SYSCFG_CFGR1_COMP2_OCREF_CLR_TIM1_Msk     (0x1UL << SYSCFG_CFGR1_COMP2_OCREF_CLR_TIM1_Pos) /*!< 0x00000020 */
-// #define SYSCFG_CFGR1_COMP2_OCREF_CLR_TIM1         SYSCFG_CFGR1_COMP2_OCREF_CLR_TIM1_Msk            /*!< COMP2 */
 #define SYSCFG_CFGR1_I2C_PA2_FMP_Pos              (16U)
 #define SYSCFG_CFGR1_I2C_PA2_FMP_Msk              (0x1UL << SYSCFG_CFGR1_I2C_PA2_FMP_Pos) /*!< 0x00010000 */
 #define SYSCFG_CFGR1_I2C_PA2_FMP                  SYSCFG_CFGR1_I2C_PA2_FMP_Msk            /*!< PA2 FMP */
@@ -2681,12 +2646,6 @@ typedef struct
 #define SYSCFG_CFGR2_LOCKUP_LOCK_Pos          (0U)
 #define SYSCFG_CFGR2_LOCKUP_LOCK_Msk          (0x1UL << SYSCFG_CFGR2_LOCKUP_LOCK_Pos)   /*!< 0x00000001 */
 #define SYSCFG_CFGR2_LOCKUP_LOCK              SYSCFG_CFGR2_LOCKUP_LOCK_Msk              /*!< Enables and locks the LOCKUP_LOCK (Hardfault) output of CortexM0 with Break Input of TIMER1 */
-// #define SYSCFG_CFGR2_COMP1_BRK_TIM1_Pos       (3U)
-// #define SYSCFG_CFGR2_COMP1_BRK_TIM1_Msk       (0x1UL << SYSCFG_CFGR2_COMP1_BRK_TIM1_Pos)  /*!< 0x00000008 */
-// #define SYSCFG_CFGR2_COMP1_BRK_TIM1           SYSCFG_CFGR2_COMP1_BRK_TIM1_Msk             /*!< COMP1_BRK_TIM1 */
-// #define SYSCFG_CFGR2_COMP2_BRK_TIM1_Pos       (4U)
-// #define SYSCFG_CFGR2_COMP2_BRK_TIM1_Msk       (0x1UL << SYSCFG_CFGR2_COMP2_BRK_TIM1_Pos)  /*!< 0x00000010 */
-// #define SYSCFG_CFGR2_COMP2_BRK_TIM1           SYSCFG_CFGR2_COMP2_BRK_TIM1_Msk             /*!< COMP2_BRK_TIM1 */
 #define SYSCFG_CFGR2_ETR_SRC_TIM1_Pos         (9U)
 #define SYSCFG_CFGR2_ETR_SRC_TIM1_Msk         (0x3UL << SYSCFG_CFGR2_ETR_SRC_TIM1_Pos)  /*!< 0x00000600 */
 #define SYSCFG_CFGR2_ETR_SRC_TIM1             SYSCFG_CFGR2_ETR_SRC_TIM1_Msk             /*!< ETR_SRC_TIM1 */

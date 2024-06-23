@@ -49,8 +49,8 @@ int main(void)
   /* 使能时钟 */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
-  /* 将 PA11 初始化为输出 */
-  LL_GPIO_InitTypeDef GPIO_InitStruct;
+  /* 将 PA5 初始化为输出 */
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT; 
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;

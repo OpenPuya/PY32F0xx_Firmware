@@ -50,7 +50,7 @@ int main(void)
   APP_SystemClockConfig();
   
   /* 使能TIM1，GPIOA时钟 */
-  LL_APB1_GRP2_EnableClock(RCC_APBENR2_TIM1EN);
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_TIM1);
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
   
   /* 初始化LED */

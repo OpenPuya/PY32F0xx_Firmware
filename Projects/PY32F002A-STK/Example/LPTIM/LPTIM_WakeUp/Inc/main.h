@@ -43,9 +43,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+void APP_ErrorHandler(void);
 
-extern LPTIM_HandleTypeDef LPTIMCONF;
+extern LPTIM_HandleTypeDef LPTIMConf;
 /* Exported functions prototypes ---------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 
