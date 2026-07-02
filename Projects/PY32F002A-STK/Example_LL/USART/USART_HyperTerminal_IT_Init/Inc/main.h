@@ -58,6 +58,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
 void APP_ErrorHandler(void);
+void APP_UsartErrorCallback(void);
 void APP_UsartIRQCallback(USART_TypeDef *USARTx);
 
 /* Private defines -----------------------------------------------------------*/

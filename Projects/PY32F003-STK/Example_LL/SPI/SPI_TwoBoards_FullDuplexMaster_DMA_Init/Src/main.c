@@ -183,7 +183,7 @@ static void APP_ConfigSPI(void)
   DMA_InitStruct.PeriphOrM2MSrcDataSize = LL_DMA_PDATAALIGN_BYTE;
   DMA_InitStruct.MemoryOrM2MDstDataSize = LL_DMA_MDATAALIGN_BYTE;
   DMA_InitStruct.NbData                 = 0x00000000U;
-  DMA_InitStruct.Priority               = LL_DMA_PRIORITY_VERYHIGH;
+  DMA_InitStruct.Priority               = LL_DMA_PRIORITY_LOW;
   LL_DMA_Init(DMA1, LL_DMA_CHANNEL_1, &DMA_InitStruct);
   
   /* Initialize DMA channel 2 */
@@ -196,7 +196,7 @@ static void APP_ConfigSPI(void)
   DMA_InitStruct.PeriphOrM2MSrcDataSize = LL_DMA_PDATAALIGN_BYTE;
   DMA_InitStruct.MemoryOrM2MDstDataSize = LL_DMA_MDATAALIGN_BYTE;
   DMA_InitStruct.NbData                 = 0x00000000U;
-  DMA_InitStruct.Priority               = LL_DMA_PRIORITY_LOW;
+  DMA_InitStruct.Priority               = LL_DMA_PRIORITY_VERYHIGH;
   LL_DMA_Init(DMA1, LL_DMA_CHANNEL_2, &DMA_InitStruct);
   
   /* Enable DMA NVIC interrupts */

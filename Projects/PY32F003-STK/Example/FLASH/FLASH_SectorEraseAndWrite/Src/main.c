@@ -119,7 +119,9 @@ static void APP_SystemClockConfig(void)
   /* Configure HSI, HSE, LSI clocks */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                      /* HSI prescaler */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;             /* Set HSI output clock as 24MHz, the library will set the calibration value */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                     /* Disable HSE */
   RCC_OscInitStruct.HSEFreq =  RCC_HSE_16_32MHz;                                /* HSE frequency range */
@@ -132,7 +134,7 @@ static void APP_SystemClockConfig(void)
 
   /* Initialize AHB, and APB bus clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                        /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS;                        /* SYSCLK source is HSISYS */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                            /* Setting the AHB prescaler */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                             /* Setting the APB1 prescaler */
 

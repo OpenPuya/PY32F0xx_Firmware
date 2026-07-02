@@ -47,10 +47,18 @@ transmission and reception. If the LED on the master is blinking, it means
 there was a failure in data transmission or reception.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 PA3     ------> I2C1_SCL
 PA2     ------> I2C1_SDA 
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 PA9     ------> I2C_SCL
 PA10    ------> I2C_SDA
 ================================================================================

@@ -1,5 +1,5 @@
 # dot files
-/.vscode/launch.json
+# /.vscode/launch.json
 /.settings
 /.eide/log
 /.eide.usr.ctx.json

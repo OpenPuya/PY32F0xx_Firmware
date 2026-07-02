@@ -104,7 +104,7 @@ void SysTick_Handler(void)
 void EXTI2_3_IRQHandler(void)
 {
   BSP_LED_Toggle(LED_GREEN);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);         /* 处理EXTI中断请求 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);         /* Handle EXTI interrupt requests */
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

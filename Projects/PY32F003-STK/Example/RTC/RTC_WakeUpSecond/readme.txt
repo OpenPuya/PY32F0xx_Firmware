@@ -39,6 +39,10 @@ LED and enter the STOP mode.
 and toggles the LED and prints the time of this alarm through the serial port.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1，演示此样例功能时需要断开swd连接线并重新上电，因为默认情况下，仿真器会把
 DBGMCU_CR.DBG_STOP置位。
 2，通过USB转TTL模块连接PC与STK板,STK板与USB转TTL模块的连线方式如下；
@@ -51,6 +55,10 @@ UART配置为波特率115200，数据位8，停止位1，校验位None
 @PrintfConfigEnd
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1.When demonstrating this sample, disconnect the SWD connection and 
 power cycle the board, as the debugger will set DBGMCU_CR.DBG_STOP by default.
 2.Connect the PC to the STK board through the USB to TTL module, and the connection

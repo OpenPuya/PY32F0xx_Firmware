@@ -41,6 +41,10 @@ Example execution steps:
 the waveforms.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 时钟主频为16M
 因为PA13（默认为SWD_DIO）引脚复用为CH2，如果要重新烧录程序需要复位后再下载
 输出效果见下图：
@@ -54,6 +58,10 @@ the waveforms.
                                 <---Delay----><------Pulse--------------->
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 The system frequency is 16MHz.
 Because PA13 (default SWD_DIO) pin is multiplexed to CH2, if you want to 
 re-burn the programme you need to reset it before downloading.

@@ -80,7 +80,9 @@ static void APP_SystemClockConfig(void)
   /* Oscillator Configuration */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;/* Select oscillators HSE, HSI, LSI */
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                     /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                     /* HSI not divided */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                             /* Configure HSI clock as 8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;                                                     /* Enable HSE */
   RCC_OscInitStruct.HSEFreq = RCC_HSE_16_24MHz;                                                /* HSE crystal operating frequency 16M~24M */
@@ -94,7 +96,7 @@ static void APP_SystemClockConfig(void)
 
   /* Clock Source Configuration */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE; /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE; /* SYSCLK source is HSISYS */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB clock not divided */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB clock not divided */
   /* Initialize RCC system clock */

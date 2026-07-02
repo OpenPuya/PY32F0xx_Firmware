@@ -109,12 +109,12 @@ extern "C" {
                                                  ((__VALUE__) == RCC_HSICALIBRATION_22p12MHz) || \
                                                  ((__VALUE__) == RCC_HSICALIBRATION_24MHz))
 #endif
-
+#if defined(RCC_HSIDIV_SUPPORT)
 #define IS_RCC_HSIDIV(__DIV__)            (((__DIV__) == RCC_HSI_DIV1)  || ((__DIV__) == RCC_HSI_DIV2) || \
                                            ((__DIV__) == RCC_HSI_DIV4)  || ((__DIV__) == RCC_HSI_DIV8) || \
                                            ((__DIV__) == RCC_HSI_DIV16) || ((__DIV__) == RCC_HSI_DIV32)|| \
                                            ((__DIV__) == RCC_HSI_DIV64) || ((__DIV__) == RCC_HSI_DIV128))
-                                         
+#endif
 #define IS_RCC_LSI(__LSI__)               (((__LSI__) == RCC_LSI_OFF) || ((__LSI__) == RCC_LSI_ON))
 
 #if defined(RCC_PLL_SUPPORT)
@@ -128,11 +128,11 @@ extern "C" {
 #define IS_RCC_CLOCKTYPE(__CLK__)         ((((__CLK__) & RCC_CLOCKTYPE_ALL) != 0x00UL) && (((__CLK__) & ~RCC_CLOCKTYPE_ALL) == 0x00UL))
 
 #if (defined(PY32F003PRE) || defined(PY32F002APRE))
-#define IS_RCC_SYSCLKSOURCE(__SOURCE__)   (((__SOURCE__) == RCC_SYSCLKSOURCE_HSI)  || \
+#define IS_RCC_SYSCLKSOURCE(__SOURCE__)   (((__SOURCE__) == RCC_SYSCLKSOURCE_HSISYS)  || \
                                             ((__SOURCE__) == RCC_SYSCLKSOURCE_HSE) || \
                                             ((__SOURCE__) == RCC_SYSCLKSOURCE_LSI))
 #else
-#define IS_RCC_SYSCLKSOURCE(__SOURCE__)   (((__SOURCE__) == RCC_SYSCLKSOURCE_HSI)  || \
+#define IS_RCC_SYSCLKSOURCE(__SOURCE__)   (((__SOURCE__) == RCC_SYSCLKSOURCE_HSISYS)  || \
                                             ((__SOURCE__) == RCC_SYSCLKSOURCE_HSE)  || \
                                             ((__SOURCE__) == RCC_SYSCLKSOURCE_LSE)  || \
                                             ((__SOURCE__) == RCC_SYSCLKSOURCE_LSI)  || \
@@ -230,10 +230,10 @@ typedef struct
 #endif
   uint32_t HSIState;             /*!< The new state of the HSI.
                                       This parameter can be a value of @ref RCC_HSI_Config                        */
-
+#if defined(RCC_HSIDIV_SUPPORT)
   uint32_t HSIDiv;               /*!< The division factor of the HSI.
                                       This parameter can be a value of @ref RCC_HSI_Div                           */
-
+#endif
   uint32_t HSICalibrationValue;  /*!< The calibration trimming value (default is RCC_HSICALIBRATION_8MHz).
                                       This parameter can be a value of @ref RCC_HSI_Calibration */
 
@@ -370,7 +370,7 @@ typedef struct
 /**
   * @}
   */
-
+#if defined(RCC_HSIDIV_SUPPORT)
 /** @defgroup RCC_HSI_Div HSI Div
   * @{
   */
@@ -385,7 +385,7 @@ typedef struct
 /**
   * @}
   */
-
+#endif
 /** @defgroup RCC_LSI_Config LSI Config
   * @{
   */
@@ -428,6 +428,7 @@ typedef struct
   * @{
   */
 #define RCC_SYSCLKSOURCE_HSI           0x00000000U                       /*!< HSI selection as system clock */
+#define RCC_SYSCLKSOURCE_HSISYS        RCC_SYSCLKSOURCE_HSI
 #define RCC_SYSCLKSOURCE_HSE           RCC_CFGR_SW_0                     /*!< HSE selection as system clock */
 #if defined(RCC_PLL_SUPPORT)
 #define RCC_SYSCLKSOURCE_PLLCLK        RCC_CFGR_SW_1                     /*!< PLL selection as system clock */
@@ -444,6 +445,7 @@ typedef struct
   * @{
   */
 #define RCC_SYSCLKSOURCE_STATUS_HSI    0x00000000U                       /*!< HSI used as system clock */
+#define RCC_SYSCLKSOURCE_STATUS_HSISYS RCC_SYSCLKSOURCE_STATUS_HSI
 #define RCC_SYSCLKSOURCE_STATUS_HSE    RCC_CFGR_SWS_0                    /*!< HSE used as system clock */
 #if defined(RCC_PLL_SUPPORT)
 #define RCC_SYSCLKSOURCE_STATUS_PLLCLK RCC_CFGR_SWS_1                    /*!< PLL used as system clock */
@@ -1296,7 +1298,7 @@ typedef struct
   */
 #define __HAL_RCC_HSI_CALIBRATIONVALUE_ADJUST(__HSICALIBRATIONVALUE__) \
                   MODIFY_REG(RCC->ICSCR, (RCC_ICSCR_HSI_FS_Msk|RCC_ICSCR_HSI_TRIM), (uint32_t)(__HSICALIBRATIONVALUE__) << RCC_ICSCR_HSI_TRIM_Pos)
-
+#if defined(RCC_HSIDIV_SUPPORT)
 /** @brief  Macro to configure the HSISYS clock.
   * @param  __HSIDIV__ specifies the HSI division factor.
   *          This parameter can be one of the following values:
@@ -1311,7 +1313,7 @@ typedef struct
   */
 #define __HAL_RCC_HSI_CONFIG(__HSIDIV__) \
                  MODIFY_REG(RCC->CR, RCC_CR_HSIDIV, (__HSIDIV__))
-
+#endif
 /** @brief  Macros to enable or disable the Internal Low Speed oscillator (LSI).
   * @note   After enabling the LSI, the application software should wait on
   *         LSIRDY flag to be set indicating that LSI clock is stable and can
@@ -1499,7 +1501,7 @@ typedef struct
   * @brief  Macro to configure the system clock source.
   * @param  __SYSCLKSOURCE__ specifies the system clock source.
   *          This parameter can be one of the following values:
-  *              @arg @ref RCC_SYSCLKSOURCE_HSI HSI oscillator is used as system clock source.
+  *              @arg @ref RCC_SYSCLKSOURCE_HSISYS HSISYS oscillator is used as system clock source.
   *              @arg @ref RCC_SYSCLKSOURCE_HSE HSE oscillator is used as system clock source.
   *              @arg @ref RCC_SYSCLKSOURCE_PLLCLK PLL output is used as system clock source.
   *              @arg @ref RCC_SYSCLKSOURCE_LSI LSI oscillator is used as system clock source.
@@ -1514,7 +1516,7 @@ typedef struct
 /** @brief  Macro to get the clock source used as system clock.
   * @retval The clock source used as system clock. The returned value can be one
   *         of the following:
-  *              @arg @ref RCC_SYSCLKSOURCE_STATUS_HSI HSI used as system clock.
+  *              @arg @ref RCC_SYSCLKSOURCE_STATUS_HSISYS HSISYS used as system clock.
   *              @arg @ref RCC_SYSCLKSOURCE_STATUS_HSE HSE used as system clock.
   *              @arg @ref RCC_SYSCLKSOURCE_STATUS_PLLCLK PLL used as system clock.
   *              @arg @ref RCC_SYSCLKSOURCE_STATUS_LSI LSI used as system clock source.

@@ -16,12 +16,12 @@
         <TargetCommonOption>
           <Device>PY32F002Ax5</Device>
           <Vendor>Puya</Vendor>
-          <PackID>Puya.PY32F0xx_DFP.1.1.0</PackID>
-          <PackURL>https://www.puyasemi.com/</PackURL>
+          <PackID>Puya.PY32F0xx_DFP.1.2.1</PackID>
+          <PackURL>https://www.puyasemi.com/uploadfiles/</PackURL>
           <Cpu>IRAM(0x20000000,0x00000C00) IROM(0x08000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F0xx_20 -FS08000000 -FL05000 -FP0($$Device:PY32F002Ax5$Flash\PY32F0xx_20.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F0xx_20 -FS08000000 -FL05000 -FP0($$Device:PY32F002Ax5$Flash\PY061xx_20.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F002Ax5$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>PY32F002Ax5,USE_FULL_LL_DRIVER,USE_FULL_ASSERT</Define>
+              <Define>PY32F002Ax5,USE_FULL_LL_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>..\Inc;..\..\..\..\..\..\Drivers\BSP\PY32F002xx_Start_Kit;..\..\..\..\..\..\Drivers\CMSIS\Include;..\..\..\..\..\..\Drivers\CMSIS\Device\PY32F0xx\Include;..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Inc</IncludePath>
             </VariousControls>

@@ -33,13 +33,15 @@
 #include "py32f003xx_ll_Start_Kit.h"
 
 /* Private define ------------------------------------------------------------*/
+#define HighTemp_85
+/* #define HighTemp_105 */
+
 #define ADC_CALIBRATION_TIMEOUT_MS       ((uint32_t) 1)
-#define VDDA_APPLI                       ((uint32_t)3300)
 #define VAR_CONVERTED_DATA_INIT_VALUE    (__LL_ADC_DIGITAL_SCALE(LL_ADC_RESOLUTION_12B) + 1)
 
 /* Private variables ---------------------------------------------------------*/
-uint16_t uhADCxConvertedData = VAR_CONVERTED_DATA_INIT_VALUE;
-uint16_t uhADCxConvertedData_Voltage = 0;
+__IO uint16_t uhADCxConvertedData = VAR_CONVERTED_DATA_INIT_VALUE;
+__IO uint16_t uhADCxConvertedData_Temp = 0;
 
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -48,6 +50,7 @@ static void APP_SystemClockConfig(void);
 static void APP_AdcConfig(void);
 static void APP_AdcEnable(void);
 static void APP_AdcCalibrate(void);
+static void APP_QuickSort(int32_t arr[], int32_t length);
 
 /**
   * @brief  Main program.
@@ -61,7 +64,7 @@ int main(void)
   /* Initialize debug USART (used for printf) */
   BSP_USART_Config();
 
-  /*Reset ADC*/
+  /* Reset ADC */
   LL_ADC_Reset(ADC1);
 
   /* Enable ADC module clock */
@@ -87,18 +90,21 @@ int main(void)
       /* Get ADC conversion data */
       uhADCxConvertedData = LL_ADC_REG_ReadConversionData12(ADC1);
 
-      /* Convert ADC raw data to physical value */
-      uhADCxConvertedData_Voltage = __LL_ADC_CALC_TEMPERATURE(VDDA_APPLI, uhADCxConvertedData, LL_ADC_RESOLUTION_12B);
-
-      /* Print the temperature value and DR value captured by ADC */
-      printf("Temperature : %d   DR : %d \r\n",uhADCxConvertedData_Voltage,uhADCxConvertedData);
+/* Please Check the High Temperature Value accord the datasheet */
+#if defined(HighTemp_85)
+      uhADCxConvertedData_Temp = __LL_ADC_CALC_TEMPERATURE_85(3300,uhADCxConvertedData,LL_ADC_RESOLUTION_12B);
+#else
+      uhADCxConvertedData_Temp = __LL_ADC_CALC_TEMPERATURE_105(3300,uhADCxConvertedData,LL_ADC_RESOLUTION_12B);
+#endif
+      
+      printf("Temperature: %d\r\n",uhADCxConvertedData_Temp);
       LL_mDelay(200);
     }
   }
 }
 
 /**
-  * @brief  Configure system clock
+  * @brief  System clock configuration function
   * @param  None
   * @retval None
   */
@@ -110,7 +116,7 @@ static void APP_SystemClockConfig(void)
   {
   }
 
-  /* Set AHB prescaler*/
+  /* Set AHB prescaler */
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
   /* Configure HSISYS as system clock source */
@@ -119,7 +125,7 @@ static void APP_SystemClockConfig(void)
   {
   }
 
-  /* Set APB1 prescaler*/
+  /* Set APB1 prescaler */
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_Init1msTick(8000000);
 
@@ -136,11 +142,11 @@ static void APP_AdcConfig(void)
 {
   __IO uint32_t wait_loop_index = 0;
 
-  LL_ADC_InitTypeDef ADC_Init = {0};
-  LL_ADC_REG_InitTypeDef LL_ADC_REG_InitType = {0};
+  LL_ADC_InitTypeDef       ADC_Init            = {0};
+  LL_ADC_REG_InitTypeDef   LL_ADC_REG_InitType = {0};
 
-  /*ADC channel and clock source should be configured when ADEN=0, others should be configured when ADSTART=0*/
-  /*Initialize ADC partial features*/
+  /* ADC channel and clock source should be configured when ADEN=0, others should be configured when ADSTART=0 */
+  /* Initialize ADC partial features */
   ADC_Init.Clock=LL_ADC_CLOCK_SYNC_PCLK_DIV4;
   ADC_Init.DataAlignment=LL_ADC_DATA_ALIGN_RIGHT;
   ADC_Init.LowPowerMode=LL_ADC_LP_MODE_NONE;
@@ -169,44 +175,90 @@ static void APP_AdcConfig(void)
   }
   /* Set channel 11 as conversion channel */
   LL_ADC_REG_SetSequencerChannels(ADC1, LL_ADC_CHANNEL_TEMPSENSOR);
+
 }
 
 /**
-  * @brief  ADC calibration
+  * @brief  Sort the array.
+  * @param  arr the array
+  * @param  length the array length
+  * @retval  None
+  */
+static void APP_QuickSort(int32_t arr[], int32_t length)
+{
+  int32_t pos,min;
+  for(int32_t i=0;i<length;i++)
+  {
+    min = arr[i];
+    pos = i;
+    for(int32_t j=i+1;j<length;j++)
+    {
+      if(min > arr[j])
+      {
+        min = arr[j];
+        pos = j;
+      }
+    }
+    arr[pos] = arr[i];
+    arr[i] = min;
+  }
+}
+
+/**
+  * @brief  ADC calibration function
   * @param  None
   * @retval None
   */
 static void APP_AdcCalibrate(void)
 {
+  __IO uint32_t backup_setting_adc_dma_transfer = 0;
+  uint32_t ADC_CALRR1_Buff[5];
+  int32_t ADC_CALRR1_BuffInt[5];
 #if (USE_TIMEOUT == 1)
-  uint32_t Timeout = 0; /* Variable used for timeout management */
-#endif /* USE_TIMEOUT */
+  uint32_t Timeout = 0; 
+#endif 
 
   if (LL_ADC_IsEnabled(ADC1) == 0)
   {
-    /* Enable calibration */
-    LL_ADC_StartCalibration(ADC1);
+    /* Disable ADC DMA transfer during calibration */
+    backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
+    LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
+
+    for(int i=0;i<5;i++)
+    {
+      /* Enable calibration */
+      LL_ADC_StartCalibration(ADC1);
 
 #if (USE_TIMEOUT == 1)
     Timeout = ADC_CALIBRATION_TIMEOUT_MS;
-#endif /* USE_TIMEOUT */
+#endif 
 
-    while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
-    {
-#if (USE_TIMEOUT == 1)
-      /* Check if calibration is timeout */
-      if (LL_SYSTICK_IsActiveCounterFlag())
+      while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
       {
-        if(Timeout-- == 0)
+#if (USE_TIMEOUT == 1)
+        /* Check if calibration is timeout */
+        if (LL_SYSTICK_IsActiveCounterFlag())
         {
+          if(Timeout-- == 0)
+          {
 
+          }
         }
-      }
-#endif /* USE_TIMEOUT */
-    }
+#endif
+     }
+      ADC_CALRR1_Buff[i]= *((__IO uint32_t *)(0x40012448)); 
+      ADC_CALRR1_BuffInt[i]=(int32_t)(ADC_CALRR1_Buff[i]<<9);   
+   }
 
+    APP_QuickSort(ADC_CALRR1_BuffInt,5);    
+    *((__IO uint32_t *)(0x40012450)) = (ADC_CALRR1_BuffInt[2]>>9);             
+    *((__IO uint32_t *)(0x40012454)) = *((__IO uint32_t *)(0x4001244C));
+    *((__IO uint32_t *)(0x40012444)) |= 0x8000; 
     /* Delay between ADC calibration end and ADC enable: minimum 4 ADC Clock cycles */
     LL_mDelay(1);
+
+    /* Restore ADC DMA configuration */
+    LL_ADC_REG_SetDMATransfer(ADC1, backup_setting_adc_dma_transfer);
   }
 }
 
@@ -231,7 +283,7 @@ static void APP_AdcEnable(void)
   */
 void APP_ErrorHandler(void)
 {
-  /* infinite loop */
+  /* Infinite loop */
   while (1)
   {
   }
@@ -242,13 +294,14 @@ void APP_ErrorHandler(void)
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
   * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* User can add his own implementation to report the file name and line number,
-     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line)  */
-  /* infinite loop */
+     for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
   while (1)
   {
   }

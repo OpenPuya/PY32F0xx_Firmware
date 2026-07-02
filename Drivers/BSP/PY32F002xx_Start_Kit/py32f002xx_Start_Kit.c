@@ -216,7 +216,11 @@ void BSP_PB_DeInit(Button_TypeDef Button)
   */
 uint32_t BSP_PB_GetState(Button_TypeDef Button)
 {
+ #if StartKitVersion == 2
+  return (HAL_GPIO_ReadPin(BUTTON_PORT[Button], BUTTON_PIN[Button]) == GPIO_PIN_RESET);
+#else
   return HAL_GPIO_ReadPin(BUTTON_PORT[Button], BUTTON_PIN[Button]);
+#endif
 }
 
 #ifdef HAL_UART_MODULE_ENABLED
@@ -228,6 +232,10 @@ uint32_t BSP_PB_GetState(Button_TypeDef Button)
 void BSP_USART_Config(void)
 {
   GPIO_InitTypeDef  GPIO_InitStruct;
+
+#if  defined(__GNUC__)
+  setvbuf(stdout, NULL, _IONBF, 0 );
+#endif
 
   DEBUG_USART_CLK_ENABLE();
 
@@ -247,7 +255,7 @@ void BSP_USART_Config(void)
   DEBUG_USART_RX_GPIO_CLK_ENABLE();
   DEBUG_USART_TX_GPIO_CLK_ENABLE();
 
-  /**USART1 GPIO Configuration
+  /**USART GPIO Configuration
     PA2     ------> USART1_TX
     PA3     ------> USART1_RX
     */
@@ -294,6 +302,7 @@ int fgetc(FILE *f)
   HAL_UART_Receive(&DebugUartHandle, (uint8_t *)&ch, 1, 1000);
   return (ch);
 }
+
 #elif defined(__ICCARM__)
 /**
   * @brief  writes a character to the usart
@@ -318,6 +327,180 @@ int __io_putchar(int ch)
 {
   /* Send a byte to USART */
   HAL_UART_Transmit(&DebugUartHandle, (uint8_t *)&ch, 1, 1000);
+
+  return ch;
+}
+
+int _write(int file, char *ptr, int len)
+{
+  int DataIdx;
+  for (DataIdx=0;DataIdx<len;DataIdx++)
+  {
+    __io_putchar(*ptr++);
+  }
+  return len;
+}
+#endif
+#else
+static uint32_t ReloadD = 0;
+static uint32_t MinD = 0;
+
+/**
+  * @brief  GPIO Config As USART
+  * @param  None
+  * @retval None
+  */
+void BSP_USART_Config(void)
+{
+  GPIO_InitTypeDef  GPIO_InitStruct = {0};
+
+  DEBUG_USART_TX_GPIO_CLK_ENABLE();
+
+  GPIO_InitStruct.Pin = DEBUG_USART_TX_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;            /* Push-pull output */
+  GPIO_InitStruct.Pull = GPIO_PULLUP;                    /* Enable pull-up */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;     /* GPIO speed */  
+  /* GPIO Initialization */
+  HAL_GPIO_Init(DEBUG_USART_TX_GPIO_PORT, &GPIO_InitStruct);   
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,(GPIO_PinState)1);
+  ReloadD = SysTick->LOAD;
+  MinD = (ReloadD+1)*10/96;
+}
+
+/**
+  * @brief  writes a character to the usart
+  * @param  SystickStart
+  * @param  ReloadData  
+  * @param  MinData
+  * @retval NULL
+  */
+static void BSP_Delay(uint32_t SystickStart,uint32_t ReloadData, uint32_t MinData)
+{
+   uint32_t SystickCurrent = 0;
+   while(1)
+   {     
+     SystickCurrent = SysTick->VAL;
+
+     if(SystickCurrent < SystickStart)
+     {
+       if((SystickStart-SystickCurrent) >= MinData)
+       {
+         break;
+       }
+     }
+     else
+     {
+       if(SystickCurrent <= (ReloadData+1 - MinData + SystickStart))
+       {
+         break;
+       }
+     }
+   }
+}
+
+/**
+  * @brief  writes a character to the usart
+  * @param  ch
+  *         *f
+  * @retval the character
+  */
+static void BSP_TransmitChar(uint8_t ch)
+{
+  uint8_t temp = 0;
+  uint32_t SystickStart = SysTick->VAL ;
+
+  for(uint8_t i=0;i<10;i++)
+  {
+    if(i==0)
+    {
+      HAL_GPIO_WritePin(DEBUG_USART_TX_GPIO_PORT,DEBUG_USART_TX_PIN,GPIO_PIN_RESET);
+    }
+    else if(i == 9)
+    { 
+      BSP_Delay(SystickStart, ReloadD, MinD);
+
+      HAL_GPIO_WritePin(DEBUG_USART_TX_GPIO_PORT,DEBUG_USART_TX_PIN,GPIO_PIN_SET);
+  
+      if(SystickStart >= MinD)
+      {
+        SystickStart = SystickStart - MinD;
+      }
+      else
+      {
+        SystickStart = ReloadD+1 + SystickStart - MinD;
+      }
+      BSP_Delay(SystickStart, ReloadD, MinD);
+    }
+    else
+    {
+      temp=ch&0x01;
+      BSP_Delay(SystickStart, ReloadD, MinD); 
+      switch(temp)
+      {
+        case 1: 
+        {
+          HAL_GPIO_WritePin(DEBUG_USART_TX_GPIO_PORT,DEBUG_USART_TX_PIN,GPIO_PIN_SET);
+          break;
+        }
+        case 0:
+        {
+          HAL_GPIO_WritePin(DEBUG_USART_TX_GPIO_PORT,DEBUG_USART_TX_PIN,GPIO_PIN_RESET);
+          break;
+        }
+
+        default: break;
+      }
+      ch>>=1;
+      if(SystickStart > MinD)
+      {
+        SystickStart = SystickStart - MinD;
+      }
+      else
+      {
+        SystickStart = ReloadD + 1 + SystickStart - MinD;
+      }
+    }
+  }
+}
+
+#if (defined (__CC_ARM)) || (defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050))
+/**
+  * @brief  writes a character to the usart
+  * @param  ch
+  *         *f
+  * @retval the character
+  */
+int fputc(int ch, FILE *f)
+{
+  BSP_TransmitChar(ch);
+  return (ch);
+}
+
+
+#elif defined(__ICCARM__)
+/**
+  * @brief  writes a character to the usart
+  * @param  ch
+  *         *f
+  * @retval the character
+  */
+int putchar(int ch)
+{
+  /* Send a byte to USART */
+  BSP_TransmitChar(ch);
+
+  return (ch);
+}
+#elif  defined(__GNUC__)
+/**
+  * @brief  writes a character to the usart
+  * @param  ch
+  * @retval the character
+  */
+int __io_putchar(int ch)
+{
+  /* Send a byte to USART */
+  BSP_TransmitChar(ch);
 
   return ch;
 }

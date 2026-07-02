@@ -322,7 +322,11 @@ static void APP_UsartTransmit_DMA(USART_TypeDef *USARTx, uint8_t *pData, uint16_
   LL_USART_ClearFlag_TC(USARTx);
 
   /* Enable USART DMA channel for transmission */
+  __disable_irq();
+  LL_USART_DisableDirectionTx(USARTx);
+  LL_USART_EnableDirectionTx(USARTx);
   LL_USART_EnableDMAReq_TX(USARTx);
+  __enable_irq();
 }
 
 /**

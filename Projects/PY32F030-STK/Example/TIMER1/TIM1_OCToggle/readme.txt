@@ -5,13 +5,13 @@
 功能描述：
 此样例演示了TIM1比较模式下的OC翻转输出功能，使能CH1(PA08),CH2(PA09),CH3(PA10),
 CH4(PA11)四个通道的输出功能，并且当计数器TIMx_CNT与TIMx_CCRx匹配时输出信号翻转
-，频率为400KHz。
+，频率为100KHz。
 
 Function descriptions:
 This sample demonstrates the output compare flip-flop functionality in TIM1 
 compare mode. It enables the output function for CH1 (PA08), CH2 (PA09), CH3 
 (PA10), and CH4 (PA11) channels. When the counter TIMx_CNT matches TIMx_CCRx, 
-the output signal will toggle at a frequency of 400KHz.
+the output signal will toggle at a frequency of 100KHz.
 ================================================================================
 测试环境：
 测试用板：PY32F030_STK
@@ -35,8 +35,16 @@ Example execution steps:
 will observe OC waveforms matching the configuration in the program.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 时钟主频为32M
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 The system frequency is 32MHz.
 ================================================================================

@@ -51,10 +51,18 @@ the baud rate to 115200.
 the MCU will send the received data back to the upper computer
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 用户可根据需要修改main.h中宏RX_MAX_LEN的值，RX_MAX_LEN定义了MCU单次接收数据长度
 （当前样例为128bytes）。
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 Users can modify the values of macros RX_MAX_LEN in main.h as needed. RX_MAX_LEN
 defines the length of data received by MCU for a single time (currently 128bytes).
 ================================================================================

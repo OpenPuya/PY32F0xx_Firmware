@@ -2,9 +2,7 @@
   "name": "Project",
   "type": "ARM",
   "dependenceList": [],
-  "srcDirs": [
-    ".eide/deps"
-  ],
+  "srcDirs": [],
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
@@ -92,9 +90,9 @@
       }
     ]
   },
-  "outDir": "build",
+  "outDir": ".",
   "deviceName": "PY32F030x8",
-  "packDir": "../../../../../../Packs/GCC/.pack/Puya/PY32F0xx_DFP",
+  "packDir": null,
   "miscInfo": {
     "uid": "36bcf0031e18a3008bbdaa90a96a7987"
   },
@@ -111,14 +109,17 @@
           "RAM": [],
           "ROM": []
         },
-        "options": "null"
+        "options": "null",
+        "archExtensions": ""
       },
-      "uploader": "OpenOCD",
+      "uploader": "pyOCD",
       "uploadConfig": {
         "bin": "",
-        "target": "py32f030",
-        "interface": "cmsis-dap",
-        "baseAddr": "0x08000000"
+        "targetName": "PY32F030x8",
+        "baseAddr": "0x08000000",
+        "speed": "4M",
+        "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+        "config": ".eide/project.pyocd.yaml"
       },
       "uploadConfigMap": {
         "JLink": {
@@ -137,6 +138,14 @@
           "target": "py32f030",
           "interface": "cmsis-dap",
           "baseAddr": "0x08000000"
+        },
+        "pyOCD": {
+          "bin": "",
+          "targetName": "PY32F030x8",
+          "baseAddr": "0x08000000",
+          "speed": "4M",
+          "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+          "config": ".eide/project.pyocd.yaml"
         }
       },
       "custom_dep": {
@@ -149,10 +158,40 @@
           "../../../../../../Drivers/PY32F0xx_HAL_Driver/Inc"
         ],
         "libList": [],
-        "sourceDirList": [],
         "defineList": ["USE_HAL_DRIVER","PY32F030x8"]
+      },
+      "builderOptions": {
+        "GCC": {
+          "version": 5,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": "--specs=nosys.specs --specs=nano.specs"
+          },
+          "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+          },
+          "asm-compiler": {
+            "ASM_FLAGS": ""
+          },
+          "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": " ",
+            "LIB_FLAGS": "-lm"
+          }
+        }
       }
     }
   },
-  "version": "3.3"
+  "version": "3.6"
 }

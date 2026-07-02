@@ -10,18 +10,18 @@
       <TargetName>Project</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>PY32F003x8</Device>
           <Vendor>Puya</Vendor>
-          <PackID>Puya.PY32F0xx_DFP.1.1.0</PackID>
-          <PackURL>https://www.puyasemi.com/</PackURL>
+          <PackID>Puya.PY32F0xx_DFP.1.2.8</PackID>
+          <PackURL>https://www.puyasemi.com/uploadfiles/</PackURL>
           <Cpu>IRAM(0x20000000,0x00002000) IROM(0x08000000,0x00010000) CPUTYPE("Cortex-M0+") CLOCK(8000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F003xx_64 -FS08000000 -FL010000 -FP0($$Device:PY32F003x8$Flash\PY32F003xx_64.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F003xx_64 -FS08000000 -FL010000 -FP0($$Device:PY32F003x8$Flash\PY061xx_64.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F003x8$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -185,6 +185,8 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -338,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,PY32F003x8</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Inc;..\..\..\..\..\..\Drivers\BSP\PY32F003xx_Start_Kit;..\Inc;..\..\..\..\..\..\Drivers\CMSIS\Device\PY32F0xx\Include</IncludePath>
+              <IncludePath>..\..\..\..\..\..\Drivers\PY32F0xx_HAL_Driver\Inc;..\..\..\..\..\..\Drivers\BSP\PY32F003xx_Start_Kit;..\Inc;..\..\..\..\..\..\Drivers\CMSIS\Device\PY32F0xx\Include;..\..\..\..\..\..\Drivers\CMSIS\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -351,7 +353,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>

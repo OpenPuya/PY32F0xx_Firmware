@@ -104,10 +104,10 @@ void SysTick_Handler(void)
 void EXTI2_3_IRQHandler(void)
 {
   /* Handling EXTI Interrupt Requests */
-  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_2))
+  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_3))
   {
     BSP_LED_Toggle(LED_GREEN);
-    LL_EXTI_ClearFlag(LL_EXTI_LINE_2);
+    LL_EXTI_ClearFlag(LL_EXTI_LINE_3);
   }
 }
 

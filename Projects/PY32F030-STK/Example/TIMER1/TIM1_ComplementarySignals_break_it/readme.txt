@@ -48,6 +48,10 @@ i.e. brake signal is in effect.
 4.The LED toggles over every time a brake signal is generated.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 CH1   ->  PA8
 CH1N  ->  PA7
 刹车输入 -> PA6
@@ -64,6 +68,10 @@ DTG[7:5]=111 => DT=(32+DTG[4:0]) × Tdtg， Tdtg = 16 × TDTS；
 64us 到 126us，若步长时间为 2us；
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 CH1 -> PA8
 CH1N -> PA7
 Brake input -> PA6

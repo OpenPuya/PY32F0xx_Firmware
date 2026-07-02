@@ -71,7 +71,9 @@ static void APP_SystemClockConfig(void)
   /* Oscillator configuration */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* No HSI division */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz;                            /* 配置HSI输出时钟为4MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                   /* Disable HSE */
   /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                         /* HSE frequency range */
@@ -84,7 +86,7 @@ static void APP_SystemClockConfig(void)
 
   /* Initialize CPU, AHB, and APB bus clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                         /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS;                                         /* SYSCLK source is HSISYS */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* AHB clock not divided */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB clock not divided */
 

@@ -108,8 +108,10 @@ static void APP_SystemClockConfig(void)
   /* Oscillator Configuration */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;         /* Selective Oscillator HSE,HSI,LSI */
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                           /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                           /* HSI not divided */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;  /* 配置HSI时钟24MHz */
+#endif
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;  /* Configure HSI clock as 24MHz */
 
   /* Initialize RCC oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -119,7 +121,7 @@ static void APP_SystemClockConfig(void)
 
   /* Clock Source Configuration */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;            /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS;            /* SYSCLK source is HSISYS */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                /* AHB clock not divided */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                 /* APB clock not divided */
   /* Initialize RCC system clock */

@@ -20,7 +20,7 @@
           <Cpu>IRAM(0x20000000,0x00000C00) IROM(0x08000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F0xx_20 -FS08000000 -FL05000 -FP0($$Device:PY32F002Ax5$Flash\PY32F0xx_20.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F0xx_20 -FS08000000 -FL05000 -FP0($$Device:PY32F002Ax5$Flash\PY061xx_20.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F002Ax5$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>

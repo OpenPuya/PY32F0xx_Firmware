@@ -21,7 +21,7 @@
           <Cpu>IRAM(0x20000000,0x00000800) IROM(0x08000000,0x00004000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F030xx_16 -FS08000000 -FL04000 -FP0($$Device:PY32F030x4$Flash\PY32F030xx_16.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC800 -FN1 -FF0PY32F030xx_16 -FS08000000 -FL04000 -FP0($$Device:PY32F030x4$Flash\PY061xx_16.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F030x4$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -484,7 +484,7 @@
           <Cpu>IRAM(0x20000000,0x00001000) IROM(0x08000000,0x00008000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_32 -FS08000000 -FL08000 -FP0($$Device:PY32F030x6$Flash\PY32F030xx_32.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_32 -FS08000000 -FL08000 -FP0($$Device:PY32F030x6$Flash\PY061xx_32.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F030x6$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -947,7 +947,7 @@
           <Cpu>IRAM(0x20000000,0x00001800) IROM(0x08000000,0x0000C000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_48 -FS08000000 -FL0C000 -FP0($$Device:PY32F030x7$Flash\PY32F030xx_48.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_48 -FS08000000 -FL0C000 -FP0($$Device:PY32F030x7$Flash\PY061xx_48.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F030x7$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -1410,7 +1410,7 @@
           <Cpu>IRAM(0x20000000,0x00002000) IROM(0x08000000,0x00010000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_64 -FS08000000 -FL010000 -FP0($$Device:PY32F030x8$Flash\PY32F030xx_64.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0PY32F030xx_64 -FS08000000 -FL010000 -FP0($$Device:PY32F030x8$Flash\PY061xx_64.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:PY32F030x8$Device\Include\py32f0xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>

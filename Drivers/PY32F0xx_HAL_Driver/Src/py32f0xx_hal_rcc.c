@@ -346,6 +346,20 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
         
         if (RCC_OscInitStruct->HSEFreq != 0)
         {
+          __HAL_RCC_HSE_CONFIG(RCC_HSE_OFF);
+
+          /* Get Start Tick*/
+          tickstart = HAL_GetTick();
+
+          /* Wait till HSE is off */
+          while (READ_BIT(RCC->CR, RCC_CR_HSERDY) == 1U)
+          {
+            if ((HAL_GetTick() - tickstart) > HSE_TIMEOUT_VALUE)
+            {
+              return HAL_TIMEOUT;
+            }
+          }
+
           MODIFY_REG(RCC->ECSCR, RCC_ECSCR_HSE_FREQ_Msk, RCC_OscInitStruct->HSEFreq);
         } else
         {
@@ -395,8 +409,10 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
     /* Check the parameters */
     assert_param(IS_RCC_HSI(RCC_OscInitStruct->HSIState));
     assert_param(IS_RCC_HSI_CALIBRATION_VALUE(RCC_OscInitStruct->HSICalibrationValue));
+#if defined(RCC_HSIDIV_SUPPORT)
     assert_param(IS_RCC_HSIDIV(RCC_OscInitStruct->HSIDiv));
-
+#endif
+    
     /* Check if HSI is used as system clock or as PLL source when PLL is selected as system clock */
     temp_sysclksrc = __HAL_RCC_GET_SYSCLK_SOURCE();
 #if defined(RCC_PLL_SUPPORT)
@@ -431,8 +447,10 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
 
         if (temp_sysclksrc == RCC_CFGR_SWS_HSI)
         {
+#if defined(RCC_HSIDIV_SUPPORT)
           /* Adjust the HSI division factor */
           __HAL_RCC_HSI_CONFIG(RCC_OscInitStruct->HSIDiv);
+#endif
 
           /* Update the SystemCoreClock global variable with HSISYS value  */
           SystemCoreClock = (HAL_RCC_GetSysClockFreq() >> ((AHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos]) & 0x1FU));
@@ -450,9 +468,10 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
       /* Check the HSI State */
       if (RCC_OscInitStruct->HSIState != RCC_HSI_OFF)
       {
+#if defined(RCC_HSIDIV_SUPPORT)
         /* Configure the HSI division factor */
         __HAL_RCC_HSI_CONFIG(RCC_OscInitStruct->HSIDiv);
-
+#endif
         /* Enable the Internal High Speed oscillator (HSI). */
         __HAL_RCC_HSI_ENABLE();
 
@@ -591,6 +610,19 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
       /* Set driver factor of the LSE*/
       if (RCC_OscInitStruct->LSEState != RCC_LSE_OFF)
       {
+        __HAL_RCC_LSE_CONFIG(RCC_LSE_OFF);
+        
+        /* Get Start Tick*/
+        tickstart = HAL_GetTick();
+
+        /* Wait till LSE is off */
+        while (READ_BIT(RCC->BDCR, RCC_BDCR_LSERDY) == 1U)
+        {
+          if ((HAL_GetTick() - tickstart) > RCC_LSE_TIMEOUT_VALUE)
+          {
+            return HAL_TIMEOUT;
+          }
+        }
         if (((RCC_OscInitStruct->LSEDriver) & RCC_ECSCR_LSE_DRIVER) == 0U)
         {
           MODIFY_REG(RCC->ECSCR, RCC_ECSCR_LSE_DRIVER_Msk, RCC_ECSCR_LSE_DRIVER_1);
@@ -847,7 +879,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
       }
     }
     /* HSI is selected as System Clock Source */
-    else if (RCC_ClkInitStruct->SYSCLKSource == RCC_SYSCLKSOURCE_HSI)
+    else if (RCC_ClkInitStruct->SYSCLKSource == RCC_SYSCLKSOURCE_HSISYS)
     {
       /* Check the HSI ready flag */
       if (READ_BIT(RCC->CR, RCC_CR_HSIRDY) == 0U)
@@ -1093,7 +1125,9 @@ void HAL_RCC_MCOConfig(uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t RCC_M
   */
 uint32_t HAL_RCC_GetSysClockFreq(void)
 {
+#if defined(RCC_HSIDIV_SUPPORT)
   uint32_t hsidiv;
+#endif
   uint32_t sysclockfreq;
   const uint32_t hsiValue[5] = {4000000,8000000,16000000,22120000,24000000};
   uint32_t hsiIndex;
@@ -1103,16 +1137,20 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
   
   if (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_HSI)
   {
-    /* HSISYS can be derived for HSI */
-    hsidiv = (1UL << ((READ_BIT(RCC->CR, RCC_CR_HSIDIV)) >> RCC_CR_HSIDIV_Pos));
-
     /* HSISYS used as system clock source */
     hsiIndex = (RCC->ICSCR&RCC_ICSCR_HSI_FS_Msk)>>RCC_ICSCR_HSI_FS_Pos;
     if (hsiIndex > 4)
     {
       hsiIndex = 0;
     }
+#if defined(RCC_HSIDIV_SUPPORT)
+    /* HSISYS can be derived for HSI */
+    hsidiv = (1UL << ((READ_BIT(RCC->CR, RCC_CR_HSIDIV)) >> RCC_CR_HSIDIV_Pos));
+    
     sysclockfreq = (hsiValue[hsiIndex] / hsidiv);
+#else
+    sysclockfreq = hsiValue[hsiIndex];
+#endif
   }
   else if (__HAL_RCC_GET_SYSCLK_SOURCE() == RCC_CFGR_SWS_HSE)
   {
@@ -1237,8 +1275,9 @@ void HAL_RCC_GetOscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
   }
 
   RCC_OscInitStruct->HSICalibrationValue = (RCC->ICSCR & (RCC_ICSCR_HSI_FS | RCC_ICSCR_HSI_TRIM));
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct->HSIDiv = (RCC->CR & RCC_CR_HSIDIV);
-
+#endif
   /* Get the LSI configuration -----------------------------------------------*/
   if ((RCC->CSR & RCC_CSR_LSION) == RCC_CSR_LSION)
   {

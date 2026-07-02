@@ -497,7 +497,11 @@ uint32_t RCC_GetSystemClockFreq(void)
 #endif
   case LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS:  /* HSISYS used as system clock  source */
   default:
+#if defined(RCC_HSIDIV_SUPPORT)
     frequency = __LL_RCC_CALC_HSI_FREQ(LL_RCC_GetHSIDiv());
+#else
+    frequency = __LL_RCC_CALC_HSI_FREQ();
+#endif
     break;
   }
 

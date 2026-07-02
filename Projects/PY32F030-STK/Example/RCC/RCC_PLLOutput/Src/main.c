@@ -51,7 +51,7 @@ int main(void)
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 
   /* Configure PA08 pin as MCO function to output system clock */
-  HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
+  HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_2);
 
   /*  Wait for the button to be pressed to enable PLL */
   while (BSP_PB_GetState(BUTTON_KEY) == 1)
@@ -79,8 +79,10 @@ static void APP_SystemClockConfig(void)
   /* Configure clock sources: HSE/HSI/LSE/LSI */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* No HSI division */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz;                           /* Configure HSI output clock as 16MHz */
+#endif
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;                           /* Configure HSI output clock as 24MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                   /* Disable HSE */
   /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                         /* HSE frequency range: 16M~32M */
   RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                   /* Disable LSI */

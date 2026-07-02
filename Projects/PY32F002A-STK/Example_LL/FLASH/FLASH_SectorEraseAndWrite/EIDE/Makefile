@@ -29,18 +29,21 @@ OPT = -Og
 # paths
 #######################################
 # Build path
-BUILD_DIR = build\Project
+BUILD_DIR = Project
 
 ######################################
 # source
 ######################################
 # C sources
-C_SOURCES =  \
-../Src/main.c \
+C_SOURCES =  \../Src/main.c \
 ../Src/py32f0xx_it.c \
 ../Src/system_py32f0xx.c \
 ../../../../../../Drivers/BSP/PY32F002xx_Start_Kit/py32f002xx_ll_Start_Kit.c \
-../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c
+../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c \
+../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal.c \
+../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_cortex.c \
+../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_flash.c \
+../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_gpio.c
 
 
 # ASM sources

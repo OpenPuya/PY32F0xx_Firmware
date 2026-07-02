@@ -3,7 +3,6 @@
   * @file    main.c
   * @author  MCU Application Team
   * @brief   Main program body
-  * @date
   ******************************************************************************
   * @attention
   *
@@ -28,27 +27,37 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define Vcc_Power     3.3l                                            /* VCC power supply voltage, modify according to actual situation */
-#define TScal1        (float)((HAL_ADC_TSCAL1) * 3.3 / Vcc_Power)     /* Voltage corresponding to calibration value at 30 ℃*/
-#define TScal2        (float)((HAL_ADC_TSCAL2) * 3.3 / Vcc_Power)     /* Voltage corresponding to calibration value at 85 ℃ */
-#define TStem1        30l                                             /* 30 ℃*/
-#define TStem2        85l                                             /* 85 ℃ */
-#define Temp_k        ((float)(TStem2-TStem1)/(float)(TScal2-TScal1)) /* Temperature calculation */
+/* Please Check the HighTemperature and NormalTemperaute value */
+#define HAL_ADC_TSCAL1                  (*(uint32_t *)(0x1fff0f14))  /*!< Temperature Scale1 */
+#define HAL_ADC_TSCAL2                  (*(uint32_t *)(0x1fff0f18))  /*!< Temperature Scale2 */
+#define Vcc_Power     3.3l                                            /* VCC power supply voltage, modify according to actual situation  */
+#define TScal1        (float)((HAL_ADC_TSCAL1) * 3.3 / Vcc_Power)     /* Voltage corresponding to calibration value */
+#define TScal2        (float)((HAL_ADC_TSCAL2) * 3.3 / Vcc_Power)     /* Voltage corresponding to calibration value  */
+#define TStem1        30l                                             /* 30 ℃ */
+
+/* #define HighTemp_85 */
+#define HighTemp_105
+
+#define TStem2_85        85   
+#define TStem2_105       105  
+#define Temp_k_85        ((float)(TStem2_85-TStem1)/(float)(TScal2-TScal1))
+#define Temp_k_105       ((float)(TStem2_105-TStem1)/(float)(TScal2-TScal1))
+
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef             AdcHandle;
-ADC_ChannelConfTypeDef        sConfig;
-volatile int16_t              aADCxConvertedData;
-int16_t                       aTEMPERATURE;
+ADC_HandleTypeDef        AdcHandle;
+uint16_t                 aADCxConvertedData;
+__IO uint16_t            hADCxConvertedData_Temperature_DegreeCelsius = 0;
+TIM_HandleTypeDef        TimHandle;
+TIM_MasterConfigTypeDef  sMasterConfig;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-void APP_ADCConfig(void);
+static void APP_AdcConfig(void);
 
 /**
   * @brief  Main program.
@@ -57,23 +66,46 @@ void APP_ADCConfig(void);
 int main(void)
 {
   /* Reset of all peripherals, Initializes the Systick */
-  HAL_Init();
+  HAL_Init();                                                            
 
+  /* Initialize LED */
+  BSP_LED_Init(LED_GREEN);
+  
   /* Initialize UART */
-  BSP_USART_Config();
-
-  /* Configure ADC */  
-  APP_ADCConfig();
-
-  /* infinite loop */
-  while (1)
+  BSP_USART_Config();                                                  
+  
+  /* Configure ADC */
+  APP_AdcConfig();
+  
+  /* ADC Calibrate */ 
+  if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)
   {
-    HAL_Delay(500);                                                  
-    if (HAL_ADC_Start_IT(&AdcHandle) != HAL_OK)                         /* Start ADC and enable ADC interrupts */
-    {
-      APP_ErrorHandler();
-    }
+    APP_ErrorHandler();
   }
+    
+  /* ADC Start */
+  HAL_ADC_Start(&AdcHandle);
+
+  while(1)
+  {
+   /* Poll For ADC Conversion */
+    if(HAL_ADC_PollForConversion(&AdcHandle, 2000) == HAL_OK)
+    {
+      /* Get ADC Value */
+      aADCxConvertedData = HAL_ADC_GetValue(&AdcHandle); 
+       
+/* Please Check the High Temperature Value accord the datasheet */
+#if defined(HighTemp_85)                              
+      hADCxConvertedData_Temperature_DegreeCelsius =(int16_t)(Temp_k_85 * aADCxConvertedData - Temp_k_85 * TScal1 + TStem1);
+#else
+      hADCxConvertedData_Temperature_DegreeCelsius =(int16_t)(Temp_k_105 * aADCxConvertedData - Temp_k_105 * TScal1 + TStem1);
+#endif
+
+      printf("Temperature: %d\r\n",(int)hADCxConvertedData_Temperature_DegreeCelsius);
+
+    }
+    HAL_Delay(1000);
+  }   
 }
 
 /**
@@ -81,55 +113,48 @@ int main(void)
   * @param  None
   * @retval None
   */
-void APP_ADCConfig(void)
+static void APP_AdcConfig(void)
 {
+  ADC_ChannelConfTypeDef   sConfig={0};  
+  
   __HAL_RCC_ADC_FORCE_RESET();
-  __HAL_RCC_ADC_RELEASE_RESET();
+  __HAL_RCC_ADC_RELEASE_RESET();                                                  /* Reset ADC */
   __HAL_RCC_ADC_CLK_ENABLE();                                                     /* Enable ADC clock */
 
   AdcHandle.Instance = ADC1;
-  if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)                          /* ADC calibration */
+
+  /* ADC calibration */
+  if (HAL_ADCEx_Calibration_Start(&AdcHandle) != HAL_OK)                          
   {
     APP_ErrorHandler();
   }
-  AdcHandle.Instance                   = ADC1;                                    /* ADC*/
-  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* Set ADC clock*/
-  AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 12-bit resolution for converted data*/
+                                                 
+  AdcHandle.Instance                   = ADC1;                                    /* ADC1 */
+  AdcHandle.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV4;                /* Set ADC clock */
+  AdcHandle.Init.Resolution            = ADC_RESOLUTION_12B;                      /* 12-bit resolution for converted data */
   AdcHandle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;                     /* Right-alignment for converted data */
-  AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;              /* Scan sequence direction: forward*/
-  AdcHandle.Init.EOCSelection          = ADC_EOC_SEQ_CONV;                        /* Single sampling*/
+  AdcHandle.Init.ScanConvMode          = ADC_SCAN_DIRECTION_FORWARD;              /* Scan sequence direction: forward */
+  AdcHandle.Init.EOCSelection          = ADC_EOC_SEQ_CONV;                        /* Conversion completion flag */
   AdcHandle.Init.LowPowerAutoWait      = ENABLE;                                  /* Enable wait for conversion mode */
   AdcHandle.Init.ContinuousConvMode    = DISABLE;                                 /* Single conversion mode */
   AdcHandle.Init.DiscontinuousConvMode = DISABLE;                                 /* Disable discontinuous mode */
   AdcHandle.Init.ExternalTrigConv      = ADC_SOFTWARE_START;                      /* Software triggering */
   AdcHandle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;           /* No external trigger edge */
-  AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* When an overload occurs, overwrite the previous value*/
-  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* Set sampling time */
-  if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                         /* ADC initialization*/
+  AdcHandle.Init.Overrun               = ADC_OVR_DATA_OVERWRITTEN;                /* When an overload occurs, overwrite the previous value */
+  AdcHandle.Init.SamplingTimeCommon    = ADC_SAMPLETIME_239CYCLES_5;              /* Channel sampling time is 239.5 ADC clock cycles */
+  /* ADC initialization */
+  if (HAL_ADC_Init(&AdcHandle) != HAL_OK)                                         
   {
     APP_ErrorHandler();
   }
 
-  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* Set whether to sample */
-  sConfig.Channel      = ADC_CHANNEL_TEMPSENSOR;                                  /*  Setting the sampling channel */
-  if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)                      /* Configuring ADC Channels */
+  sConfig.Rank         = ADC_RANK_CHANNEL_NUMBER;                                 /* Set the rank for the ADC channel order */
+  sConfig.Channel      = ADC_CHANNEL_TEMPSENSOR;                                  /* ADC channel selection */
+  /* Configure ADC channels */
+  if (HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)                      
   {
     APP_ErrorHandler();
   }
-
-}
-
-/**
-  * @brief  ADC transfer complete callback function
-  * @param  None
-  * @retval None
-  */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
-{
-  aADCxConvertedData = HAL_ADC_GetValue(hadc);
-  aTEMPERATURE =(int16_t)(Temp_k * aADCxConvertedData - Temp_k * TScal1 + TStem1);
-  printf("Temperature = %d \r\n", aTEMPERATURE);
-
 }
 
 /**
@@ -139,7 +164,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
   */
 void APP_ErrorHandler(void)
 {
-  /* infinite loop */
   while (1)
   {
   }
@@ -157,11 +181,11 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* User can add his own implementation to report the file name and line number,
      for example: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* infinite loop */
+  /* Infinite loop */
   while (1)
   {
   }
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT Puya *****END OF FILE****/
+/************************ (C) COPYRIGHT Puya *****END OF FILE******************/

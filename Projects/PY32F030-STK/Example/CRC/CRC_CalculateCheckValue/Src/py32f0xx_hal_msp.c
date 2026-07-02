@@ -49,7 +49,7 @@ void HAL_MspInit(void)
 
 /**
   * @brief Initialize CRC-related MSP
-  * @param  hcrc：CRC handle
+  * @param  hcrc: CRC handle
   */
 void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc)
 {
@@ -59,7 +59,7 @@ void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc)
 
 /**
   * @brief Deinitialize CRC-related MSP
-  * @param  hcrc：CRC handle
+  * @param  hcrc: CRC handle
   */
 void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc)
 {

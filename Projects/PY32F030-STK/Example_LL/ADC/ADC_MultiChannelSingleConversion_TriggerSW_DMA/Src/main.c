@@ -50,6 +50,7 @@ static void APP_AdcEnable(void);
 static void APP_AdcConfig(void);
 static void APP_DmaConfig(void);
 static void APP_AdcCalibrate(void);
+static void APP_QuickSort(int32_t arr[], int32_t length);
 void APP_DMATransferCompleteCallback(void);
 
 /**
@@ -114,8 +115,13 @@ static void APP_AdcConfig(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
   /* Configure pins PA4/5/6/7 as analog inputs */
-  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_4| LL_GPIO_PIN_5| LL_GPIO_PIN_6  \
-                     | LL_GPIO_PIN_7, LL_GPIO_MODE_ANALOG);
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_4, LL_GPIO_MODE_ANALOG);
+
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_5, LL_GPIO_MODE_ANALOG);
+
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_6, LL_GPIO_MODE_ANALOG);
+
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_7, LL_GPIO_MODE_ANALOG);
 
   /* ADC channel and clock source should be configured when ADEN=0, others should be configured when ADSTART=0 */
   /* Configure internal conversion channel */
@@ -160,6 +166,32 @@ static void APP_AdcConfig(void)
 }
 
 /**
+  * @brief  Sort the array.
+  * @param  arr the array
+  * @param  length the array length
+  * @retval  None
+  */
+static void APP_QuickSort(int32_t arr[], int32_t length)
+{
+  int32_t pos,min;
+  for(int32_t i=0;i<length;i++)
+  {
+    min = arr[i];
+    pos = i;
+    for(int32_t j=i+1;j<length;j++)
+    {
+      if(min > arr[j])
+      {
+        min = arr[j];
+        pos = j;
+      }
+    }
+    arr[pos] = arr[i];
+    arr[i] = min;
+  }
+}
+
+/**
   * @brief  ADC calibration function
   * @param  None
   * @retval None
@@ -167,9 +199,11 @@ static void APP_AdcConfig(void)
 static void APP_AdcCalibrate(void)
 {
   __IO uint32_t backup_setting_adc_dma_transfer = 0;
+  uint32_t ADC_CALRR1_Buff[5];
+  int32_t ADC_CALRR1_BuffInt[5];
 #if (USE_TIMEOUT == 1)
-  uint32_t Timeout = 0;
-#endif
+  uint32_t Timeout = 0; 
+#endif 
 
   if (LL_ADC_IsEnabled(ADC1) == 0)
   {
@@ -177,27 +211,36 @@ static void APP_AdcCalibrate(void)
     backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
     LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
 
-    /* Enable calibration */
-    LL_ADC_StartCalibration(ADC1);
+    for(int i=0;i<5;i++)
+    {
+      /* Enable calibration */
+      LL_ADC_StartCalibration(ADC1);
 
 #if (USE_TIMEOUT == 1)
     Timeout = ADC_CALIBRATION_TIMEOUT_MS;
-#endif
+#endif 
 
-    while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
-    {
-#if (USE_TIMEOUT == 1)
-      /* Check if calibration is timeout */
-      if (LL_SYSTICK_IsActiveCounterFlag())
+      while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
       {
-        if(Timeout-- == 0)
+#if (USE_TIMEOUT == 1)
+        /* Check if calibration is timeout */
+        if (LL_SYSTICK_IsActiveCounterFlag())
         {
+          if(Timeout-- == 0)
+          {
 
+          }
         }
-      }
 #endif
-    }
+     }
+      ADC_CALRR1_Buff[i]= *((__IO uint32_t *)(0x40012448)); 
+      ADC_CALRR1_BuffInt[i]=(int32_t)(ADC_CALRR1_Buff[i]<<9);   
+   }
 
+    APP_QuickSort(ADC_CALRR1_BuffInt,5);   
+    *((__IO uint32_t *)(0x40012450)) = (ADC_CALRR1_BuffInt[2]>>9);             
+    *((__IO uint32_t *)(0x40012454)) = *((__IO uint32_t *)(0x4001244C));
+    *((__IO uint32_t *)(0x40012444)) |= 0x8000; 
     /* Delay between ADC calibration end and ADC enable: minimum 4 ADC Clock cycles */
     LL_mDelay(1);
 

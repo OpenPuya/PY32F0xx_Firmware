@@ -42,6 +42,10 @@ logic analyzer to see the complementary PWM outputs.
 i.e. brake signal is in effect.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 具体的通道和引脚对应关系如下：
 CH1   ->  PA3
 CH1N  ->  PA0
@@ -62,6 +66,10 @@ DTG[7:5]=111 => DT=(32+DTG[4:0]) × Tdtg， Tdtg = 16
 64us 到 126us，若步长时间为 2us；
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 Specific channel-to-pin mappings are as follows:
 CH1         -> PA3
 CH1N        -> PA0

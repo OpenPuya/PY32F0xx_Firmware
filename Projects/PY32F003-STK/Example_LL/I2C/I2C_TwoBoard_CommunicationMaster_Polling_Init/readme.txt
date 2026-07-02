@@ -44,6 +44,10 @@ and slave. If the LEDs on the master or slave are blinking, it means that
 there was a failure in data transmission or reception.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 PA3     ------> I2C1_SCL
 PA2     ------> I2C1_SDA 
 主机程序为I2C_TwoBoard_CommunicationMaster_Polling_Init
@@ -51,6 +55,10 @@ PA2     ------> I2C1_SDA
 如需修改速率，直接修改I2C_SPEEDCLOCK即可
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 PA3     ------> I2C1_SCL
 PA2     ------> I2C1_SDA 
 Master program: I2C_TwoBoard_CommunicationMaster_Polling_Init

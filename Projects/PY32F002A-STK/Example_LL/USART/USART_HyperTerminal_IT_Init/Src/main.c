@@ -42,16 +42,18 @@ uint8_t aTxStartMessage[] = "\n\r USART Hyperterminal communication based on IT 
 uint8_t aTxEndMessage[] = "\n\r Example Finished\n\r";
 
 uint8_t *TxBuff = NULL;
-__IO uint16_t TxSize = 0;
 __IO uint16_t TxCount = 0;
 
 uint8_t *RxBuff = NULL;
-__IO uint16_t RxSize = 0;
 __IO uint16_t RxCount = 0;
 
 __IO ITStatus UartReady = RESET;
-__IO ITStatus UartError = RESET;
 
+uint8_t  EieFlags = 0;
+uint32_t ErrorFlags = 0;
+
+/* Private user code ---------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 static void APP_SystemClockConfig(void);
 static void APP_ConfigUsart(USART_TypeDef *USARTx);
@@ -91,14 +93,20 @@ int main(void)
   APP_UsartTransmit_IT(USART1, (uint8_t*)aTxEndMessage, TXENDMESSAGESIZE);
   APP_WaitToReady();
 
-  /* Turn on LED */
-  BSP_LED_On(LED_GREEN);
-  
-  while (UartReady != SET)
+  if(EieFlags)
   {
+    /* If some error occurs during transmission, the LED blinking
+       and the test failed */
+      BSP_LED_Toggle(LED_GREEN);
+      LL_mDelay(500);
   }
-  UartReady = RESET;
-
+  else
+  {
+    /* Turn on LED if test passes then enter infinite loop */
+    BSP_LED_On(LED_GREEN);
+  }
+  
+  /* Infinite loop */
   while (1)
   {
   }
@@ -180,35 +188,33 @@ static void APP_ConfigUsart(USART_TypeDef *USARTx)
   */
 static void APP_UsartTransmit_IT(USART_TypeDef *USARTx, uint8_t *pData, uint16_t Size)
 {
-    TxBuff = pData;
-    TxSize = Size;
-    TxCount = Size;
-    
-    /*Enable transmit data register empty interrupt*/
-    LL_USART_EnableIT_TXE(USARTx); 
+  TxBuff = pData;
+  TxCount = Size;
+  
+  /*Enable transmit data register empty interrupt*/
+  LL_USART_EnableIT_TXE(USARTx);
 }
 
 /**
   * @brief  USART receive function.
   * @param  USARTx：USART module, can be USART1
-  * @param  pData：transmit buffer
-  * @param  Size：Size of the transmit buffer
+  * @param  pData：receive buffer
+  * @param  Size：Size of the receive buffer
   * @retval None
   */
 static void APP_UsartReceive_IT(USART_TypeDef *USARTx, uint8_t *pData, uint16_t Size)
 {
-    RxBuff = pData;
-    RxSize = Size;
-    RxCount = Size;
-    
-    /*Enable parity error interrupt*/
-    LL_USART_EnableIT_PE(USARTx);
+  RxBuff = pData;
+  RxCount = Size;
   
-    /*Enable error interrupt*/
-    LL_USART_EnableIT_ERROR(USARTx);
-  
-    /*Enable receive data register not empty interrupt*/
-    LL_USART_EnableIT_RXNE(USARTx);
+  /* Enable parity error interrupt */
+  LL_USART_EnableIT_PE(USARTx);
+
+  /* Enable error interrupt */
+  LL_USART_EnableIT_ERROR(USARTx);
+
+  /* Enable receive data register not empty interrupt */
+  LL_USART_EnableIT_RXNE(USARTx);
 }
 
 /**
@@ -218,11 +224,12 @@ static void APP_UsartReceive_IT(USART_TypeDef *USARTx, uint8_t *pData, uint16_t 
   */
 void APP_UsartIRQCallback(USART_TypeDef *USARTx)
 {
-  /* Check if the receive data register is not empty */
-  uint32_t errorflags = (LL_USART_IsActiveFlag_PE(USARTx) | LL_USART_IsActiveFlag_FE(USARTx) |\
+  /* Check SR register PE,FE,ORE,NE bit */
+  ErrorFlags = (LL_USART_IsActiveFlag_PE(USARTx) | LL_USART_IsActiveFlag_FE(USARTx) |\
                          LL_USART_IsActiveFlag_ORE(USARTx) | LL_USART_IsActiveFlag_NE(USARTx));
-  if (errorflags == RESET)
+  if (ErrorFlags == RESET)
   {
+    /* The receive data register is not empty */
     if ((LL_USART_IsActiveFlag_RXNE(USARTx) != RESET) && (LL_USART_IsEnabledIT_RXNE(USARTx) != RESET))
     {
       *RxBuff = LL_USART_ReceiveData8(USARTx);
@@ -241,15 +248,26 @@ void APP_UsartIRQCallback(USART_TypeDef *USARTx)
   }
   
   /* Receive error */ 
-  if (errorflags != RESET)
+  if (ErrorFlags != RESET)
   {
-  UartError = SET;
-  return;
+    /* Clearing the ORE bit here will clear the FE, PE, NE,
+       and flag bits together */
+    LL_USART_ClearFlag_ORE(USARTx);
+    
+    /* Error callback function */
+    APP_UsartErrorCallback();
+    
+    return;
   }
   
   /* Transmit data register empty */ 
   if ((LL_USART_IsActiveFlag_TXE(USARTx) != RESET) && (LL_USART_IsEnabledIT_TXE(USARTx) != RESET))
     {
+    /* To prevent the TC flag bit from being affected by other operations during
+       data transmission, read the SR register in conjunction with write the DR 
+       Register to clear the TC flag bit.
+    */
+    (void)(USARTx->SR);
       LL_USART_TransmitData8(USARTx, *TxBuff);
       TxBuff++;
       if (--TxCount == 0U)
@@ -312,11 +330,16 @@ static void APP_WaitToReady(void)
   while (UartReady != SET);
   
   UartReady = RESET;
+}
 
-  if(UartError == SET)
-  {
-    APP_ErrorHandler();
-  }
+/**
+  * @brief  USART Error handling function
+  * @param  None
+  * @retval None
+  */
+void APP_UsartErrorCallback(void)
+{
+  EieFlags = ErrorFlags;
 }
 
 /**

@@ -1,0 +1,189 @@
+{
+  "name": "Project",
+  "type": "ARM",
+  "dependenceList": [],
+  "srcDirs": [],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": [
+      {
+        "name": "BSP",
+        "files": [
+          {
+            "path": "../../../Drivers/BSP/PY32F002xx_Start_Kit/py32f002xx_Start_Kit.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "Common",
+        "files": [
+          {
+            "path": "../Src/system_py32f0xx.c"
+          },
+          {
+            "path": "startup_py32f002xx.s"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "Doc",
+        "files": [
+          {
+            "path": "../readme.txt"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "PY32F0xx_HAL_Driver",
+        "files": [
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal.c"
+          },
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_cortex.c"
+          },
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_pwr.c"
+          },
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc.c"
+          },
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_rcc_ex.c"
+          },
+          {
+            "path": "../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_gpio.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "User",
+        "files": [
+          {
+            "path": "../Src/main.c"
+          },
+          {
+            "path": "../Src/py32f0xx_hal_msp.c"
+          },
+          {
+            "path": "../Src/py32f0xx_it.c"
+          }
+        ],
+        "folders": []
+      }
+    ]
+  },
+  "outDir": ".",
+  "deviceName": "PY32F002Ax5",
+  "packDir": null,
+  "miscInfo": {
+    "uid": "36bcf0031e18a3008bbdaa90a96a7987"
+  },
+  "targets": {
+    "Project": {
+      "excludeList": [],
+      "toolchain": "GCC",
+      "compileConfig": {
+        "cpuType": "Cortex-M0+",
+        "floatingPointHardware": "none",
+        "scatterFilePath": "py32f002ax5.ld",
+        "useCustomScatterFile": true,
+        "storageLayout": {
+          "RAM": [],
+          "ROM": []
+        },
+        "options": "null",
+        "archExtensions": ""
+      },
+      "uploader": "pyOCD",
+      "uploadConfig": {
+        "bin": "",
+        "targetName": "PY32F002Ax5",
+        "baseAddr": "0x08000000",
+        "speed": "4M",
+        "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+        "config": ".eide/project.pyocd.yaml"
+      },
+      "uploadConfigMap": {
+        "JLink": {
+          "bin": "",
+          "baseAddr": "",
+          "cpuInfo": {
+            "vendor": "Puya",
+            "cpuName": "PY32F002Ax5"
+          },
+          "proType": 1,
+          "speed": 8000,
+          "otherCmds": ""
+        },
+        "OpenOCD": {
+          "bin": "",
+          "target": "py32f002a",
+          "interface": "cmsis-dap",
+          "baseAddr": "0x08000000"
+        },
+        "pyOCD": {
+          "bin": "",
+          "targetName": "PY32F002Ax5",
+          "baseAddr": "0x08000000",
+          "speed": "4M",
+          "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+          "config": ".eide/project.pyocd.yaml"
+        }
+      },
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          ".",
+          "../Inc",
+          "../../../Drivers/CMSIS/Include",
+          "../../../Drivers/CMSIS/Device/PY32F0xx/Include",
+          "../../../Drivers/PY32F0xx_HAL_Driver/Inc",
+          "../../../Drivers/BSP/PY32F002xx_Start_Kit"
+        ],
+        "libList": [],
+        "defineList": [
+          "USE_HAL_DRIVER",
+          "PY32F002Ax5"
+        ]
+      },
+      "builderOptions": {
+        "GCC": {
+          "version": 5,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": "--specs=nosys.specs --specs=nano.specs"
+          },
+          "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+          },
+          "asm-compiler": {
+            "ASM_FLAGS": ""
+          },
+          "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": " ",
+            "LIB_FLAGS": "-lm"
+          }
+        }
+      }
+    }
+  },
+  "version": "3.6"
+}

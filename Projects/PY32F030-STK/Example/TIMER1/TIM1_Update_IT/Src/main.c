@@ -55,8 +55,8 @@ int main(void)
   /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
 
-  TimHandle.Instance = TIM1;                                           /* Select TIM1 */
-  TimHandle.Init.Period            = 3200 - 1;                         /* Auto-reload value */
+  TimHandle.Instance               = TIM1;                             /* Select TIM1 */
+  TimHandle.Init.Period            = 800 - 1;                          /* Auto-reload value */
   TimHandle.Init.Prescaler         = 1000 - 1;                         /* Prescaler of 1000-1 */
   TimHandle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;           /* No clock division */
   TimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;               /* Up counting */
@@ -101,31 +101,32 @@ static void APP_SystemClockConfig(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /* Oscillator configuration */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE; /* Select oscillators HSE, HSI, LSI, LSE */
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                          /* Enable HSI */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                          /* HSI not divided */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz; /* Configure HSI clock as 16MHz */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* Disable HSE */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI \
+                                   | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;  /* Configure HSE, HSI, LSI, LSE */
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                             /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                             /* HSI not divided */
+#endif
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                     /* Configure HSI clock as 8MHz */
+  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                            /* Disable HSE */
   /*RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;*/
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                         /* Disable LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                         /* Disable LSE */
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                            /* Disable LSI */
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                            /* Disable LSE */
   /*RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;*/
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                      /* Enable PLL */
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;              /* Select HSI as PLL source */
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                        /* Disable PLL */
+  /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/                             /* Select HSI as PLL source */
   /* Configure oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();
   }
 
-  /* Clock source configuration */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* Select clock types HCLK, SYSCLK, PCLK1 */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* Select PLL as system clock */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;        /* AHB  clock not divided */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;         /* APB  clock not divided */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS; /* Select HSI as system clock */
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;     /* AHB  clock not divided */
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;      /* APB  clock not divided */
   /* Configure clock source */
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     APP_ErrorHandler();
   }

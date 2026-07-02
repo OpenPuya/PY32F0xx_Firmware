@@ -128,7 +128,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
       HdmaCh1.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     }
     HdmaCh1.Init.Mode                = DMA_NORMAL;
-    HdmaCh1.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
+    HdmaCh1.Init.Priority            = DMA_PRIORITY_LOW;
     /* DMA initialization */
     HAL_DMA_Init(&HdmaCh1);
 
@@ -152,7 +152,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
       HdmaCh2.Init.MemDataAlignment    = DMA_MDATAALIGN_HALFWORD;
     }
     HdmaCh2.Init.Mode                = DMA_NORMAL;
-    HdmaCh2.Init.Priority            = DMA_PRIORITY_LOW;
+    HdmaCh2.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
     /* DMA initialization */
     HAL_DMA_Init(&HdmaCh2);
     /* Link DMA handle with SPI handle */

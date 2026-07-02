@@ -38,10 +38,18 @@ to 3.3V), the LED will be turned off.
 3.Input 0V again, and the LED will be turned on.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1. 本样例中PB07引脚被配置为上拉，因此PB07悬空时PVDO的状态为0。
 2. 低功耗应用中，PVD时钟源应该选择LSC，否则无法正常工作。
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1. The PB07 pin is configured as pull-up in this sample, so the state of PVDO 
 is 0 when PB07 is suspended.
 2. In low-power applications, the PVD clock source should be selected as LSC, 

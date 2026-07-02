@@ -169,7 +169,9 @@ static void APP_SystemClockConfig(uint32_t HSICLKSource_SET)
   /* Configure HSI clock */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                      /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                      /* HSI prescaler */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = HSICLKSource_SET;                     /* Set HSI output clock calibration value */
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                                 /* Disable PLL */
   /*RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;*/                      /* Select HSI as PLL source */
@@ -180,7 +182,7 @@ static void APP_SystemClockConfig(uint32_t HSICLKSource_SET)
 
   /* Initialize AHB, APB bus clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                         /* Configure AHB clock source */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS;                         /* Configure AHB clock source */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                             /* Set AHB prescaler */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                              /* Set APB1 prescaler */
 

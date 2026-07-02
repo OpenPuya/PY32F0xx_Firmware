@@ -74,6 +74,14 @@ int main(void)
        /*Send data*/
       HAL_UART_Transmit_IT(&UartHandle, (uint8_t *)aTxBuffer, 18);
     }
+    else if((__HAL_UART_GET_FLAG(&UartHandle, UART_FLAG_ABRE) == SET) && \
+        (__HAL_UART_GET_FLAG(&UartHandle, UART_FLAG_ABRF) == SET))
+    {
+      /* Baud Rate Adaptive Detection Error */
+    }
+    else
+    {
+    }
   }
 }
 
@@ -84,7 +92,7 @@ int main(void)
   */
 static void APP_USARTConfig(void)
 {
-  /* Initialize USART2 */
+  /* Initialize USART1 */
   __HAL_RCC_USART1_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   UartHandle.Instance          = USART1;

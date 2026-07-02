@@ -138,6 +138,7 @@
 static HAL_StatusTypeDef ADC_Enable(ADC_HandleTypeDef* hadc);
 static HAL_StatusTypeDef ADC_Disable(ADC_HandleTypeDef* hadc);
 static HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef* hadc);
+static void ADC_QuickSort(int32_t arr[], int32_t length);
 #if (defined(DMA) || defined(DMA1))
 static void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma);
 static void ADC_DMAHalfConvCplt(DMA_HandleTypeDef *hdma);
@@ -2321,6 +2322,32 @@ uint32_t HAL_ADC_GetCalibStatus(ADC_HandleTypeDef* hadc)
 }
 
 /**
+  * @brief  Sort the array.
+  * @param  arr the array
+  * @param  length the array length
+  * @retval  None
+  */
+static void ADC_QuickSort(int32_t arr[], int32_t length)
+{
+  int32_t pos,min;
+  for(int32_t i=0;i<length;i++)
+  {
+    min = arr[i];
+    pos = i;
+    for(int32_t j=i+1;j<length;j++)
+    {
+      if(min > arr[j])
+      {
+        min = arr[j];
+        pos = j;
+      }
+    }
+    arr[pos] = arr[i];
+    arr[i] = min;
+  }
+}
+
+/**
   * @brief  Perform an ADC automatic self-calibration
   *         Calibration prerequisite: ADC must be disabled (execute this
   *         function before HAL_ADC_Start() or after HAL_ADC_Stop() ).
@@ -2329,7 +2356,7 @@ uint32_t HAL_ADC_GetCalibStatus(ADC_HandleTypeDef* hadc)
   * @param  hadc ADC handle
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ADC_Calibration_Start(ADC_HandleTypeDef* hadc)
+HAL_StatusTypeDef HAL_ADC_Calibration_SingleStart(ADC_HandleTypeDef* hadc)
 {
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
   uint32_t tickstart = 0U;
@@ -2406,6 +2433,38 @@ HAL_StatusTypeDef HAL_ADC_Calibration_Start(ADC_HandleTypeDef* hadc)
 
   /* Return function status */
   return tmp_hal_status;
+}
+
+/**
+  * @brief  Perform an ADC automatic self-calibration
+  *         Calibration prerequisite: ADC must be disabled (execute this
+  *         function before HAL_ADC_Start() or after HAL_ADC_Stop() ).
+  * @note   Calibration factor can be read after calibration, using function
+  *         HAL_ADC_GetValue() (value on 7 bits: from DR[6;0]).
+  * @param  hadc ADC handle
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_ADC_Calibration_Start(ADC_HandleTypeDef* hadc)
+{
+  uint32_t ADC_CALRR1_Buff[5];
+  int32_t ADC_CALRR1_BuffInt[5];
+
+  for(int i=0;i<5;i++)
+  {
+    /* ADC calibration */
+    if (HAL_ADC_Calibration_SingleStart(hadc) != HAL_OK)                 
+    {
+      return HAL_ERROR;
+    }
+    ADC_CALRR1_Buff[i]= *((__IO uint32_t *)(0x40012448)); 
+    ADC_CALRR1_BuffInt[i]=(int32_t)(ADC_CALRR1_Buff[i]<<9);    
+  }
+
+  ADC_QuickSort(ADC_CALRR1_BuffInt,5);   
+  *((__IO uint32_t *)(0x40012450)) = (ADC_CALRR1_BuffInt[2]>>9);             
+  *((__IO uint32_t *)(0x40012454)) = *((__IO uint32_t *)(0x4001244C));
+  *((__IO uint32_t *)(0x40012444)) |= 0x8000; 
+  return HAL_OK;
 }
 
 /**

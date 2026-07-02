@@ -39,30 +39,42 @@
       },
       {
         "name": "PY32F0xx_HAL_Driver",
-        "files": [
+        "files":[
           {
-            "path": "../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c"
+            "path":"../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_utils.c"
+          },
+          {                
+            "path":"../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal.c"
+          },
+          {                
+            "path":"../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_cortex.c"
+          },
+          {                
+            "path":"../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_hal_flash.c"
+          },
+          {                
+            "path":"../../../../../../Drivers/PY32F0xx_HAL_Driver/Src/py32f0xx_ll_gpio.c"
           }
         ],
         "folders": []
       },
       {
         "name": "User",
-        "files": [
+        "files":[
           {
-            "path": "../Src/main.c"
+            "path":"../Src/main.c"
           },
           {
-            "path": "../Src/py32f0xx_it.c"
+            "path":"../Src/py32f0xx_it.c"
           }
         ],
         "folders": []
       }
     ]
   },
-  "outDir": "build",
+  "outDir": ".",
   "deviceName": "PY32F002Ax5",
-  "packDir": "../../../../../../Packs/GCC/.pack/Puya/PY32F0xx_DFP",
+  "packDir": null,
   "miscInfo": {
     "uid": "36bcf0031e18a3008bbdaa90a96a7987"
   },
@@ -79,14 +91,17 @@
           "RAM": [],
           "ROM": []
         },
-        "options": "null"
+        "options": "null",
+        "archExtensions": ""
       },
-      "uploader": "OpenOCD",
+      "uploader": "pyOCD",
       "uploadConfig": {
         "bin": "",
-        "target": "py32f030",
-        "interface": "cmsis-dap",
-        "baseAddr": "0x08000000"
+        "targetName": "PY32F002Ax5",
+        "baseAddr": "0x08000000",
+        "speed": "4M",
+        "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+        "config": ".eide/project.pyocd.yaml"
       },
       "uploadConfigMap": {
         "JLink": {
@@ -102,9 +117,17 @@
         },
         "OpenOCD": {
           "bin": "",
-          "target": "py32f030",
+          "target": "py32f002a",
           "interface": "cmsis-dap",
           "baseAddr": "0x08000000"
+        },
+        "pyOCD": {
+          "bin": "",
+          "targetName": "PY32F002Ax5",
+          "baseAddr": "0x08000000",
+          "speed": "4M",
+          "otherCmds": "\"--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack\"",
+          "config": ".eide/project.pyocd.yaml"
         }
       },
       "custom_dep": {
@@ -118,12 +141,40 @@
           "../../../../../../Drivers/BSP/PY32F002xx_Start_Kit"
         ],
         "libList": [],
-        "defineList": [
-          "PY32F002Ax5",
-          "USE_FULL_LL_DRIVER"
-        ]
+        "defineList": ["PY32F002Ax5","USE_FULL_LL_DRIVER"]
+      },
+      "builderOptions": {
+        "GCC": {
+          "version": 5,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": "--specs=nosys.specs --specs=nano.specs"
+          },
+          "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+          },
+          "asm-compiler": {
+            "ASM_FLAGS": ""
+          },
+          "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": " ",
+            "LIB_FLAGS": "-lm"
+          }
+        }
       }
     }
   },
-  "version": "3.4"
+  "version": "3.6"
 }

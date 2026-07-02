@@ -94,11 +94,11 @@ static void APP_ConfigTIM1Encoder(void)
   LL_TIM_SetEncoderMode(TIM1,LL_TIM_ENCODERMODE_X4_TI12);
 
   TIM1EncoderInit.EncoderMode     = LL_TIM_ENCODERMODE_X4_TI12;   /* Encoder mode: Mode 3  */
-  TIM1EncoderInit.IC1Polarity     = LL_TIM_IC_POLARITY_BOTHEDGE;  /* Input capture 1 active edge: Both edges */
+  TIM1EncoderInit.IC1Polarity     = LL_TIM_IC_POLARITY_RISING;    /* Not Inverted */
   TIM1EncoderInit.IC1ActiveInput  = LL_TIM_ACTIVEINPUT_DIRECTTI;  /* Input capture 1 active input: TI1 */
   TIM1EncoderInit.IC1Filter       = LL_TIM_IC_FILTER_FDIV1;       /* Input capture 1 filter value: No filter */
   TIM1EncoderInit.IC1Prescaler    = LL_TIM_ICPSC_DIV1;            /* Input capture 1 prescaler value: 1 */
-  TIM1EncoderInit.IC2Polarity     = LL_TIM_IC_POLARITY_BOTHEDGE;  /* Input capture 2 active edge: Both edges */
+  TIM1EncoderInit.IC2Polarity     = LL_TIM_IC_POLARITY_RISING;    /* Not Inverted */
   TIM1EncoderInit.IC2ActiveInput  = LL_TIM_ACTIVEINPUT_DIRECTTI;  /* Input capture 2 active input: TI2 */
   TIM1EncoderInit.IC2Filter       = LL_TIM_IC_FILTER_FDIV1;       /* Input capture 2 filter value: No filter */
   TIM1EncoderInit.IC2Prescaler    = LL_TIM_ICPSC_DIV1;            /* Input capture 2 prescaler value: 1 */

@@ -2526,6 +2526,11 @@ static HAL_StatusTypeDef USART_Transmit_IT(USART_HandleTypeDef *husart)
     if (husart->Init.WordLength == USART_WORDLENGTH_9B)
     {
       tmp = (uint16_t *) husart->pTxBuffPtr;
+      /* To prevent the TC flag bit from being affected by other operations during
+         data transmission, read the SR register in conjunction with write the DR 
+         Register to clear the TC flag bit.
+         */
+      (void)(husart->Instance->SR);
       husart->Instance->DR = (uint16_t)(*tmp & (uint16_t)0x01FF);
       if (husart->Init.Parity == USART_PARITY_NONE)
       {
@@ -2538,6 +2543,11 @@ static HAL_StatusTypeDef USART_Transmit_IT(USART_HandleTypeDef *husart)
     }
     else
     {
+      /* To prevent the TC flag bit from being affected by other operations during
+         data transmission, read the SR register in conjunction with write the DR 
+         Register to clear the TC flag bit.
+         */
+      (void)(husart->Instance->SR);
       husart->Instance->DR = (uint8_t)(*husart->pTxBuffPtr++ & (uint8_t)0x00FF);
     }
 

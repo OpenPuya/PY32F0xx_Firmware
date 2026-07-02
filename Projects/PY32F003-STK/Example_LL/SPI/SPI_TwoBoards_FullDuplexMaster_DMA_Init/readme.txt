@@ -28,7 +28,7 @@ IAR Version: 9.20
 GCC Version: GNU Arm Embedded Toolchain 10.3-2021.10
 
 ================================================================================
-使用步骤:
+使用步骤：
 1.选择两块PY32F003_STK板，一块作为主机，一块作为从机
 2.编译下载主机程序（本样例程序）
 3.编译下载从机程序SPI_TwoBoards_FullDuplexSlave_DMA_Init
@@ -60,7 +60,11 @@ then press the user button on the master to run the master program.
 7.If both the master and slave LEDs remain constantly on, the communication 
 is successful. If they blink, it indicates communication failure.
 ================================================================================
-注意事项:
+注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1.必须先按从机复位按键使从机程序先运行，再按主机用户按键开始运行主机程序，否则会
 导致主从机通信失败。
 2.主机模式可通过程序设置IO控制方式为DMA方式、中断方式和查询方式
@@ -68,6 +72,10 @@ is successful. If they blink, it indicates communication failure.
 脚）
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1.It is necessary to press the reset button on the slave first to run the 
 slave program, and then press the user button on the master to start running 
 the master program, otherwise it will result in communication failure between 

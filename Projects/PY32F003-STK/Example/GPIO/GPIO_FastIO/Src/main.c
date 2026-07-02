@@ -119,11 +119,13 @@ static void APP_SystemClockConfig(void)
   /* Configure clock source HSI */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                       /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                       /* No HSI division */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz; */                         /* Configure HSI output clock as 4MHz */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz; */                         /* Configure HSI output clock as 8MHz */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz; */                        /* Configure HSI output clock as 16MHz */
   /* RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_22p12MHz; */                     /* Configure HSI output clock as 22.12MHz */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz;                              /* Configure HSI output clock as 24MHz */
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)                                           /* Initialize RCC oscillators */
@@ -133,7 +135,7 @@ static void APP_SystemClockConfig(void)
 
   /* Initialize CPU, AHB, APB bus clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;  /* RCC system clock types */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;                                          /* SYSCLK source is HSI */
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSISYS;                                          /* SYSCLK source is HSISYS */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                              /* AHB clock not divided */
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                               /* APB clock not divided */
 

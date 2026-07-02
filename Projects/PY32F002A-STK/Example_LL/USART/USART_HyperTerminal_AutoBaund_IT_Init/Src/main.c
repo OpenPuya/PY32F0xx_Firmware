@@ -77,6 +77,13 @@ int main(void)
       /* Send data */
       APP_UsartTransmit_IT(USART1, (uint8_t*)aTxBuffer, sizeof(aTxBuffer)-1);
     }
+    else if((LL_USART_IsActiveFlag_ABRE(USART1) == 1) && (LL_USART_IsActiveFlag_ABRF(USART1) == 1))
+    {
+      /* Baud Rate Adaptive Detection Error */
+    }
+    else
+    {
+    }
   }
 }
 
@@ -270,6 +277,11 @@ void APP_UsartIRQCallback(USART_TypeDef *USARTx)
     /*Transmit data register empty*/
     if ((LL_USART_IsActiveFlag_TXE(USARTx) != RESET) && (LL_USART_IsEnabledIT_TXE(USARTx) != RESET))
     {
+    /* To prevent the TC flag bit from being affected by other operations during
+       data transmission, read the SR register in conjunction with write the DR 
+       Register to clear the TC flag bit.
+    */
+    (void)(USARTx->SR);
         LL_USART_TransmitData8(USARTx, *TxBuff);
         TxBuff++;
         

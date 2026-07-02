@@ -33,8 +33,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-LL_UTILS_ClkInitTypeDef UTILS_ClkInitStruct = {LL_RCC_SYSCLK_DIV_1, LL_RCC_APB1_DIV_1};
-
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -54,7 +52,7 @@ int main(void)
   APP_GPIOConfig();
   
   /* MCO (Microcontroller Clock Output) clock and divider initialization */
-  LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_SYSCLK,LL_RCC_MCO1_DIV_1); 
+  LL_RCC_ConfigMCO(LL_RCC_MCO1SOURCE_SYSCLK,LL_RCC_MCO1_DIV_2); 
   
   while (1)
   {
@@ -74,9 +72,40 @@ static void APP_SystemClockConfig(void)
   while(LL_RCC_HSI_IsReady() != 1)
   {
   }
+  /* Configure HSISYS as system clock */
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
+  {
+  }
+  /* PLL multiplication factor of 2 using HSI (24MHz) */
+  LL_RCC_PLL_Disable();
+  while(LL_RCC_PLL_IsReady() != 0)
+  {
+  }
+  LL_RCC_PLL_SetMainSource(LL_RCC_PLLSOURCE_HSI);
+
+  LL_RCC_PLL_Enable();
+  while(LL_RCC_PLL_IsReady() != 1)
+  {
+  }
   
-  /* Configure system clock with HSI as clock source of the PLL and initialize it */
-  LL_PLL_ConfigSystemClock_HSI(&UTILS_ClkInitStruct);
+  /* Set flash latency */
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
+  while(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_1)
+  {
+  }
+  
+  /* Configure AHB prescaler */
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+
+  /* Configure PLL as system clock and initialize */
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
+  {
+  }
+
+  /* Configure APB1 prescaler and initialize */
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   
   /* Set systick to 1ms */
   LL_Init1msTick(48000000);

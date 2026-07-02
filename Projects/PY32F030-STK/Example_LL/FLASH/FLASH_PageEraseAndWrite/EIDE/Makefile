@@ -29,14 +29,13 @@ OPT = -Og
 # paths
 #######################################
 # Build path
-BUILD_DIR = build\Project
+BUILD_DIR = Project
 
 ######################################
 # source
 ######################################
 # C sources
-C_SOURCES =  \
-../Src/main.c \
+C_SOURCES =  \../Src/main.c \
 ../Src/py32f0xx_it.c \
 ../Src/system_py32f0xx.c \
 ../../../../../../Drivers/BSP/PY32F030xx_Start_Kit/py32f030xx_ll_Start_Kit.c \

@@ -82,6 +82,9 @@ typedef enum
   BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
+#define StartKitVersion 2
+/* #define StartKitVersion 1 */
+
 #define LEDn                               1
 
 #define LED3_PIN                           LL_GPIO_PIN_11
@@ -90,7 +93,7 @@ typedef enum
 #define LED3_GPIO_CLK_DISABLE()            LL_IOP_GRP1_DisableClock(LL_IOP_GRP1_PERIPH_GPIOA)
 
 #define LEDx_GPIO_CLK_ENABLE(__INDEX__)    do {LED3_GPIO_CLK_ENABLE(); } while(0U)
-#define LEDx_GPIO_CLK_DISABLE(__INDEX__)   LED3_GPIO_CLK_DISABLE())
+#define LEDx_GPIO_CLK_DISABLE(__INDEX__)   LED3_GPIO_CLK_DISABLE()
 
 #define BUTTONn                            1
 
@@ -117,7 +120,7 @@ typedef enum
 #define BUTTONx_GPIO_CLK_ENABLE(__INDEX__)      do { if((__INDEX__) == 0) USER_BUTTON_GPIO_CLK_ENABLE();} while(0)
 #define BUTTONx_GPIO_CLK_DISABLE(__INDEX__)     (((__INDEX__) == 0) ? USER_BUTTON_GPIO_CLK_DISABLE() : 0)
 
-
+#ifdef USART2
 //debug printf redirect config
 #define DEBUG_USART_BAUDRATE                    115200
 
@@ -144,6 +147,11 @@ typedef enum
 
 #define DEBUG_USART_IRQHandler                  USART2_IRQHandler
 #define DEBUG_USART_IRQ                         USART2_IRQn
+#else
+#define DEBUG_USART_TX_GPIO_PORT                GPIOA
+#define DEBUG_USART_TX_GPIO_CLK_ENABLE()        LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA)
+#define DEBUG_USART_TX_PIN                      LL_GPIO_PIN_2
+#endif
 /************************************************************/
 
 /** @defgroup Functions

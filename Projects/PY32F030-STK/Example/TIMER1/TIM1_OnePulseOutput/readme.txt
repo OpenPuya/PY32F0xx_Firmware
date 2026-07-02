@@ -6,7 +6,7 @@
 此样例演示了TIM1的单脉冲模式。当CH2 (PA09)引脚上的上升沿触发计数器开始计数时，当计数值
 与CCR1匹配时，CH1 (PA08)输出高电平，直到计数器溢出，CH1再次输出低电平。计数器溢出后，
 定时器停止工作。本例程中脉冲宽度的计算公式为 
-(TIM1_ARR-TIM1_CCR1)/CLK = (65535-16383)/32000000 = 1.536ms。
+(TIM1_ARR-TIM1_CCR1)/CLK = (65535-16383)/8000000 = 6.144ms。
 
 Function descriptions:
 This sample demonstrates the single pulse mode of TIM1. When the rising edge is 
@@ -14,7 +14,7 @@ detected on CH2 (PA09) pin, the counter starts counting. When the counter value
 matches CCR1, CH1 (PA08) outputs a high level until the counter overflows. After 
 the counter overflows, CH1 outputs a low level and the timer stops working. The 
 pulse width in this example is calculated using the formula 
-(TIM1_ARR-TIM1_CCR1)/CLK = (65535-16383)/32000000 = 1.536ms.
+(TIM1_ARR-TIM1_CCR1)/CLK = (65535-16383)/8000000 = 6.144ms.
 ================================================================================
 测试环境：
 测试用板：PY32F030_STK
@@ -40,6 +40,10 @@ Example execution steps:
 the waveforms.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 时钟主频为32M
 输出效果见下图：
                                 ____
@@ -52,6 +56,10 @@ the waveforms.
                                 <---Delay----><------Pulse--------------->
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 The system frequency is 32MHz.
 Please refer to the diagram below for the output effect:
                                 ____

@@ -35,11 +35,19 @@ Example execution steps:
 2.Run the program, and observe the LED blinking at a frequency of 0.5Hz.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 默认主频为8M
 此例程计算方式为TIM3_ARR*TIM3_PSC*TIM1_ARR*TIM1_PSC/时钟
 =800*100*100*1/8000000=1Hz
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 The default system frequency is 8MHz.
 The calculation in this example is as follows: 
 TIM3_ARR * TIM3_PSC * TIM1_ARR * TIM1_PSC / Clock frequency

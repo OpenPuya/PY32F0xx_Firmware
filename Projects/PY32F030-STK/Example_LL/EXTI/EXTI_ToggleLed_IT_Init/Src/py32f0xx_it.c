@@ -95,10 +95,10 @@ void SysTick_Handler(void)
 void EXTI4_15_IRQHandler(void)
 {
   /* Handle EXTI interrupt request */
-  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_12))
+  if(LL_EXTI_IsActiveFlag(LL_EXTI_LINE_15))
   {
     BSP_LED_Toggle(LED_GREEN);
-    LL_EXTI_ClearFlag(LL_EXTI_LINE_12);
+    LL_EXTI_ClearFlag(LL_EXTI_LINE_15);
   }
 }
 

@@ -32,6 +32,10 @@ Example execution steps:
 2.Use a logic analyzer to observe the waveforms on pins PA7/PA8/PA9/PA10/PB0/PB1.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 PA8  -> CH1  占空比：25%
 PA9  -> CH2  占空比：50%
 PA10 -> CH3  占空比：75%
@@ -40,6 +44,10 @@ PB0  -> CH2N
 PB1  -> CH3N
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 PA8  -> CH1  Duty cycle: 25%
 PA9  -> CH2  Duty cycle: 50%
 PA10 -> CH3  Duty cycle: 75%

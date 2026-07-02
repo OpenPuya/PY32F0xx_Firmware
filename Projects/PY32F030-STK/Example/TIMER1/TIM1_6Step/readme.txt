@@ -36,6 +36,10 @@ CH2 (PA09), CH2N (PB00), CH3 (PA10), CH3N (PB01), and can monitor the PWM
 waveform in the notes;
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 下表是换向步骤，比如第一步中的CH1和CH2N为1，即设置打开这两个通道的PWM输出。
 PWM时序如下：
         第一步      第二步      第三步      第四步      第五步     第六步     
@@ -56,6 +60,10 @@ CH3  (PA10)   _______||||||||||||||||_______________________________||||||||||||
 CH3N (PB01)   ________________________________|||||||||||||||________________________________|||||||||||||||
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 The table below 
 shows the PWM sequence for each step, where CH1 and CH2N are set to 1 in the 
 first step, indicating the activation of these two channels for PWM output.

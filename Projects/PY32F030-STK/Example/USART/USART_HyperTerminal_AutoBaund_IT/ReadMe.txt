@@ -47,12 +47,20 @@ COM port with a baud rate of 9600.
 with the string "Auto BaudRate Test".
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1. 不注释掉宏AUTO_BAUD_MODE0(main.c中)，上位机发送1字节的波特率检测0x7f，如果
 MCU检测成功,返回字符：Auto BaudRate Test
 2. 注释掉宏AUTO_BAUD_MODE0(main.c中)，上位机发送1字节的波特率检测0x55，如果MCU
 检测成功，返回字符：Auto BaudRate Test
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1.If the macro AUTO_BAUD_MODE0 is not commented out in main.c, when the host 
 computer sends a 1-byte baud rate detection signal 0x7F, and the MCU detects 
 it successfully, it will return the string "Auto BaudRate Test".

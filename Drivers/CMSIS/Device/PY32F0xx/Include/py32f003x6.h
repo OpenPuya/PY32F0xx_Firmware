@@ -1091,7 +1091,7 @@ typedef struct
 #define EXTI_RTSR_RT16_Msk          (0x1UL << EXTI_RTSR_RT16_Pos)            /*!< 0x00010000 */
 #define EXTI_RTSR_RT16              EXTI_RTSR_RT16_Msk                       /*!< Rising trigger configuration for input line 16 */
 #define EXTI_RTSR_RT17_Pos          (17U)
-#define EXTI_RTSR_RT17_Msk          (0x1UL << EXTI_RTSR_RT16_Pos)            /*!< 0x00020000 */
+#define EXTI_RTSR_RT17_Msk          (0x1UL << EXTI_RTSR_RT17_Pos)            /*!< 0x00020000 */            /*!< 0x00020000 */
 #define EXTI_RTSR_RT17              EXTI_RTSR_RT17_Msk                       /*!< Rising trigger configuration for input line 17 */
 #define EXTI_RTSR_RT18_Pos          (18U)
 #define EXTI_RTSR_RT18_Msk          (0x1UL << EXTI_RTSR_RT18_Pos)            /*!< 0x00040000 */
@@ -2797,12 +2797,12 @@ typedef struct
 #define RCC_CR_HSIRDY_Pos                (10U)
 #define RCC_CR_HSIRDY_Msk                (0x1UL << RCC_CR_HSIRDY_Pos)          /*!< 0x00000400 */
 #define RCC_CR_HSIRDY                    RCC_CR_HSIRDY_Msk                     /*!< Internal High Speed clock ready flag */
-#define RCC_CR_HSIDIV_Pos                (11U)
-#define RCC_CR_HSIDIV_Msk                (0x7UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00003800 */
-#define RCC_CR_HSIDIV                    RCC_CR_HSIDIV_Msk                     /*!< HSIDIV[13:11] Internal High Speed clock division factor */
-#define RCC_CR_HSIDIV_0                  (0x1UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00000800 */
-#define RCC_CR_HSIDIV_1                  (0x2UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00001000 */
-#define RCC_CR_HSIDIV_2                  (0x4UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00002000 */
+// #define RCC_CR_HSIDIV_Pos                (11U)
+// #define RCC_CR_HSIDIV_Msk                (0x7UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00003800 */
+// #define RCC_CR_HSIDIV                    RCC_CR_HSIDIV_Msk                     /*!< HSIDIV[13:11] Internal High Speed clock division factor */
+// #define RCC_CR_HSIDIV_0                  (0x1UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00000800 */
+// #define RCC_CR_HSIDIV_1                  (0x2UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00001000 */
+// #define RCC_CR_HSIDIV_2                  (0x4UL << RCC_CR_HSIDIV_Pos)          /*!< 0x00002000 */
 #define RCC_CR_HSEON_Pos                 (16U)
 #define RCC_CR_HSEON_Msk                 (0x1UL << RCC_CR_HSEON_Pos)           /*!< 0x00010000 */
 #define RCC_CR_HSEON                     RCC_CR_HSEON_Msk                      /*!< External High Speed clock enable */

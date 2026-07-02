@@ -1,0 +1,6 @@
+r
+halt
+loadfile "Project\Project.hex"
+r
+go
+exit

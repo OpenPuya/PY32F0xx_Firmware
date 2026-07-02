@@ -32,12 +32,20 @@ Example execution steps:
 2.It can be observed that the digital tube gradually displays: 8888.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1. 此样例需要stk板外接数码管
 2. 数码管的COM0/COM1/COM2/COM3分别接stk板的PA15/PB3/PB4/PB5
 3. 数码管的SEG A B C D E F G DP 分别接stk板的PB8/PA00/PA01/PA02/PA03/PA04/PA05/PA06
 4. 使用中请确认所选的芯片型号，上述IO口是否都有引出
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1.This example requires an external 4-digit display connected to the stk board.
 2.The COM0/COM1/COM2/COM3 pins of the 4-digit display are respectively connected 
 to PA15/PB3/PB4/PB5 of the stk board.

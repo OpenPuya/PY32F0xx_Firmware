@@ -45,7 +45,6 @@ uint8_t aRxBuffer[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void APP_SystemClockConfig(void);
 static void APP_CheckEndOfTransfer(void);
 static uint8_t APP_Buffercmp8(uint8_t* pBuffer1, uint8_t* pBuffer2, uint8_t BufferLength);
 static void APP_LedBlinking(void);
@@ -61,10 +60,7 @@ int main(void)
   
   /* Initialize LED */
   BSP_LED_Init(LED_GREEN);
-  
-  /* Configure clock */
-  APP_SystemClockConfig();
-  
+
   /* I2C initialization */
   I2cHandle.Instance             = I2C;                                   /* I2C */
   I2cHandle.Init.ClockSpeed      = I2C_SPEEDCLOCK;                        /* I2C communication speed */
@@ -101,44 +97,6 @@ int main(void)
   
   while(1)
   {
-  }
-}
-
-/**
-  * @brief  System clock configuration function
-  * @param  None
-  * @retval None
-  */
-static void APP_SystemClockConfig(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-  /* Configure clock source: HSE/HSI/LSE/LSI */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                    /* Enable HSI */
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                    /* No HSI division */
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz;                           /* Configure HSI output clock as 16MHz */
-  RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                   /* Disable HSE */
-  RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;                                               /* HSE crystal frequency range: 16MHz - 32MHz */
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;                                                   /* Disable LSI */
-  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;                                                   /* Disable LSE */
-  RCC_OscInitStruct.LSEDriver = RCC_LSEDRIVE_MEDIUM;                                          /* Default LSE drive capability */
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;                                                /* Enable PLL */
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;                                        /* Select PLL source as HSI */
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    APP_ErrorHandler();
-  }
-
-  /* Initialize CPU, AHB, and APB bus clocks */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1; /* RCC system clock types */
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;                                      /* SYSCLK source selection as PLL */
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* AHB clock no division */
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB clock no division */
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    APP_ErrorHandler();
   }
 }
 

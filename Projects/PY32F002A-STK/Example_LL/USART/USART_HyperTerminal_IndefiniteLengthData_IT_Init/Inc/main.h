@@ -65,6 +65,7 @@ extern uint8_t  aRxBuffer[RX_MAX_LEN];
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
 void APP_ErrorHandler(void);
+void APP_UsartErrorCallback(void);
 
 /* Private defines -----------------------------------------------------------*/
 

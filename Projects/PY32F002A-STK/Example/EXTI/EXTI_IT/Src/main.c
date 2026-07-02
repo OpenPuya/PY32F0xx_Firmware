@@ -52,11 +52,8 @@ int main(void)
   Configure_EXTI();                             /* Configure external interrupt */
   while (1)
   {
-
   }
 }
-
-
 
 /**
   * @brief  Configure EXTI
@@ -72,7 +69,7 @@ void Configure_EXTI(void)
   GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;   /* GPIO mode set to falling edge interrupt */
   GPIO_InitStruct.Pull  = GPIO_PULLUP;            /* Pull-up */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;   /* High-speed */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   HAL_NVIC_EnableIRQ(EXTI2_3_IRQn);                /* Enable EXTI interrupt */

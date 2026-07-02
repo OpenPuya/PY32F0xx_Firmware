@@ -281,7 +281,7 @@ typedef struct
 /**
   * @}
   */
-
+#if defined(RCC_HSIDIV_SUPPORT)
 /** @defgroup RCC_LL_EC_HSI_DIV  HSI division factor
   * @{
   */
@@ -296,7 +296,7 @@ typedef struct
 /**
   * @}
   */
-
+#endif
 /** @defgroup RCC_LL_EC_MCO1SOURCE  MCO1 SOURCE selection
   * @{
   */
@@ -547,6 +547,7 @@ typedef struct
 #define __LL_RCC_CALC_PCLK1_FREQ(__HCLKFREQ__, __APB1PRESCALER__)  \
   ((__HCLKFREQ__) >> (APBPrescTable[(__APB1PRESCALER__) >>  RCC_CFGR_PPRE_Pos] & 0x1FU))
 
+#if defined(RCC_HSIDIV_SUPPORT)
 /**
   * @brief  Helper macro to calculate the HSISYS frequency
   * @param  __HSIDIV__ This parameter can be one of the following values:
@@ -562,7 +563,10 @@ typedef struct
   */
 #define __LL_RCC_CALC_HSI_FREQ(__HSIDIV__)  \
   (HSIFreqTable[(RCC->ICSCR & RCC_ICSCR_HSI_FS) >> RCC_ICSCR_HSI_FS_Pos] / (1U << ((__HSIDIV__)>> RCC_CR_HSIDIV_Pos)))
-
+#else
+#define __LL_RCC_CALC_HSI_FREQ()  \
+  (HSIFreqTable[(RCC->ICSCR & RCC_ICSCR_HSI_FS) >> RCC_ICSCR_HSI_FS_Pos])
+#endif
 /**
   * @}
   */
@@ -1015,7 +1019,7 @@ __STATIC_INLINE void LL_RCC_SetAPB1Prescaler(uint32_t Prescaler)
 {
   MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE, Prescaler);
 }
-
+#if defined(RCC_HSIDIV_SUPPORT)
 /**
   * @brief  Set HSI division factor
   * @rmtoll CR         HSIDIV          LL_RCC_SetHSIDiv
@@ -1036,6 +1040,7 @@ __STATIC_INLINE void LL_RCC_SetHSIDiv(uint32_t HSIDiv)
 {
   MODIFY_REG(RCC->CR, RCC_CR_HSIDIV, HSIDiv);
 }
+#endif
 /**
   * @brief  Get AHB prescaler
   * @rmtoll CFGR         HPRE          LL_RCC_GetAHBPrescaler
@@ -1069,7 +1074,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetAPB1Prescaler(void)
 {
   return (uint32_t)(READ_BIT(RCC->CFGR, RCC_CFGR_PPRE));
 }
-
+#if defined(RCC_HSIDIV_SUPPORT)
 /**
   * @brief  Get HSI division factor
   * @rmtoll CR         HSIDIV         LL_RCC_GetHSIDiv
@@ -1089,6 +1094,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetHSIDiv(void)
 {
   return (uint32_t)(READ_BIT(RCC->CR, RCC_CR_HSIDIV));
 }
+#endif
 /**
   * @}
   */

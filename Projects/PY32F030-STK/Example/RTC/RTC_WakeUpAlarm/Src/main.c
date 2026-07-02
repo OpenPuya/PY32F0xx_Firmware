@@ -197,7 +197,9 @@ static void APP_SystemClockConfig(void)
   /* Configure clock source HSE/HSI/LSE/LSI */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;                                                      /* Enable HSI */
+#if defined(RCC_HSIDIV_SUPPORT)
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;                                                      /* No HSI division */
+#endif
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;                              /* Configure HSI output clock as 8MHz */
   RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                                                     /* Disable HSE */
   /* RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz; */                                           /* HSE frequency range 16M~32M */

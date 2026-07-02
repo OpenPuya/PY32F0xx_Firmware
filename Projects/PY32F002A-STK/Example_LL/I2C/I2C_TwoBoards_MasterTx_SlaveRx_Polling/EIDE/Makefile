@@ -29,7 +29,7 @@ OPT = -Og
 # paths
 #######################################
 # Build path
-BUILD_DIR = build\Project
+BUILD_DIR = Project
 
 ######################################
 # source
@@ -91,8 +91,7 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DPY32F002Ax5\
--DUSE_FULL_LL_DRIVER\
--DUSE_FULL_ASSERT
+-DUSE_FULL_LL_DRIVER
 
 
 # AS includes

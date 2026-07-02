@@ -51,8 +51,7 @@ extern uint32_t cRxIndex;
 
 /* Exported functions prototypes ---------------------------------------------*/
 void APP_ErrorHandler(void);
-
-/* Private defines -----------------------------------------------------------*/
+void APP_UsartErrorCallback(void);
 
 #ifdef __cplusplus
 }

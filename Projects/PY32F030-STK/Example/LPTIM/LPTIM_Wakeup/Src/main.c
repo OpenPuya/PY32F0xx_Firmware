@@ -173,8 +173,8 @@ static void APP_LPTIMStart(void)
   /* Load autoreload value */
   __HAL_LPTIM_AUTORELOAD_SET(&LPTIMConf, 51);
 
-  /* Delay 120us */
-  APP_delay_us(120);
+  /* Delay 160us */
+  APP_delay_us(160);
   
   /* Start single count mode */
   __HAL_LPTIM_START_SINGLE(&LPTIMConf);

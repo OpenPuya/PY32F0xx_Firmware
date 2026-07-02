@@ -70,7 +70,7 @@ static void APP_ConfigureExti(void)
   GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;  /* GPIO mode set to falling edge interrupt */
   GPIO_InitStruct.Pull  = GPIO_PULLUP;           /* Pull-up */
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;  /* High-speed  */
-  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   
   /* Enable EXTI interrupt */

@@ -80,7 +80,9 @@ const uint32_t HSIFreqTable[8] = {4000000U, 8000000U, 16000000U, 22120000U, 2400
 void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency      */
 {
   uint32_t tmp;
+#if defined(RCC_HSIDIV_SUPPORT)
   uint32_t hsidiv;
+#endif
   uint32_t hsifs;
 
   /* Get SYSCLK source -------------------------------------------------------*/
@@ -114,8 +116,12 @@ void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency      */
   case 0x00000000U:  /* HSI used as system clock */
   default:                /* HSI used as system clock */
     hsifs = ((READ_BIT(RCC->ICSCR, RCC_ICSCR_HSI_FS)) >> RCC_ICSCR_HSI_FS_Pos);
+#if defined(RCC_HSIDIV_SUPPORT)
     hsidiv = (1UL << ((READ_BIT(RCC->CR, RCC_CR_HSIDIV)) >> RCC_CR_HSIDIV_Pos));
     SystemCoreClock = (HSIFreqTable[hsifs] / hsidiv);
+#else
+    SystemCoreClock = HSIFreqTable[hsifs];
+#endif
     break;
   }
   /* Compute HCLK clock frequency --------------------------------------------*/
@@ -135,6 +141,9 @@ void SystemInit(void)
 {
   /* Set the HSI clock to 8MHz by default */
   RCC->ICSCR = (RCC->ICSCR & 0xFFFF0000) | (0x1 << 13) | ((*(uint32_t *)(0x1FFF0F04)) & 0x1FFF);
+
+  /* Set the LSI clock to 32.768KHz by default */
+  RCC->ICSCR = (RCC->ICSCR & 0xFE00FFFF) | (((*(uint32_t *)(0x1FFF0FA4)) & 0x1FF) << RCC_ICSCR_LSI_TRIM_Pos);
 
   /* Configure the Vector Table location add offset address ------------------*/
 #ifdef VECT_TAB_SRAM
@@ -181,6 +190,24 @@ int __low_level_init(void)
   /* call IAR table copy function. */
   __iar_data_init3();
 
+  for (i = 0; i < 48; i++)
+  {
+    VECT_SRAM_TAB[i] = pFmcVect[i];
+  }
+
+  SCB->VTOR = SRAM_BASE;
+
+  main();
+  return 0;
+}
+#elif defined(__GNUC__)
+extern int32_t main(void);
+extern int entry(void);
+uint32_t VECT_SRAM_TAB[48]__attribute__((section(".vectable_sram")));
+int entry(void)
+{
+  uint8_t i;
+  uint32_t *pFmcVect = (uint32_t *)(FLASH_BASE | VECT_TAB_OFFSET);
   for (i = 0; i < 48; i++)
   {
     VECT_SRAM_TAB[i] = pFmcVect[i];

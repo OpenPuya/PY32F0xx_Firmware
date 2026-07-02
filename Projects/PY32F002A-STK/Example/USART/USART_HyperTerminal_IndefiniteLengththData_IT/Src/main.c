@@ -91,6 +91,17 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 }
 
 /**
+  * @brief  USART Error interrupt handler function
+  * @param  None
+  * @retval None
+  */
+void APP_UsartErrorCallback(void)
+{
+  /* Turn on the LED */
+  BSP_LED_On(LED_GREEN);
+}
+
+/**
   * @brief  This function is executed in case of error occurrence.
   * @param  None
   * @retval None

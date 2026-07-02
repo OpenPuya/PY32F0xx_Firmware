@@ -100,9 +100,13 @@ void USART1_IRQHandler(void)
   /* receive data register not empty */
   if ((LL_USART_IsActiveFlag_RXNE(USART1) != RESET) && (LL_USART_IsEnabledIT_RXNE(USART1) != RESET))
   {
-    /* Receive data */
     aRxBuffer[cRxIndex] = (uint8_t)(USART1->DR & (uint8_t)0x00FF);
 
+    /* Wait SR_TXE bit set 1 */
+    while(LL_USART_IsActiveFlag_TXE(USART1) == RESET)
+    {
+    }
+    
     /* Send received data */
     USART1->DR = aRxBuffer[cRxIndex];
     
@@ -112,8 +116,14 @@ void USART1_IRQHandler(void)
       cRxIndex = (RX_MAX_LEN - 1);
     }
   }
+  if(LL_USART_IsActiveFlag_ORE(USART1) == SET)
+  {
+    LL_USART_ClearFlag_ORE(USART1);
+    
+    /* Error callback function */
+    APP_UsartErrorCallback();
+  }
 }
-
 
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE****/

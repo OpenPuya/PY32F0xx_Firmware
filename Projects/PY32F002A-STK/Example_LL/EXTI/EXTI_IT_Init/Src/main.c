@@ -59,7 +59,6 @@ int main(void)
   }
 }
 
-
 /**
   * @brief  System clock configuration
   * @param  None
@@ -103,21 +102,21 @@ static void APP_ConfigureEXTI(void)
   /* Enable GPIOB clock */
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB);
 
-  /* Configure PB2 as input mode */
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+  /* Configure PB3 as input mode */
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* Configure EXTI for interrupt, triggered on falling edge */
-  EXTI_InitStruct.Line = LL_EXTI_LINE_2;
+  EXTI_InitStruct.Line = LL_EXTI_LINE_3;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
   EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
   LL_EXTI_Init(&EXTI_InitStruct);
   
-  /*Select PB2 to trigger EXTI2*/
-  LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTB,LL_EXTI_CONFIG_LINE2);
+  /*Select PB3 to trigger EXTI3*/
+  LL_EXTI_SetEXTISource(LL_EXTI_CONFIG_PORTB,LL_EXTI_CONFIG_LINE3);
   
   /* Enable interrupts */
   NVIC_SetPriority(EXTI2_3_IRQn, 0);

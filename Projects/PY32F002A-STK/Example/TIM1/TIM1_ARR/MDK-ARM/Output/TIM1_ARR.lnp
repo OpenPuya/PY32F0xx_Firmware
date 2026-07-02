@@ -1,0 +1,20 @@
+--cpu Cortex-M0+
+".\output\system_py32f0xx.o"
+".\output\startup_py32f002xx.o"
+".\output\main.o"
+".\output\py32f0xx_hal_msp.o"
+".\output\py32f0xx_it.o"
+".\output\py32f002xx_start_kit.o"
+".\output\py32f0xx_hal.o"
+".\output\py32f0xx_hal_rcc.o"
+".\output\py32f0xx_hal_gpio.o"
+".\output\py32f0xx_hal_pwr.o"
+".\output\py32f0xx_hal_uart.o"
+".\output\py32f0xx_hal_cortex.o"
+".\output\py32f0xx_hal_rcc_ex.o"
+".\output\py32f0xx_hal_tim.o"
+".\output\py32f0xx_hal_tim_ex.o"
+--library_type=microlib --strict --scatter ".\Output\TIM1_ARR.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Output\TIM1_ARR.map" -o .\Output\TIM1_ARR.axf

@@ -91,9 +91,15 @@ static void APP_SystemClockConfig(void)
   {
   }
   
+  /* Disable and initialize HSE */
+  LL_RCC_HSE_Disable();
+  while(LL_RCC_HSE_IsReady() != 0)
+  {
+  }
+  /* Set HSE Crystal working frequency */
+  LL_RCC_HSE_SetFreqRegion(LL_RCC_HSE_16_32MHz);
   /* Enable and initialize HSE */
   LL_RCC_HSE_Enable();
-  LL_RCC_HSE_SetFreqRegion(LL_RCC_HSE_16_32MHz);
   while(LL_RCC_HSE_IsReady() != 1)
   {
   }

@@ -1,0 +1,49 @@
+{
+    // 使用 IntelliSense 了解相关属性�? 
+    // 悬停以查看现有属性的描述�?
+    // 欲了解更多信息，请访�?: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "Project/Project.elf",
+            "name": "pyocd",
+            "request": "launch",
+            "type": "cortex-debug",
+            "targetId": "PY32F030x8",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "servertype": "pyocd",
+            "cmsisPack": "${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack",
+            "svdFile": "${env:PYSDEPATH}\\svd\\PY32F030xx.svd"
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "openocd",
+            "servertype": "openocd",
+            "executable": "Project/Project.elf",
+            "runToEntryPoint": "main",
+            "configFiles": [
+                "interface/cmsis-dap.cfg",
+                "target/py32f030.cfg"
+            ],
+            "toolchainPrefix": "arm-none-eabi",
+            "svdFile": "${env:PYSDEPATH}\\svd\\PY32F030xx.svd"
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "jlink",
+            "servertype": "jlink",
+            "interface": "swd",
+            "executable": "Project/Project.elf",
+            "runToEntryPoint": "main",
+            "device": "PY32F030x8",
+            "toolchainPrefix": "arm-none-eabi",
+            "svdFile": "${env:PYSDEPATH}\\svd\\PY32F030xx.svd"
+        }
+    ]
+}

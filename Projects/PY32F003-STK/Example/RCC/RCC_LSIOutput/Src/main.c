@@ -56,7 +56,7 @@ int main(void)
   /* System clock configuration */
   APP_EnbaleLSI();
   
-  /* 配置PA01引脚为MCO功能，输出LSI时钟 */
+  /* Configure PA01 pin as MCO function to output LSI clock */
   HAL_RCC_MCOConfig(RCC_MCO2, RCC_MCO1SOURCE_LSI, RCC_MCODIV_1);
   
   /* infinite loop */
@@ -66,7 +66,7 @@ int main(void)
 }
 
 /**
-  * @brief  使能LSI
+  * @brief  Enable LSI
   * @param  None
   * @retval None
   */
@@ -74,11 +74,11 @@ void APP_EnbaleLSI(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 
-  /* 振荡器配置 */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* 选择振荡器LSI */
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                          /* 打开LSI */
+  /* Oscillator Configuration */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;        /* Configure the clock sources: LSI */
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;                          /* Enable LSI */
 
-  /* 配置振荡器 */
+  /* Initialize RCC oscillators */
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     APP_ErrorHandler();

@@ -36,13 +36,22 @@ and wake up.
 5.The LED will blink at a frequency of 1Hz.
 ================================================================================
 注意事项：
+如果需要使用按键:
+StartKit版本为V2.0以下,需将StartKit.h中的StartKitVersion 2 注释掉，并打开
+StartKitVersion 1
+StartKit版本为V2.0及以上版本,则无需操作
 1，演示此样例功能时需要断开swd连接线并重新上电，因为默认情况下，仿真器会把
 DBGMCU_CR.DBG_STOP置位。
-2,每次唤醒后再次进入Stop模式前,必须增加延时120us(至少3个LSI时钟),用于LSI和APB时钟同步。
+2,每次唤醒后再次进入Stop模式前,必须增加延时160us(至少4个LSI时钟),用于LSI和APB时
+钟同步。
 
 Notes:
+If you need to use buttons:
+StartKit version is below V2.0, you need to comment StartKitVersion 2 in
+StartKit.h, and open StartKitVersion 1 
+StartKit version is V2.0 and above, no operation is required
 1.When demonstrating this sample, disconnect the SWD connection and 
 power cycle the board, as the debugger will set DBGMCU_CR.DBG_STOP by default.
-2,Before re-entering stop mode after each wake-up, a delayof 75us (at least 2 LSI 
-clocks) must be added to synchronize the LSI and APB clocks.
+2,Before re-entering stop mode after each wake-up, a delay of 160us (at least 4
+LSI clocks) must be added to synchronize the LSI and APB clocks.
 ================================================================================

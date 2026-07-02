@@ -1,73 +1,72 @@
 {
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
-			"type": "shell",
-			"label": "make",
-			"command": "make",
-			"args": [],
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
-		  "type": "shell",
-		  "label": "make and download",
-		  "command": "openocd",
-		  "args": [
-			"-s",
-			"../../../scripts",
-			"-f",
-			"interface/cmsis-dap.cfg",
-			"-f",
-			"target/py32f030.cfg",
-			"-c",
-			"program build/Project/Project.elf verify reset exit"
-		  ],
-		  "problemMatcher": [
-			"$gcc"
-		  ],
-		  "group": "build",
-		  "dependsOn": "make"
-		},
-        {
+            "type": "shell",
             "label": "build",
-            "type": "shell",
-            "command": "${command:eide.project.build}",
-            "group": "build",
-            "problemMatcher": []
+            "command": "make",
+            "args": [],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
-            "label": "flash",
-            "type": "shell",
-            "command": "${command:eide.project.uploadToDevice}",
-            "group": "build",
-            "problemMatcher": []
+          "type": "shell",
+          "label": "pyocd download",
+          "command": "pyocd",
+          "args": [
+            "load",
+            "Project/Project.elf",
+            "--target=PY32F030x8",
+            "--frequency=1000000",
+            "--pack=${env:PYSDEPATH}\\packs\\PY32F0xx_DFP.pack"
+          ],
+          "problemMatcher": [
+            "$gcc"
+          ],
+          "group": "build",
+          "dependsOn": "build"
         },
         {
-            "label": "build and flash",
-            "type": "shell",
-            "command": "${command:eide.project.buildAndFlash}",
-            "group": "build",
-            "problemMatcher": []
+          "type": "shell",
+          "label": "openocd download",
+          "command": "openocd",
+          "args": [
+            "-f",
+            "interface/cmsis-dap.cfg",
+            "-f",
+            "target/py32f030.cfg",
+            "-c",
+            "program Project/Project.elf verify reset exit"
+          ],
+          "problemMatcher": [
+            "$gcc"
+          ],
+          "group": "build",
+          "dependsOn": "build"
         },
         {
-            "label": "rebuild",
-            "type": "shell",
-            "command": "${command:eide.project.rebuild}",
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "command": "${command:eide.project.clean}",
-            "group": "build",
-            "problemMatcher": []
+          "type": "shell",
+          "label": "jlink download",
+          "command": "JLink.exe",
+          "args": [
+            "-device", "PY32F030x8",
+            "-if", "SWD",
+            "-speed", "4000",
+            "-autoconnect", "1",
+            "-CommanderScript", "commands.jlink"
+          ],
+          "problemMatcher": [
+            "$gcc"
+          ],
+          "group": "build",
+          "dependsOn": "build"
         }
     ]
 }
